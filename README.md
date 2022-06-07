@@ -1,0 +1,1 @@
+Once cookiecutted the project run `makemigrations` and `migrate` to create the database.
