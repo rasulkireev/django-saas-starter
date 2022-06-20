@@ -1,7 +1,8 @@
 {
   "project_name": "My Awesome Project",
   "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
+  "repo_url": "https://github.com/cookiecutter/cookiecutter",
+  "project_description": "",
   "author_name": "Jane Doe",
-  "author_email": "janedoe@example.com",
-  "project_description": ""
+  "author_email": "janedoe@example.com"
 }
