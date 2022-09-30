@@ -1,15 +1,15 @@
-{% extends 'base.html' %}
+{{ "{% extends 'base.html' %}" }}
 
-{% block content %}
-  <h1 class="text-green-800 mb-10 text-xl font-bold">Helllloooooo!</h1>
+{{ "{% block content %}" }}
+  <h1 class="mb-10 text-xl font-bold text-green-800">Helllloooooo!</h1>
 
-  {% if user.is_authenticated %}
-    <p>Username: {{user.username}}</p>
-    <p>Email: {{user.email}}</p>
-    <a href="{% url 'account_logout' %}">Logout</a>
-  {% else %}
-    <a href="{% url 'account_login' %}">Login</a>
-    <a href="{% url 'account_signup' %}">Signup</a>
-  {% endif %}
+  {{ "{% if user.is_authenticated %}" }}
+    <p>Username: {{ "{{ user.username }}" }}</p>
+    <p>Email: {{ "{{ user.email }}" }}</p>
+    <a href={{ "{% url 'account_logout' %}" }}>Logout</a>
+  {{ "{% else %}" }}
+    <a href={{ "{% url 'account_login' %}" }}>Login</a>
+    <a href={{ "{% url 'account_signup' %}" }}>Signup</a>
+  {{ "{% endif %}" }}
 
-{% endblock content %}
+{{ "{% endblock content %}" }}

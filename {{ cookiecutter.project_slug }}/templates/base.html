@@ -1,4 +1,4 @@
-{% load webpack_loader static %}
+{{ "{% load webpack_loader static %}" }}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,14 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Basic Django Project</title>
 
-  {% stylesheet_pack 'index' %}
-  {% javascript_pack 'index' attrs='defer' %}
+  {{ "{% stylesheet_pack 'index' %}" }}
+  {{ "{% javascript_pack 'index' attrs='defer' %}" }}
 
 </head>
 <body>
 
-  {% block content %}
-  {% endblock %}
+  {{ "{% block content %}" }}
+  {{ "{% endblock %}" }}
 
 </body>
 </html>
