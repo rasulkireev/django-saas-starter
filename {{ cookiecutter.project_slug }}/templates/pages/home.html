@@ -1,7 +1,7 @@
 {{ "{% extends 'base.html' %}" }}
 
 {{ "{% block content %}" }}
-  <h1 class="mb-10 text-xl font-bold text-green-800">Helllloooooo!</h1>
+  <h1 class="mb-10 text-xl font-bold text-{{cookiecutter.project_main_color}}-800">Helllloooooo!</h1>
 
   {{ "{% if user.is_authenticated %}" }}
     <p>Username: {{ "{{ user.username }}" }}</p>
