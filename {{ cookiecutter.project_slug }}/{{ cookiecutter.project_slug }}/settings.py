@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "webpack_boilerplate",
+    "widget_tweaks",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -156,3 +157,6 @@ ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_FORMS = {
+  'signup': 'users.forms.CustomSignUpForm'
+}

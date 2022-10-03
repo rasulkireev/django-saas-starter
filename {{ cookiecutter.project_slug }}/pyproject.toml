@@ -9,6 +9,7 @@ python = "^3.10"
 Django = "^4.0.4"
 django-allauth = "^0.50.0"
 python-webpack-boilerplate = "^1.0.0"
+django-widget-tweaks = "^1.4.12"
 
 [tool.poetry.dev-dependencies]
 

@@ -4,5 +4,6 @@
   "repo_url": "https://github.com/cookiecutter/cookiecutter",
   "project_description": "",
   "author_name": "Jane Doe",
-  "author_email": "janedoe@example.com"
+  "author_email": "janedoe@example.com",
+  "project_main_color": "green"
 }
