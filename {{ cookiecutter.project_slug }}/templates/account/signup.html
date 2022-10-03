@@ -10,12 +10,12 @@
           </h2>
           <p class="mt-2 text-sm text-center text-gray-600">
             Or
-            <a href={{ "{% url 'account_login' %}" }} class="font-medium text-{{cookiecutter.project_main_color}}-600 hover:text-{{cookiecutter.project_main_color}}-500">
+            <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="font-medium text-{{cookiecutter.project_main_color}}-600 hover:text-{{cookiecutter.project_main_color}}-500">
                 login if you have one already.
             </a>
         </p>
       </div>
-      <form class="mt-8 space-y-6" id="signup_form" method="post" action={{ "{% url 'account_signup' %}" }}>
+      <form class="mt-8 space-y-6" id="signup_form" method="post" action="{% raw %}{% url 'account_signup' %}{%- endraw %}">
         {{ "{% csrf_token %}" }}
 
         {{ "{{ form.non_field_errors | safe }}" }}

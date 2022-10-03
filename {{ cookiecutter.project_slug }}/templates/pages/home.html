@@ -6,10 +6,10 @@
   {{ "{% if user.is_authenticated %}" }}
     <p>Username: {{ "{{ user.username }}" }}</p>
     <p>Email: {{ "{{ user.email }}" }}</p>
-    <a href={{ "{% url 'account_logout' %}" }}>Logout</a>
+    <a href="{% raw %}{% url 'account_logout' %}{%- endraw %}">Logout</a>
   {{ "{% else %}" }}
-    <a href={{ "{% url 'account_login' %}" }}>Login</a>
-    <a href={{ "{% url 'account_signup' %}" }}>Signup</a>
+    <a href="{% raw %}{% url 'account_login' %}{%- endraw %}">Login</a>
+    <a href="{% raw %}{% url 'account_signup' %}{%- endraw %}">Signup</a>
   {{ "{% endif %}" }}
 
 {{ "{% endblock content %}" }}
