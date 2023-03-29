@@ -1,0 +1,57 @@
+exclude: .*migrations\/.*
+repos:
+
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+
+- repo: https://github.com/psf/black
+  rev: 22.12.0
+  hooks:
+  - id: black
+    language_version: python3.9
+
+- repo: https://github.com/pycqa/isort
+  rev: 5.12.0
+  hooks:
+    - id: isort
+      name: isort (python)
+
+- repo: https://github.com/pycqa/flake8
+  rev: 6.0.0
+  hooks:
+    - id: flake8
+
+- repo: https://github.com/Riverside-Healthcare/djLint
+  rev: v1.19.16
+  hooks:
+    - id: djlint-django
+
+- repo: https://github.com/python-poetry/poetry
+  rev: '1.4.1'
+  hooks:
+    - id: poetry-export
+      args: [
+        "-f", "requirements.txt",
+        "-o", "requirements.txt",
+        "--without-hashes"
+      ]
+
+- repo: local
+  hooks:
+    - id: pylint
+      name: pylint
+      entry: poetry run pylint
+      language: system
+      types: [python]
+      args:
+        [
+          "-rn",
+          "-sn",
+          "--load-plugins=pylint_django",
+          "--django-settings-module={{ cookiecutter.project_slug }}.settings",
+          --ignore=manage.py,
+        ]

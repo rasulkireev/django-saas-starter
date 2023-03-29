@@ -1,5 +1,5 @@
-{{ "{% extends 'base.html' %}" }}
-{{ "{% load widget_tweaks %}" }}
+{{ '{% extends "base.html" %}' }}
+{{ '{% load widget_tweaks %}' }}
 
 {{ "{% block content %}" }}
     <div class="flex items-center justify-center px-4 py-12 my-4 sm:px-6 lg:px-8">
@@ -15,7 +15,7 @@
                     </a>
                 </p>
             </div>
-            <form class="mt-8 space-y-6" method="POST" action="{% raw %}{% url 'account_login' %}{%- endraw %}">
+            <form class="mt-8 space-y-6" method="post" action="{% raw %}{% url 'account_login' %}{%- endraw %}">
                 {{ "{% csrf_token %}" }}
                 {{ "{{ form.non_field_errors | safe }}" }}
                 <input type="hidden" name="remember" value="true" />

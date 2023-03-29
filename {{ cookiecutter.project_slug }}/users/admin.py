@@ -11,11 +11,7 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         (
             "Extra Fields",
-            {
-                "fields": (
-                    "twitter_handle",
-                )
-            },
+            {"fields": ("twitter_handle",)},
         ),
     )
 
