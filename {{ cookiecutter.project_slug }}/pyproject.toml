@@ -38,6 +38,8 @@ include = '\.pyi?$'
 profile="django"
 ignore = "H031"
 
+[tool.ruff]
+line-length = 120
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
