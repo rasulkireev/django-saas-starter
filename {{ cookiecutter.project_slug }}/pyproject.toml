@@ -22,6 +22,7 @@ pylint = "^2.17.1"
 pylint-django = "^2.5.3"
 pre-commit = "^3.2.1"
 mkdocs = "^1.6.0"
+mkdocs-material = "^9.5.23"
 
 [tool.isort]
 profile = "django"
