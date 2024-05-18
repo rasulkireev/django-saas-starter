@@ -1,7 +1,7 @@
 site_name: Minimal Django SaaS Cookicutter
 
 theme:
-  name: "material"
+  name: "mkdocs"
 
 plugins:
   - mkdocstrings

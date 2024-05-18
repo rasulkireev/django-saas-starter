@@ -1,4 +1,6 @@
-Once cookiecutter the project run `makemigrations` and `migrate` to create the database.
+To start you'll need to start the Mkdocs server, where a step-by-step process will be provided to you. To do this:
+1. `poetry install`
+2. `poetry run mkdocs serve`
 
 ## Features
 

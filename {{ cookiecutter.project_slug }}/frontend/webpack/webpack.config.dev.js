@@ -26,7 +26,7 @@ module.exports = merge(common, {
     },
     watchFiles: [
       Path.join(__dirname, '../../**/*.py'),
-      Path.join(__dirname, '../../templates/**/*.html'),
+      Path.join(__dirname, '../../frontend/templates/**/*.html'),
     ],
   },
   plugins: [
@@ -68,7 +68,6 @@ module.exports = merge(common, {
             },
           },
           "postcss-loader",
-          "sass-loader",
         ],
       },
     ],

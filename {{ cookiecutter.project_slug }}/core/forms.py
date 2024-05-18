@@ -1,5 +1,6 @@
 from allauth.account.forms import LoginForm, SignupForm
-from {{cookiecutter.project_slug}}.utils import DivErrorList  # noqa: E999
+
+from .utils import DivErrorList
 
 
 class CustomSignUpForm(SignupForm):

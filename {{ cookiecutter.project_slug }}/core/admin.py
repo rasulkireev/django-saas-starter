@@ -1,12 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import CustomUser
+from .models import User
 
 
-class CustomUserAdmin(UserAdmin):
+class UserAdmin(UserAdmin):
     list_display = ["date_joined", "username", "email", "first_name", "last_name"]
-    model = CustomUser
+    model = User
 
     fieldsets = UserAdmin.fieldsets + (
         (
@@ -16,4 +16,4 @@ class CustomUserAdmin(UserAdmin):
     )
 
 
-admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(User, UserAdmin)

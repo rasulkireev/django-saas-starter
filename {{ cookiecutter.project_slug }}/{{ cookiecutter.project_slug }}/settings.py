@@ -42,8 +42,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "pages.apps.PagesConfig",
-    "users.apps.UsersConfig",
+    "core.apps.CoreConfig",
 ]
 
 MIDDLEWARE = [
@@ -61,7 +60,7 @@ ROOT_URLCONF = "{{ cookiecutter.project_slug }}.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [str(BASE_DIR.joinpath("templates"))],
+        "DIRS": [str(BASE_DIR.joinpath("frontend", "templates"))],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -138,7 +137,7 @@ WEBPACK_LOADER = {
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Authentication
-AUTH_USER_MODEL = "users.CustomUser"
+AUTH_USER_MODEL = "core.User"
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
@@ -158,6 +157,6 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_FORMS = {
-    "signup": "users.forms.CustomSignUpForm",
-    "login": "users.forms.CustomLoginForm",
+    "signup": "core.forms.CustomSignUpForm",
+    "login": "core.forms.CustomLoginForm",
 }

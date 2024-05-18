@@ -1,6 +1,6 @@
 module.exports = {
   content: [
-    './templates/**/*.html',
+    './frontend/templates/**/*.html',
     './**/*.py',
   ],
   theme: {
@@ -10,4 +10,4 @@ module.exports = {
     require('@tailwindcss/typography'),
     require('@tailwindcss/forms'),
   ],
-}
+};
