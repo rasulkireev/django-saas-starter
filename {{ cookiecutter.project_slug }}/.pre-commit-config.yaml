@@ -1,6 +1,5 @@
 exclude: .*migrations\/.*
 repos:
-
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
@@ -15,7 +14,7 @@ repos:
     language_version: python3.9
 
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: 'v0.0.260'
+  rev: 'v0.1.14'
   hooks:
     - id: ruff
 
@@ -24,11 +23,6 @@ repos:
   hooks:
     - id: isort
       name: isort (python)
-
-- repo: https://github.com/pycqa/flake8
-  rev: 6.0.0
-  hooks:
-    - id: flake8
 
 - repo: https://github.com/Riverside-Healthcare/djLint
   rev: v1.19.16
@@ -44,19 +38,3 @@ repos:
         "-o", "requirements.txt",
         "--without-hashes"
       ]
-
-- repo: local
-  hooks:
-    - id: pylint
-      name: pylint
-      entry: poetry run pylint
-      language: system
-      types: [python]
-      args:
-        [
-          "-rn",
-          "-sn",
-          "--load-plugins=pylint_django",
-          "--django-settings-module={{ cookiecutter.project_slug }}.settings",
-          --ignore=manage.py,
-        ]
