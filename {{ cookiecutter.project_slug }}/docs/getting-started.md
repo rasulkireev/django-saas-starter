@@ -1,28 +1,16 @@
 ## 1 Dependencies
 
-### Python dependencies
-After you have run the cookiecutter command and the project has been generated the first thing you should do is install all the dependencies.
+To get these docs running you have already installed python deps with Poetry. Nice!. Now the only thing left to do is to install JS deps. For that I like to use `pnpm`. So run this command:
 
 ```
-poetry install
+pnpm i
 ```
 
-Notes:
-
-If you are having issues like this:
+To get things going, let's try starting the deb frontend server. This will start the css and js complilation and will create a build folder.
 
 ```
-poetry install
-
-Current Python version (3.7.7) is not allowed by the project (^3.10).
-Please change python executable via the "env use" command.
+pnpm run start
 ```
-
-Try running `poetry env use python3.10` and then trying poetry install again.
-
-### Javascript
-
-Next let's install javascript dependencies with `npm install`
 
 
 ## 2 Creating the Database

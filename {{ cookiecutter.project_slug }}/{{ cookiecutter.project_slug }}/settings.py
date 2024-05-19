@@ -11,10 +11,17 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import environ
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(BASE_DIR / ".env")
 
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -23,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-a7&5bd(i0z*e!2o1up_!jhdxqxe(%ygs)7i+vc*$4o+9zogu%3"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -42,8 +49,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "pages.apps.PagesConfig",
-    "users.apps.UsersConfig",
+    "core.apps.CoreConfig",
 ]
 
 MIDDLEWARE = [
@@ -61,7 +67,7 @@ ROOT_URLCONF = "{{ cookiecutter.project_slug }}.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [str(BASE_DIR.joinpath("templates"))],
+        "DIRS": [str(BASE_DIR.joinpath("frontend", "templates"))],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -137,9 +143,6 @@ WEBPACK_LOADER = {
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Authentication
-AUTH_USER_MODEL = "users.CustomUser"
-
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
@@ -158,6 +161,6 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_FORMS = {
-    "signup": "users.forms.CustomSignUpForm",
-    "login": "users.forms.CustomLoginForm",
+    "signup": "core.forms.CustomSignUpForm",
+    "login": "core.forms.CustomLoginForm",
 }

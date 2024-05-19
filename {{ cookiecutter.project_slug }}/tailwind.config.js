@@ -1,7 +1,7 @@
 module.exports = {
   content: [
-    './templates/**/*.html',
-    './**/*.py',
+    './frontend/templates/**/*.html',
+    './core/**/*.py',
   ],
   theme: {
     extend: {},
@@ -10,4 +10,4 @@ module.exports = {
     require('@tailwindcss/typography'),
     require('@tailwindcss/forms'),
   ],
-}
+};
