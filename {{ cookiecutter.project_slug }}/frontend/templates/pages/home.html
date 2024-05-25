@@ -1,15 +1,23 @@
 {{ '{% extends "base.html" %}' }}
 
 {{ "{% block content %}" }}
-  <h1 class="mb-10 text-xl font-bold text-{{cookiecutter.project_main_color}}-800">Helllloooooo!</h1>
+<div class="relative px-6 mt-16 isolate sm:mt-24 lg:px-8">
+  <div class="relative px-6 mt-16 isolate sm:mt-24 lg:px-8">
+    <div class="mx-auto text-center">
+        <h1 class="max-w-2xl mx-auto mb-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+          {{ cookiecutter.project_description }}
+        </h1>
+        <div class="flex flex-col items-center justify-center mt-10 md:flex-row md:items-end gap-x-6">
+          <a
+            class="block px-3 py-2 text-sm font-semibold text-white bg-{{cookiecutter.project_main_color}}-600 rounded-md shadow-sm hover:bg-{{cookiecutter.project_main_color}}-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-{{cookiecutter.project_main_color}}-600"
+            href="{% raw %}{% url 'account_login' %}{%- endraw %}"
+          >
+            Get Started
+          </a>
+        </div>
+    </div>
+  </div>
+</div>
 
-  {{ "{% if user.is_authenticated %}" }}
-    <p>Username: {{ "{{ user.username }}" }}</p>
-    <p>Email: {{ "{{ user.email }}" }}</p>
-    <a href="{% raw %}{% url 'account_logout' %}{%- endraw %}">Logout</a>
-  {{ "{% else %}" }}
-    <a href="{% raw %}{% url 'account_login' %}{%- endraw %}">Login</a>
-    <a href="{% raw %}{% url 'account_signup' %}{%- endraw %}">Signup</a>
-  {{ "{% endif %}" }}
-
+<div data-controller="testing"></div>
 {{ "{% endblock content %}" }}

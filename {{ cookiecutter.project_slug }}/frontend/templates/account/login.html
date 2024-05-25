@@ -33,7 +33,7 @@
                 </div>
 
                 {{" {% if redirect_field_value %}" }}
-                <input type="hidden" name={{"{{ redirect_field_name }}"}} value={{"{{ redirect_field_value }}"}} />
+                <input type="hidden" name="{% raw %}{{ redirect_field_name }}{%- endraw %}" value="{% raw %}{{ redirect_field_value }}{%- endraw %}" />
                 {{" {% endif %}" }}
 
                 <div>
