@@ -10,22 +10,22 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
   <!-- Other meta stuff -->
-  <link rel="apple-touch-icon" href="{% static 'vendors/favicon/logo.png' %}" />
-  <link rel="apple-touch-icon" href="{% static 'vendors/favicon/logo.png' %}" />
-  <link rel="icon" type="image/png" sizes="16x16 32x32 500x500" href="{% static 'vendors/favicon/logo.png' %}" />
+  <link rel="apple-touch-icon" href="{% raw %}{% static 'vendors/favicon/logo.png' %}{%- endraw %}" />
+  <link rel="apple-touch-icon" href="{% raw %}{% static 'vendors/favicon/logo.png' %}{%- endraw %}" />
+  <link rel="icon" type="image/png" sizes="16x16 32x32 500x500" href="{% raw %}{% static 'vendors/favicon/logo.png' %}{%- endraw %}" />
 
   {{ "{% block meta %}" }}
   <title>{{ cookiecutter.project_name }}</title>
   <meta name="description" content="{{ cookiecutter.project_description }}" />
   <meta name="keywords" content="django" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://{{ request.get_host }}/" />
+  <link rel="canonical" href="https://{{ '{{ request.get_host }}' }}/" />
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="{{ cookiecutter.project_name }}" />
-  <meta property="og:url" content="https://{{ request.get_host }}/" />
+  <meta property="og:url" content="https://{{ '{{ request.get_host }}' }}/" />
   <meta property="og:description" content="{{ cookiecutter.project_description }}" />
-  <meta property="og:image" content="https://{{ request.get_host }}{% static 'vendors/images/logo.png' %}" />
+  <meta property="og:image" content="https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
   <meta property="og:locale" content="en_US" />
 
   <meta name="twitter:card" content="summary" />
@@ -33,7 +33,7 @@
   <meta name="twitter:site" content="@rasulkireev" />
   <meta name="twitter:title" content="{{ cookiecutter.project_name }}" />
   <meta name="twitter:description" content="{{ cookiecutter.project_description }}" />
-  <meta name="twitter:image" content="https://{{ request.get_host }}{% static 'vendors/images/logo.png' %}" />
+  <meta name="twitter:image" content="https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
   {{ "{% endblock meta %}" }}
 
   {{ "{% stylesheet_pack 'index' %}" }}
@@ -51,8 +51,8 @@
     <header class="bg-white">
       <nav class="flex items-center justify-between p-6 mx-auto max-w-7xl lg:px-8" aria-label="Global">
         <div class="flex items-center gap-x-12">
-          <a href="{% url 'home' %}" class="-m-1.5 p-1.5 flex flex-row space-x-2 items-center justify-between">
-            <img class="w-auto h-8" src="{% static 'vendors/images/logo.png' %}" alt="{{ cookiecutter.project_name }} Logo" />
+          <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="-m-1.5 p-1.5 flex flex-row space-x-2 items-center justify-between">
+            <img class="w-auto h-8" src="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="{{ cookiecutter.project_name }} Logo" />
             <span class="text-base font-semibold text-gray-700">{{ cookiecutter.project_name }}</span>
           </a>
         </div>
@@ -76,23 +76,18 @@
                 id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                 <span class="sr-only">Open user menu</span>
                 <img class="object-cover w-10 h-10 p-1 bg-gray-100 border-2 border-gray-500 rounded-full"
-                  src="{% static 'vendors/images/unknown-man.png' %}" alt="No Personal Photo" />
+                  src="{% raw %}{% static 'vendors/images/unknown-man.png' %}{%- endraw %}" alt="No Personal Photo" />
               </button>
             </div>
             <div data-dropdown-target="menu"
               class="absolute right-0 z-10 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
               role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-              {{ "{% if user.is_authenticated %}" }}
-              <a href="{% url 'settings' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-300"
-                role="menuitem" data-action="dropdown#toggle" tabindex="-1" id="user-menu-item-0">Settings</a>
-              {{ "{% endif %}" }}
-              <!-- <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a> -->
-              <a href="{% url 'account_logout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-300"
+              <a href="{% raw %}{% url 'account_logout' %}{%- endraw %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-300"
                 role="menuitem" data-action="dropdown#toggle" tabindex="-1" id="user-menu-item-2">Sign out</a>
             </div>
           </div>
           {{ "{% else %}" }}
-          <a href="{% url 'account_login' %}" class="text-base font-semibold leading-6 text-gray-900">
+          <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="text-base font-semibold leading-6 text-gray-900">
               Log in <span aria-hidden="true">&rarr;</span>
           </a>
           {{ "{% endif %}" }}
@@ -106,9 +101,9 @@
         <div
           class="fixed inset-y-0 right-0 z-10 w-full px-6 py-6 overflow-y-auto bg-white sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div class="flex items-center justify-between">
-            <a href="{% url 'home' %}" class="-m-1.5 p-1.5">
+            <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="-m-1.5 p-1.5">
               <span class="sr-only">{{ cookiecutter.project_name }}</span>
-              <img class="w-auto h-8" src="{% static 'vendors/images/logo.png' %}" alt="{{ cookiecutter.project_name }} Logo" />
+              <img class="w-auto h-8" src="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="{{ cookiecutter.project_name }} Logo" />
             </a>
             <button data-action="dropdown#toggle click@window->dropdown#hide" type="button"
               class="-m-2.5 rounded-md p-2.5 text-gray-700">
@@ -121,17 +116,8 @@
           </div>
           <div class="flow-root mt-6">
             <div class="-my-6 divide-y divide-gray-500/10">
-              <div class="py-6 space-y-2">
-                <a href="{% url 'posts' %}"
-                  class="block px-3 py-2 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50">Jobs</a>
-                {{ "{% if user.is_authenticated %}" }}
-                <a href="{% url 'settings' %}"
-                  class="block px-3 py-2 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50">Settings</a>
-                {{ "{% endif %}" }}
-
-              </div>
               <div class="py-6">
-                <a href="{% url 'account_login' %}" class="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Log in</a>
+                <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Log in</a>
               </div>
             </div>
           </div>
@@ -163,8 +149,8 @@
       "@type": "WebSite",
       "name": "{{ cookiecutter.project_name }}",
       "description": "{{ cookiecutter.project_description }}",
-      "thumbnailUrl": "https://{{ request.get_host }}{% static 'vendors/images/logo.png' %}",
-      "url": "https://{{ request.get_host }}/",
+      "thumbnailUrl": "https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}",
+      "url": "https://{{ '{{ request.get_host }}' }}/",
       "author": {
         "@type": "Person",
         "givenName": "Rasul",
