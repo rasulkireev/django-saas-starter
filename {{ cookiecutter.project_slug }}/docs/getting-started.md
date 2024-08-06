@@ -12,8 +12,12 @@ To get things going, let's try starting the deb frontend server. This will start
 pnpm run start
 ```
 
+## 2 Prepare the files
 
-## 2 Creating the Database
+- Change the `.env.example` file name to `.env`.
+
+
+## 3 Creating the Database
 
 The next thing you want to do is to create and apply the migrations. First run:
 
@@ -29,7 +33,7 @@ poetry run python manage.py migrate
 
 This will create a SQLite database with all the necessary tables.
 
-## 3 Start the dev server
+## 4 Start the dev server
 
 Start by building the frontend resource. You can do that by running:
 

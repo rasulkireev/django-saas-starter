@@ -6,7 +6,7 @@ authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-django-allauth = "^0.50.0"
+django-allauth = {extras = ["socialaccount"], version = "^64.0.0"}
 python-webpack-boilerplate = "^1.0.0"
 django-widget-tweaks = "^1.4.12"
 mkdocs = "^1.4.2"
