@@ -38,27 +38,21 @@
 
   {{ "{% stylesheet_pack 'index' %}" }}
   {{ "{% javascript_pack 'index' attrs='defer' %}" }}
-
-  <script defer data-domain="." src="https://plausible.cr.lvtd.dev/js/script.js"></script>
-  <script>
-    !function (t, e) { var o, n, p, r; e.__SV || (window.posthog = e, e._i = [], e.init = function (i, s, a) { function g(t, e) { var o = e.split("."); 2 == o.length && (t = t[o[0]], e = o[1]), t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } } (p = t.createElement("script")).type = "text/javascript", p.async = !0, p.src = s.api_host + "/static/array.js", (r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(p, r); var u = e; for (void 0 !== a ? u = e[a] = [] : a = "posthog", u.people = u.people || [], u.toString = function (t) { var e = "posthog"; return "posthog" !== a && (e += "." + a), t || (e += " (stub)"), e }, u.people.toString = function () { return u.toString(1) + ".people (stub)" }, o = "capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "), n = 0; n < o.length; n++)g(u, o[n]); e._i.push([i, s, a]) }, e.__SV = 1) }(document, window.posthog || []);
-    posthog.init('.', { api_host: 'https://app.posthog.com' })
-  </script>
 </head>
 
 <body>
   <div data-controller="dropdown" class="bg-white">
     <header class="bg-white">
-      <nav class="flex items-center justify-between p-6 mx-auto max-w-7xl lg:px-8" aria-label="Global">
-        <div class="flex items-center gap-x-12">
-          <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="-m-1.5 p-1.5 flex flex-row space-x-2 items-center justify-between">
+      <nav class="flex justify-between items-center p-6 mx-auto max-w-7xl lg:px-8" aria-label="Global">
+        <div class="flex gap-x-12 items-center">
+          <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="flex flex-row justify-between items-center p-1.5 -m-1.5 space-x-2">
             <img class="w-auto h-8" src="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="{{ cookiecutter.project_name }} Logo" />
             <span class="text-base font-semibold text-gray-700">{{ cookiecutter.project_name }}</span>
           </a>
         </div>
         <div class="flex lg:hidden">
           <button data-action="dropdown#toggle click@window->dropdown#hide" type="button"
-            class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
+            class="inline-flex justify-center items-center p-2.5 -m-2.5 text-gray-700 rounded-md">
             <span class="sr-only">Open main menu</span>
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
               aria-hidden="true">
@@ -66,7 +60,7 @@
             </svg>
           </button>
         </div>
-        <div class="items-center hidden lg:flex lg:gap-x-12">
+        <div class="hidden items-center lg:flex lg:gap-x-12">
           {{ "{% if user.is_authenticated %}" }}
           <!-- Profile dropdown -->
           <div data-controller="dropdown" class="relative ml-3">
@@ -75,12 +69,12 @@
                 class="flex text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                 id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                 <span class="sr-only">Open user menu</span>
-                <img class="object-cover w-10 h-10 p-1 bg-gray-100 border-2 border-gray-500 rounded-full"
+                <img class="object-cover p-1 w-10 h-10 bg-gray-100 rounded-full border-2 border-gray-500"
                   src="{% raw %}{% static 'vendors/images/unknown-man.png' %}{%- endraw %}" alt="No Personal Photo" />
               </button>
             </div>
             <div data-dropdown-target="menu"
-              class="absolute right-0 z-10 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+              class="absolute right-0 z-10 py-1 mt-2 w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow-lg origin-top-right focus:outline-none"
               role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
               <a href="{% raw %}{% url 'account_logout' %}{%- endraw %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-300"
                 role="menuitem" data-action="dropdown#toggle" tabindex="-1" id="user-menu-item-2">Sign out</a>
@@ -99,14 +93,14 @@
         <!-- Background backdrop, show/hide based on slide-over state. -->
         <div class="fixed inset-0 z-10"></div>
         <div
-          class="fixed inset-y-0 right-0 z-10 w-full px-6 py-6 overflow-y-auto bg-white sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-          <div class="flex items-center justify-between">
-            <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="-m-1.5 p-1.5">
+          class="overflow-y-auto fixed inset-y-0 right-0 z-10 px-6 py-6 w-full bg-white sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+          <div class="flex justify-between items-center">
+            <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="p-1.5 -m-1.5">
               <span class="sr-only">{{ cookiecutter.project_name }}</span>
               <img class="w-auto h-8" src="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="{{ cookiecutter.project_name }} Logo" />
             </a>
             <button data-action="dropdown#toggle click@window->dropdown#hide" type="button"
-              class="-m-2.5 rounded-md p-2.5 text-gray-700">
+              class="p-2.5 -m-2.5 text-gray-700 rounded-md">
               <span class="sr-only">Close menu</span>
               <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                 aria-hidden="true">
@@ -117,7 +111,7 @@
           <div class="flow-root mt-6">
             <div class="-my-6 divide-y divide-gray-500/10">
               <div class="py-6">
-                <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Log in</a>
+                <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="block px-3 py-2.5 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50">Log in</a>
               </div>
             </div>
           </div>
