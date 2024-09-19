@@ -1,25 +1,79 @@
-version: '3'
-
 services:
   db:
-    image: postgres
+    image: rasulkireev/custom-postgres:15
     volumes:
-      - ./data/db:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     environment:
-      - POSTGRES_DB=mydatabase
-      - POSTGRES_USER=mydatabaseuser
-      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_DB={{ cookiecutter.project_slug }}
+      - POSTGRES_USER={{ cookiecutter.project_slug }}
+      - POSTGRES_PASSWORD={{ cookiecutter.project_slug }}
 
-  web:
+  redis:
+    image: redis:7-alpine
+    command: redis-server --requirepass {{ cookiecutter.project_slug }}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    environment:
+      - REDIS_PASSWORD={{ cookiecutter.project_slug }}
+
+  backend:
     build:
       context: .
-      dockerfile: deployment/Dockerfile.server
-    command: python manage.py runserver 0.0.0.0:8000
+      dockerfile: Dockerfile-python
+    working_dir: /app
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/code
+      - .:/app
     ports:
       - "8000:8000"
     depends_on:
       - db
+      - redis
     env_file:
       - .env
+
+  workers:
+    build:
+      context: .
+      dockerfile: Dockerfile-python
+    working_dir: /app
+    command: python manage.py qcluster
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+
+  frontend:
+    image: node:18
+    working_dir: /app
+    command: sh -c "npm install && npm run start"
+    volumes:
+      - .:/app
+    ports:
+      - "9091:9091"
+
+  backend-thin:
+    build:
+      context: .
+      dockerfile: Dockerfile-python
+    working_dir: /app
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    profiles:
+      - manual
+
+volumes:
+  postgres_data:
+  redis_data:
