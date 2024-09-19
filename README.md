@@ -4,13 +4,16 @@ To start you'll need to start the Mkdocs server, where a step-by-step process wi
 
 ## Features
 
-- For Django 4.0
+- Django 5
 - Works with Python 3.11
 - Registration via django-allauth
 - 12-Factor based settings via django-environ
 - TailwindCSS & StimulusJS (Hotwire) - comes with Webpack configure for dev & prod.
 - Comes with custom user model ready to go
-- SQLite for Database
+- Will work with any DB of your choosing, as long as it is supported by django
+- Comes with docker-compose and makefile for rapid local development
+- Media storage with any S3 compatible service. I use minio both locally and in prod
+- structlog for logging setup both for local (console) and prod (json)
 
 
 ## Roadmap
@@ -20,8 +23,6 @@ To start you'll need to start the Mkdocs server, where a step-by-step process wi
 - Add some tech overview to the Readme
 - Add Wagtail for the blog
 - Send emails via Anymail (Mailgun by default) (plus add Mailhog)
-- Media storage with Cloudinary
 - Add github workflows to automate deployment (digitalocean, fly, appliku)
 - Add pre-commit
-- Set up logs for dev and prod
 - Add Sentry option
