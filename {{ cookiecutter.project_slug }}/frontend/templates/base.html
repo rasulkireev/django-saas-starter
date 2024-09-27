@@ -10,9 +10,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
   <!-- Other meta stuff -->
-  <link rel="apple-touch-icon" href="{% raw %}{% static 'vendors/favicon/logo.png' %}{%- endraw %}" />
-  <link rel="apple-touch-icon" href="{% raw %}{% static 'vendors/favicon/logo.png' %}{%- endraw %}" />
-  <link rel="icon" type="image/png" sizes="16x16 32x32 500x500" href="{% raw %}{% static 'vendors/favicon/logo.png' %}{%- endraw %}" />
+  <link rel="apple-touch-icon" href="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
+  <link rel="apple-touch-icon" href="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
+  <link rel="icon" type="image/png" sizes="16x16 32x32 500x500" href="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
 
   {{ "{% block meta %}" }}
   <title>{{ cookiecutter.project_name }}</title>
@@ -41,6 +41,10 @@
 </head>
 
 <body>
+  {% block default_messages %}
+    {% include "components/messages.html" with messages=messages %}
+  {% endblock default_messages %}
+
   <div data-controller="dropdown" class="bg-white">
     <header class="bg-white">
       <nav class="flex justify-between items-center p-6 mx-auto max-w-7xl lg:px-8" aria-label="Global">

@@ -4,3 +4,6 @@ serve:
 
 shell:
 	docker compose run --rm backend-thin python ./manage.py shell_plus --ipython
+
+test:
+	docker compose run --rm backend pytest

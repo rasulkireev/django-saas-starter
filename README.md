@@ -12,9 +12,14 @@ To start you'll need to start the Mkdocs server, where a step-by-step process wi
 - Comes with custom user model ready to go
 - Will work with any DB of your choosing, as long as it is supported by django
 - Comes with docker-compose and makefile for rapid local development
-- Media storage with any S3 compatible service. I use minio both locally and in prod
-- structlog for logging setup both for local (console) and prod (json)
-
+- Media storage with any S3 compatible service. I use Minio both locally and in prod
+- Structlog for logging setup both for local (console) and prod (json)
+- Deployment to Caprover via Github Actions
+- Messages handling
+- Sitemaps enabled
+- Sentry integration
+- OpenTelemetry for tracing (Signoz in this case)
+- Boilerplate for the Github Auth
 
 ## Roadmap
 - Add more default styling
