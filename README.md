@@ -20,6 +20,8 @@ To start you'll need to start the Mkdocs server, where a step-by-step process wi
 - Sentry integration
 - OpenTelemetry for tracing (Signoz in this case)
 - Boilerplate for the Github Auth
+- Testing with pytest
+- Pre-commit
 
 ## Roadmap
 - Add more default styling
