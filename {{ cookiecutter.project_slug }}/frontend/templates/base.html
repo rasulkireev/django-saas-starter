@@ -11,7 +11,7 @@
 
   <!-- Other meta stuff -->
   <link rel="apple-touch-icon" href="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
-  <link rel="apple-touch-icon" href="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
+  <link rel="apple-touch-icon" href="{% raw %}{% {static }'vendors/images/logo.png' %}{%- endraw %}" />
   <link rel="icon" type="image/png" sizes="16x16 32x32 500x500" href="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
 
   {{ "{% block meta %}" }}
@@ -45,27 +45,82 @@
     {% include "components/messages.html" with messages=messages %}
   {% endblock default_messages %}
 
-  <div data-controller="dropdown" class="bg-white">
+  <div class="bg-white">
     <header class="bg-white">
       <nav class="flex justify-between items-center p-6 mx-auto max-w-7xl lg:px-8" aria-label="Global">
-        <div class="flex gap-x-12 items-center">
-          <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="flex flex-row justify-between items-center p-1.5 -m-1.5 space-x-2">
-            <img class="w-auto h-8" src="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="{{ cookiecutter.project_name }} Logo" />
+
+        <!-- Small Screen -->
+        <div class="flex justify-between items-center w-full lg:hidden">
+          <!-- App logo (center) -->
+          <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="flex flex-row justify-center items-center p-1.5 -m-1.5 space-x-2">
+            <img class="w-auto h-8" src="{%- endraw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="{{ cookiecutter.project_name }} Logo" />
             <span class="text-base font-semibold text-gray-700">{{ cookiecutter.project_name }}</span>
           </a>
+
+          <!-- Profile dropdown (right) -->
+          <div class="relative">
+            {% if user.is_authenticated %}
+            <div data-controller="dropdown">
+              <button type="button" data-action="dropdown#toggle click@window->dropdown#hide"
+                class="flex text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                <span class="sr-only">Open user menu</span>
+                <img class="object-cover p-1 w-10 h-10 bg-gray-100 rounded-full border-2 border-gray-500"
+                  src="{% raw %}{% static 'vendors/images/unknown-man.png' %}{%- endraw %}" alt="No Personal Photo" />
+              </button>
+              <div data-dropdown-target="menu" class="hidden lg:hidden" role="dialog" aria-modal="true">
+                <!-- Background backdrop, show/hide based on slide-over state. -->
+                <div class="fixed inset-0 z-10"></div>
+                <div class="overflow-y-auto fixed inset-y-0 right-0 z-10 px-6 py-6 w-full bg-white sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+                  <div class="flex justify-end items-center">
+                    <button data-action="dropdown#toggle click@window->dropdown#hide" type="button"
+                      class="p-2.5 -m-2.5 text-gray-700 rounded-md">
+                      <span class="sr-only">Close menu</span>
+                      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                        aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="flow-root mt-6">
+                    <div class="-my-6 divide-y divide-gray-500/10">
+                      <div class="py-6">
+                        <form method="post" class="flex justify-end" action="{% raw %}{% url 'account_logout' %}{%- endraw %}">
+                          {% csrf_token %}
+                          <button
+                            class="px-3 py-2.5 -mx-3 text-base font-semibold leading-7 text-center text-gray-900 rounded-lg hover:bg-gray-50"
+                            role="menuitem"
+                            data-action="dropdown#toggle"
+                            tabindex="-1"
+                            id="user-menu-item-2"
+                            type="submit"
+                          >
+                              Sign Out
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="text-base font-semibold leading-6 text-gray-900">
+              Log in <span aria-hidden="true">&rarr;</span>
+            </a>
+            {% endif %}
+          </div>
         </div>
-        <div class="flex lg:hidden">
-          <button data-action="dropdown#toggle click@window->dropdown#hide" type="button"
-            class="inline-flex justify-center items-center p-2.5 -m-2.5 text-gray-700 rounded-md">
-            <span class="sr-only">Open main menu</span>
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-              aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-          </button>
-        </div>
-        <div class="hidden items-center lg:flex lg:gap-x-12">
-          {{ "{% if user.is_authenticated %}" }}
+
+        <!-- Large Screen -->
+        <div class="hidden lg:flex lg:justify-between lg:items-center lg:w-full"">
+          <div class="flex gap-x-12 items-center">
+            <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="flex flex-row justify-between items-center p-1.5 -m-1.5 space-x-2">
+              <img class="w-auto h-8" src="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="{{ cookiecutter.project_name }} Logo" />
+              <span class="text-base font-semibold text-gray-700">{{ cookiecutter.project_name }}</span>
+            </a>
+          </div>
+          {% if user.is_authenticated %}
           <!-- Profile dropdown -->
           <div data-controller="dropdown" class="relative ml-3">
             <div>
@@ -74,53 +129,35 @@
                 id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                 <span class="sr-only">Open user menu</span>
                 <img class="object-cover p-1 w-10 h-10 bg-gray-100 rounded-full border-2 border-gray-500"
-                  src="{% raw %}{% static 'vendors/images/unknown-man.png' %}{%- endraw %}" alt="No Personal Photo" />
+                  src="{% static 'vendors/images/unknown-man.png' %}" alt="No Personal Photo" />
               </button>
             </div>
             <div data-dropdown-target="menu"
-              class="absolute right-0 z-10 py-1 mt-2 w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow-lg origin-top-right focus:outline-none"
+              class="hidden absolute right-0 z-10 py-1 mt-2 w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow-lg origin-top-right focus:outline-none"
               role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-              <a href="{% raw %}{% url 'account_logout' %}{%- endraw %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-300"
-                role="menuitem" data-action="dropdown#toggle" tabindex="-1" id="user-menu-item-2">Sign out</a>
+              <form method="post" action="{% raw %}{% url 'account_logout' %}{%- endraw %}">
+                {% csrf_token %}
+                <button
+                  class="flex justify-start px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-300"
+                  role="menuitem"
+                  data-action="dropdown#toggle"
+                  tabindex="-1"
+                  id="user-menu-item-2"
+                  type="submit"
+                >
+                    Sign Out
+                </button>
+              </form>
             </div>
           </div>
-          {{ "{% else %}" }}
+          {% else %}
           <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="text-base font-semibold leading-6 text-gray-900">
               Log in <span aria-hidden="true">&rarr;</span>
           </a>
-          {{ "{% endif %}" }}
+          {% endif %}
         </div>
-      </nav>
 
-      <!-- Mobile menu, show/hide based on menu open state. -->
-      <div data-dropdown-target="menu" class="lg:hidden" role="dialog" aria-modal="true">
-        <!-- Background backdrop, show/hide based on slide-over state. -->
-        <div class="fixed inset-0 z-10"></div>
-        <div
-          class="overflow-y-auto fixed inset-y-0 right-0 z-10 px-6 py-6 w-full bg-white sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-          <div class="flex justify-between items-center">
-            <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="p-1.5 -m-1.5">
-              <span class="sr-only">{{ cookiecutter.project_name }}</span>
-              <img class="w-auto h-8" src="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="{{ cookiecutter.project_name }} Logo" />
-            </a>
-            <button data-action="dropdown#toggle click@window->dropdown#hide" type="button"
-              class="p-2.5 -m-2.5 text-gray-700 rounded-md">
-              <span class="sr-only">Close menu</span>
-              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-          <div class="flow-root mt-6">
-            <div class="-my-6 divide-y divide-gray-500/10">
-              <div class="py-6">
-                <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="block px-3 py-2.5 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50">Log in</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      </nav>
     </header>
 
     <div class="px-2 sm:px-0">
