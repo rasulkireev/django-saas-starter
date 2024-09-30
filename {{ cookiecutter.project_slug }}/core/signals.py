@@ -13,6 +13,11 @@ logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
+    user = instance
+    if user.id == 1:
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
     if created:
         Profile.objects.create(user=instance)
 
