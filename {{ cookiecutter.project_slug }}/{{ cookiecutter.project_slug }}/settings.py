@@ -215,10 +215,10 @@ SOCIALACCOUNT_PROVIDERS = {
 
 ANYMAIL = {
     "MAILGUN_API_KEY": env("MAILGUN_API_KEY"),
-    "MAILGUN_SENDER_DOMAIN": "mg.{{ cookicutter.project_slug }}.app",
+    "MAILGUN_SENDER_DOMAIN": "mg.{{ cookiecutter.project_slug }}.app",
 }
-DEFAULT_FROM_EMAIL = "Rasul from {{ cookiecutter.project_name }} <hello@{{ cookicutter.project_slug }}.app>"
-SERVER_EMAIL = "{{ cookiecutter.project_name }} Errors <error@{{ cookicutter.project_slug }}.app>"
+DEFAULT_FROM_EMAIL = "Rasul from {{ cookiecutter.project_name }} <hello@{{ cookiecutter.project_slug }}.app>"
+SERVER_EMAIL = "{{ cookiecutter.project_name }} Errors <error@{{ cookiecutter.project_slug }}.app>"
 
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -312,4 +312,8 @@ if ENVIRONMENT == "prod" and SENTRY_DSN:
 POSTHOG_API_KEY = env("POSTHOG_API_KEY")
 if ENVIRONMENT == "prod" and POSTHOG_API_KEY:
     sentry_sdk.init(dsn=env("POSTHOG_API_KEY"))
+{% endif -%}
+
+{% if cookiecutter.use_buttondown == 'y' -%}
+BUTTONDOWN_API_KEY=env("BUTTONDOWN_API_KEY")
 {% endif -%}

@@ -1,4 +1,4 @@
-{% if not email_verified %}
+{{ "{% if not email_verified %}" }}
 <div class="p-4 m-4 mt-8 bg-yellow-50 rounded-md border-2 border-yellow-400">
   <div class="flex">
     <div class="flex-shrink-0">
@@ -10,8 +10,8 @@
     <div class="ml-3">
       <h3 class="text-sm font-medium text-yellow-800">Attention</h3>
       <div class="mt-2 text-sm text-yellow-700">
-        <form method="post" action="{{ resend_confirmation_url }}">
-            {% csrf_token %}
+        <form method="post" action="{% raw %}{{ resend_confirmation_url }}{%- endraw %}">
+            {{ "{% csrf_token %}" }}
             <p>Your email is not yet confirmed. This will limit the available functionality.</p>
             <p>You should have gotten a link to confirm in your email. If you haven't received it,
             <button type="submit" class="inline font-semibold text-yellow-800 underline">click here to resend</button>
@@ -21,4 +21,4 @@
     </div>
   </div>
 </div>
-{% endif %}
+{{ "{% endif %}" }}

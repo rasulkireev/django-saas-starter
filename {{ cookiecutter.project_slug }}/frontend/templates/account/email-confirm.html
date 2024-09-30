@@ -17,7 +17,7 @@
             {{ "{% user_display confirmation.email_address.user as user_display %}" }}
             {{ "{% if can_confirm %}" }}
                 <p class="mb-6 text-center">
-                    Please confirm that <a href="mailto:{% raw %}{{ confirmation.email_address.email }}{%- endraw %}" class="text-blue-600 hover:underline">{{ confirmation.email_address.email }}</a> is an email address for user {{ user_display }}.
+                    Please confirm that <a href="mailto:{% raw %}{{ confirmation.email_address.email }}{%- endraw %}" class="text-blue-600 hover:underline">{{ "{{ confirmation.email_address.email }}" }}</a> is an email address for user {{ "{{ user_display }}" }}.
                 </p>
                 {{ "{% url 'account_confirm_email' confirmation.key as action_url %}" }}
                 <form method="post" action="{% raw %}{{ action_url }}{%- endraw %}" class="flex justify-center">

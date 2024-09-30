@@ -6,7 +6,8 @@
   "author_name": "Jane Doe",
   "author_email": "janedoe@example.com",
   "project_main_color": "green",
-  "use_posthog": "n",
-  "use_social_auth": "n",
-  "use_github_auth": "n"
+  "use_posthog": "y",
+  "use_social_auth": "y",
+  "use_github_auth": "y",
+  "use_buttondown": "y"
 }

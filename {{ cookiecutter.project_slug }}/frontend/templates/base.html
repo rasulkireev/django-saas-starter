@@ -41,9 +41,9 @@
 </head>
 
 <body>
-  {% block default_messages %}
-    {% include "components/messages.html" with messages=messages %}
-  {% endblock default_messages %}
+  {{ "{% block default_messages %}" }}
+    {{ "{% include 'components/messages.html' with messages=messages %}" }}
+  {{ "{% endblock default_messages %}" }}
 
   <div class="bg-white">
     <header class="bg-white">
@@ -109,11 +109,11 @@
                 </div>
               </div>
             </div>
-            {% else %}
+            {{ "{% else %}" }}
             <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="text-base font-semibold leading-6 text-gray-900">
               Log in <span aria-hidden="true">&rarr;</span>
             </a>
-            {% endif %}
+            {{ "{% endif %}" }}
           </div>
         </div>
 
