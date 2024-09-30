@@ -1,3 +1,6 @@
+import random
+import string
+
 from django.forms.utils import ErrorList
 
 
@@ -9,7 +12,7 @@ class DivErrorList(ErrorList):
         if not self:
             return ""
         return f"""
-            <div class="p-4 my-4 border border-red-600 border-solid rounded-md bg-red-50">
+            <div class="p-4 my-4 bg-red-50 rounded-md border border-red-600 border-solid">
               <div class="flex">
                 <div class="flex-shrink-0">
                   <!-- Heroicon name: solid/x-circle -->
@@ -23,3 +26,8 @@ class DivErrorList(ErrorList):
               </div>
             </div>
          """
+
+
+def generate_random_key():
+    characters = string.ascii_letters + string.digits
+    return ''.join(random.choice(characters) for _ in range(10))
