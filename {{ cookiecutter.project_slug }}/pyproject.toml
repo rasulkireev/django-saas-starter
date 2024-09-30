@@ -37,6 +37,10 @@ gunicorn = "^23.0.0"
 pytest = "^8.3.3"
 pytest-django = "^4.9.0"
 redis = "^5.0.8"
+django-anymail = {extras = ["mailgun"], version = "^12.0"}
+{% if cookiecutter.use_posthog == 'y' -%}
+posthog = "^3.6.6"
+{% endif -%}
 
 [tool.poetry.dev-dependencies]
 

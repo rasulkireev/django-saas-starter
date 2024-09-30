@@ -41,9 +41,9 @@
 </head>
 
 <body>
-  {% block default_messages %}
-    {% include "components/messages.html" with messages=messages %}
-  {% endblock default_messages %}
+  {{ "{% block default_messages %}" }}
+    {{ "{% include 'components/messages.html' with messages=messages %}" }}
+  {{ "{% endblock default_messages %}" }}
 
   <div class="bg-white">
     <header class="bg-white">
@@ -53,13 +53,13 @@
         <div class="flex justify-between items-center w-full lg:hidden">
           <!-- App logo (center) -->
           <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="flex flex-row justify-center items-center p-1.5 -m-1.5 space-x-2">
-            <img class="w-auto h-8" src="{%- endraw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="{{ cookiecutter.project_name }} Logo" />
-            <span class="text-base font-semibold text-gray-700">{{ cookiecutter.project_name }}</span>
+            <img class="w-auto h-8" src="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="OSIG Logo" />
+            <span class="text-base font-semibold text-gray-700">OSIG</span>
           </a>
 
           <!-- Profile dropdown (right) -->
           <div class="relative">
-            {% if user.is_authenticated %}
+            {{ "{% if user.is_authenticated %}" }}
             <div data-controller="dropdown">
               <button type="button" data-action="dropdown#toggle click@window->dropdown#hide"
                 class="flex text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
@@ -83,10 +83,15 @@
                     </button>
                   </div>
                   <div class="flow-root mt-6">
+                    <div class="flex justify-end">
+                      <a href="{% raw %}{% url 'settings' %}{%- endraw %}" class="px-3 py-2.5 -mx-3 text-base font-semibold leading-7 text-center text-gray-900 rounded-lg hover:bg-gray-50">
+                        Settings
+                      </a>
+                    </div>
                     <div class="-my-6 divide-y divide-gray-500/10">
                       <div class="py-6">
                         <form method="post" class="flex justify-end" action="{% raw %}{% url 'account_logout' %}{%- endraw %}">
-                          {% csrf_token %}
+                          {{ "{% csrf_token %}" }}
                           <button
                             class="px-3 py-2.5 -mx-3 text-base font-semibold leading-7 text-center text-gray-900 rounded-lg hover:bg-gray-50"
                             role="menuitem"
@@ -104,11 +109,11 @@
                 </div>
               </div>
             </div>
-            {% else %}
+            {{ "{% else %}" }}
             <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="text-base font-semibold leading-6 text-gray-900">
               Log in <span aria-hidden="true">&rarr;</span>
             </a>
-            {% endif %}
+            {{ "{% endif %}" }}
           </div>
         </div>
 
@@ -116,11 +121,11 @@
         <div class="hidden lg:flex lg:justify-between lg:items-center lg:w-full"">
           <div class="flex gap-x-12 items-center">
             <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="flex flex-row justify-between items-center p-1.5 -m-1.5 space-x-2">
-              <img class="w-auto h-8" src="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="{{ cookiecutter.project_name }} Logo" />
-              <span class="text-base font-semibold text-gray-700">{{ cookiecutter.project_name }}</span>
+              <img class="w-auto h-8" src="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="OSIG Logo" />
+              <span class="text-base font-semibold text-gray-700">OSIG</span>
             </a>
           </div>
-          {% if user.is_authenticated %}
+          {{ "{% if user.is_authenticated %}" }}
           <!-- Profile dropdown -->
           <div data-controller="dropdown" class="relative ml-3">
             <div>
@@ -129,14 +134,17 @@
                 id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                 <span class="sr-only">Open user menu</span>
                 <img class="object-cover p-1 w-10 h-10 bg-gray-100 rounded-full border-2 border-gray-500"
-                  src="{% static 'vendors/images/unknown-man.png' %}" alt="No Personal Photo" />
+                  src="{% raw %}{% static 'vendors/images/unknown-man.png' %}{%- endraw %}" alt="No Personal Photo" />
               </button>
             </div>
             <div data-dropdown-target="menu"
               class="hidden absolute right-0 z-10 py-1 mt-2 w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow-lg origin-top-right focus:outline-none"
               role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+              <a href="{% raw %}{% url 'settings' %}{%- endraw %}" class="flex justify-start px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-300">
+                Settings
+              </a>
               <form method="post" action="{% raw %}{% url 'account_logout' %}{%- endraw %}">
-                {% csrf_token %}
+                {{ "{% csrf_token %}" }}
                 <button
                   class="flex justify-start px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-300"
                   role="menuitem"
@@ -150,11 +158,11 @@
               </form>
             </div>
           </div>
-          {% else %}
+          {{ "{% else %}" }}
           <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="text-base font-semibold leading-6 text-gray-900">
               Log in <span aria-hidden="true">&rarr;</span>
           </a>
-          {% endif %}
+          {{ "{% endif %}" }}
         </div>
 
       </nav>
@@ -169,7 +177,7 @@
       <div class="px-6 py-12 mx-auto max-w-7xl md:flex md:items-center md:justify-between lg:px-8">
         <div class="mt-8 md:mt-0">
           <p class="text-xs leading-5 text-center text-gray-500">
-            &copy; 2024 LVTD, LLC. All rights reserved.
+            &copy; 2024 <a href="https://lvtd.dev">LVTD, LLC</a>. All rights reserved.
           </p>
         </div>
       </div>
