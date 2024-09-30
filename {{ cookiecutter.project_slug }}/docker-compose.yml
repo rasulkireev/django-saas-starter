@@ -59,20 +59,14 @@ services:
     ports:
       - "9091:9091"
 
-  backend-thin:
-    build:
-      context: .
-      dockerfile: Dockerfile-python
-    working_dir: /app
-    volumes:
-      - .:/app
-    depends_on:
-      - db
-      - redis
-    env_file:
-      - .env
-    profiles:
-      - manual
+  mailhog:
+    image: mailhog/mailhog
+    expose:
+      - 1025
+      - 8025
+    ports:
+      - "1025:1025"
+      - "8025:8025"
 
 volumes:
   postgres_data:

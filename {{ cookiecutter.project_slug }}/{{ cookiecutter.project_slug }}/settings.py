@@ -51,10 +51,14 @@ INSTALLED_APPS = [
     "django.contrib.sitemaps",
     "webpack_boilerplate",
     "widget_tweaks",
+    "anymail",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    {% if cookiecutter.use_github_auth == 'y' -%}
     "allauth.socialaccount.providers.github",
+    {% endif -%}
+    "anymail",
     "django_q",
     "django_extensions",
     "core.apps.CoreConfig",
@@ -196,15 +200,35 @@ ACCOUNT_FORMS = {
 }
 
 SOCIALACCOUNT_PROVIDERS = {
+    {% if cookiecutter.use_github_auth == 'y' -%}
     "github": {
         "VERIFIED_EMAIL": True,
+        "EMAIL_AUTHENTICATION": True,
+        "AUTO_SIGNUP": True,
         "APP": {
             "client_id": env("GITHUB_CLIENT_ID"),
             "secret": env("GITHUB_CLIENT_SECRET"),
         },
     },
+    {% endif -%}
 }
 
+ANYMAIL = {
+    "MAILGUN_API_KEY": env("MAILGUN_API_KEY"),
+    "MAILGUN_SENDER_DOMAIN": "mg.{{ cookicutter.project_slug }}.app",
+}
+DEFAULT_FROM_EMAIL = "Rasul from {{ cookiecutter.project_name }} <hello@{{ cookicutter.project_slug }}.app>"
+SERVER_EMAIL = "{{ cookiecutter.project_name }} Errors <error@{{ cookicutter.project_slug }}.app>"
+
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "mailhog"  # Use the service name from docker-compose
+    EMAIL_PORT = 1025
+    EMAIL_USE_TLS = False
+    EMAIL_HOST_USER = ""
+    EMAIL_HOST_PASSWORD = ""
+else:
+    EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
 Q_CLUSTER = {
     "name": "{{ cookiecutter.project_slug }}-q",
@@ -283,3 +307,9 @@ if ENVIRONMENT == "prod":
 SENTRY_DSN = env("SENTRY_DSN")
 if ENVIRONMENT == "prod" and SENTRY_DSN:
     sentry_sdk.init(dsn=env("SENTRY_DSN"))
+
+{% if cookiecutter.use_posthog == 'y' -%}
+POSTHOG_API_KEY = env("POSTHOG_API_KEY")
+if ENVIRONMENT == "prod" and POSTHOG_API_KEY:
+    sentry_sdk.init(dsn=env("POSTHOG_API_KEY"))
+{% endif -%}

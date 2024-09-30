@@ -5,5 +5,8 @@
   "project_description": "",
   "author_name": "Jane Doe",
   "author_email": "janedoe@example.com",
-  "project_main_color": "green"
+  "project_main_color": "green",
+  "use_posthog": "n",
+  "use_social_auth": "n",
+  "use_github_auth": "n"
 }

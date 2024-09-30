@@ -22,6 +22,7 @@ from {{ cookiecutter.project_slug }}.sitemaps import sitemaps
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("allauth.urls")),
+    path("anymail/", include("anymail.urls")),
     path("", include("core.urls")),
     path(
         "sitemap.xml",
