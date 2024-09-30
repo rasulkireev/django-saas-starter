@@ -11,7 +11,7 @@
                 </h2>
                 <p class="mt-2 text-sm text-center text-gray-600">
                     Or
-                    <a href="{% raw %}{% url 'account_signup' %}{%- endraw %}" class="font-medium text-blue-600 hover:text-blue-500">
+                    <a href="{% raw %}{% url 'account_signup' %}{%- endraw %}" class="font-medium text-{{cookiecutter.project_main_color}}-600 hover:text-{{cookiecutter.project_main_color}}-500">
                         sign up if you don't have one yet.
                     </a>
                 </p>
@@ -39,10 +39,10 @@
 
                 <div>
                     <button type="submit"
-                            class="flex relative justify-center px-4 py-2 w-full text-sm font-medium text-white bg-blue-600 rounded-md border border-transparent border-solid group hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            class="flex relative justify-center px-4 py-2 w-full text-sm font-medium text-white bg-{{cookiecutter.project_main_color}}-600 rounded-md border border-transparent border-solid group hover:bg-{{cookiecutter.project_main_color}}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-{{cookiecutter.project_main_color}}-500">
                         <span class="flex absolute inset-y-0 left-0 items-center pl-3">
                             <!-- Heroicon name: solid/lock-closed -->
-                            <svg class="w-5 h-5 text-blue-500 group-hover:text-blue-400"
+                            <svg class="w-5 h-5 text-{{cookiecutter.project_main_color}}-500 group-hover:text-{{cookiecutter.project_main_color}}-400"
                                  xmlns="http://www.w3.org/2000/svg"
                                  viewBox="0 0 20 20"
                                  fill="currentColor"

@@ -5,7 +5,9 @@
 
 All the information on how to run, develop and update your new application can be found in the documentation.
 
-To start you'll need to runb these commands:
+1. Update the name of the `.env.example` to `.env`
+
+To start you'll need to run these commands:
 1. `poetry install`
 2. `poetry run python makemigrations`
 3. `make serve` : Make sure you have a Docker Engine running. I recommend OrbStack.
@@ -31,3 +33,6 @@ To start you'll need to runb these commands:
    - `REGISTRY_TOKEN`
 
 5. Then just push main branch.
+
+## Notes
+- Don't forget to update the site domain and name on the Admin Panel.

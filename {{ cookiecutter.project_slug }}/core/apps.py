@@ -13,6 +13,7 @@ class CoreConfig(AppConfig):
         import core.signals  # noqa
 
         {% if cookiecutter.use_posthog == 'y' -%}
-        posthog.api_key = settings.POSTHOG_API_KEY
-        posthog.host = "https://us.i.posthog.com"
+        if settings.ENVIRONMENT == "prod":
+            posthog.api_key = settings.POSTHOG_API_KEY
+            posthog.host = "https://us.i.posthog.com"
         {% endif -%}

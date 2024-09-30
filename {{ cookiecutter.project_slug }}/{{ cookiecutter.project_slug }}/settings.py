@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     {% if cookiecutter.use_github_auth == 'y' -%}
     "allauth.socialaccount.providers.github",
     {% endif -%}
-    "anymail",
     "django_q",
     "django_extensions",
     "core.apps.CoreConfig",
