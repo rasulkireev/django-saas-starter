@@ -1,9 +1,9 @@
 import requests
 from django.conf import settings
 
-from osig.utils import get_osig_logger
+from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
-logger = get_osig_logger(__name__)
+logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
 {% if cookiecutter.use_buttondown == 'y' -%}
 def add_email_to_buttondown(email, tag):
@@ -11,7 +11,7 @@ def add_email_to_buttondown(email, tag):
         "email_address": str(email),
         "metadata": {"source": tag},
         "tags": [tag],
-        "referrer_url": "https://osig.app",
+        "referrer_url": "https://{{ cookiecutter.project_slug }}.app",
         "subscriber_type": "regular",
     }
 

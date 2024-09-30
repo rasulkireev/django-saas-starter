@@ -7,6 +7,10 @@ from django_q.tasks import async_task
 
 from core.tasks import add_email_to_buttondown
 from core.models import Profile
+from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
+
+logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -18,24 +22,29 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
+
 {% if cookiecutter.use_buttondown == 'y' -%}
 @receiver(email_confirmed)
-{% if cookiecutter.use_social_auth == 'y' -%}
-@receiver(social_account_added)
+def add_email_to_buttondown_on_confirm(sender, **kwargs):
+    logger.info(
+        "Adding new user to buttondown newsletter, on email confirmation",
+        kwargs=kwargs,
+        sender=sender,
+    )
+    async_task(add_email_to_buttondown, kwargs["email_address"], tag="user")
 {% endif -%}
-def email_confirmation_callback(sender, **kwargs):
-    if 'email_address' in kwargs:
-        # This is for email_confirmed signal
-        email = kwargs['email_address']
-    {% if cookiecutter.use_social_auth == 'y' -%}
-    elif 'sociallogin' in kwargs:
-        # This is for social_account_added signal
-        email = kwargs['sociallogin'].user.email
-    {% endif -%}
-    else:
-        # If neither email_address nor sociallogin is present, we can't proceed
-        return
 
-    if email:
-        async_task(add_email_to_buttondown, email, tag="user")
+
+{% if cookiecutter.use_buttondown == 'y' and cookiecutter.use_social_auth == 'y' -%}
+@receiver(user_signed_up)
+def email_confirmation_callback(sender, request, user, **kwargs):
+    if 'sociallogin' in kwargs:
+        logger.info(
+            "Adding new user to buttondown newsletter on social signup",
+            kwargs=kwargs,
+            sender=sender,
+        )
+        email = kwargs['sociallogin'].user.email
+        if email:
+            async_task(add_email_to_buttondown, email, tag="user")
 {% endif -%}

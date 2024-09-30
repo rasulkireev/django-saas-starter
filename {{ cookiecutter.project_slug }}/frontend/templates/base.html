@@ -53,8 +53,8 @@
         <div class="flex justify-between items-center w-full lg:hidden">
           <!-- App logo (center) -->
           <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="flex flex-row justify-center items-center p-1.5 -m-1.5 space-x-2">
-            <img class="w-auto h-8" src="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="OSIG Logo" />
-            <span class="text-base font-semibold text-gray-700">OSIG</span>
+            <img class="w-auto h-8" src="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="{{ cookiecutter.project_name }} Logo" />
+            <span class="text-base font-semibold text-gray-700">{{ cookiecutter.project_name }}</span>
           </a>
 
           <!-- Profile dropdown (right) -->
@@ -121,8 +121,8 @@
         <div class="hidden lg:flex lg:justify-between lg:items-center lg:w-full"">
           <div class="flex gap-x-12 items-center">
             <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="flex flex-row justify-between items-center p-1.5 -m-1.5 space-x-2">
-              <img class="w-auto h-8" src="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="OSIG Logo" />
-              <span class="text-base font-semibold text-gray-700">OSIG</span>
+              <img class="w-auto h-8" src="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="{{ cookiecutter.project_name }} Logo" />
+              <span class="text-base font-semibold text-gray-700">{{ cookiecutter.project_name }}</span>
             </a>
           </div>
           {{ "{% if user.is_authenticated %}" }}
