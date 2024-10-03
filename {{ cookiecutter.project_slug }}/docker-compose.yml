@@ -69,6 +69,20 @@ services:
       - "1025:1025"
       - "8025:8025"
 
+  {% if cookiecutter.use_stripe == 'y' -%}
+  stripe:
+    image: stripe/stripe-cli:v1.21.7
+    command: [
+      "listen",
+      "-H", "x-djstripe-webhook-secret: ${DJSTRIPE_WEBHOOK_SECRET}",
+      "--forward-to", "http://backend:8000/stripe/webhook/"
+    ]
+    environment:
+      - STRIPE_API_KEY=${STRIPE_TEST_SECRET_KEY}
+      - STRIPE_DEVICE_NAME=djstripe_docker
+      - DJSTRIPE_WEBHOOK_SECRET=${DJSTRIPE_WEBHOOK_SECRET}
+  {% endif -%}
+
 volumes:
   postgres_data:
   redis_data:

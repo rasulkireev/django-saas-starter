@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from django_q.tasks import async_task
 
 from core.tasks import add_email_to_buttondown
-from core.models import Profile
+from core.models import Profile{% if cookiecutter.use_stripe == 'y' -%}, ProfileStates{% endif -%}
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
@@ -20,6 +20,11 @@ def create_user_profile(sender, instance, created, **kwargs):
         user.save()
     if created:
         Profile.objects.create(user=instance)
+        {% if cookiecutter.use_stripe == 'y' -%}
+        profile.track_state_change(
+            to_state=ProfileStates.SIGNED_UP,
+        )
+        {% endif -%}
 
 
 @receiver(post_save, sender=User)

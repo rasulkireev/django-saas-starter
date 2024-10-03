@@ -52,6 +52,9 @@ INSTALLED_APPS = [
     "webpack_boilerplate",
     "widget_tweaks",
     "anymail",
+    {% if cookiecutter.use_stripe == 'y' -%}
+    "djstripe",
+    {% endif -%}
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -317,4 +320,18 @@ if ENVIRONMENT == "prod" and POSTHOG_API_KEY:
 
 {% if cookiecutter.use_buttondown == 'y' -%}
 BUTTONDOWN_API_KEY=env("BUTTONDOWN_API_KEY")
+{% endif -%}
+
+{% if cookiecutter.use_stripe == 'y' -%}
+STRIPE_LIVE_SECRET_KEY = env("STRIPE_LIVE_SECRET_KEY")
+STRIPE_TEST_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY")
+
+STRIPE_LIVE_MODE = False
+STRIPE_SECRET_KEY = STRIPE_TEST_SECRET_KEY
+if ENVIRONMENT == "prod":
+    STRIPE_LIVE_MODE = True
+    STRIPE_SECRET_KEY = STRIPE_LIVE_SECRET_KEY
+
+DJSTRIPE_WEBHOOK_SECRET = env("DJSTRIPE_WEBHOOK_SECRET")
+DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
 {% endif -%}
