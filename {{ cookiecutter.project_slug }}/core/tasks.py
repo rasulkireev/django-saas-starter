@@ -22,4 +22,4 @@ def add_email_to_buttondown(email, tag):
     )
 
     return r.json()
-{% endif -%}
+{% endif %}

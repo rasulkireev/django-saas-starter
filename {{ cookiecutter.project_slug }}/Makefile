@@ -7,3 +7,11 @@ shell:
 
 test:
 	docker compose run --rm backend pytest
+
+{% if cookiecutter.use_stripe == 'y' -%}
+test-webhook:
+	docker compose run --rm stripe trigger customer.subscription.created
+
+stripe-sync:
+	docker compose run --rm backend python ./manage.py djstripe_sync_models Product Price
+{% endif %}
