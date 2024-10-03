@@ -20,6 +20,7 @@ To start you'll need to start the Mkdocs server, where a step-by-step process wi
 - Pre-commit for code quality checks
 
 Optional Integrations:
+- Social Authentication (Github)
 - Stripe for payments
 - Buttondown for newsletters
 - Github Auth for social sign-ins
