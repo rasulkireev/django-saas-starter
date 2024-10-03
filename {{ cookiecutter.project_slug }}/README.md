@@ -24,16 +24,15 @@ To start you'll need to run these commands:
 
 {% if cookiecutter.use_stripe == 'y' -%}
 ## Stripe
-- For local. When you run make serve for the first time, a stripe-cli container will be created. Looks at the logs for this container and at the top you will see a webhook secret generated. Copy this and add it to your `.env` file.
+- For local. When you run make serve for the first time, a stripe-cli container will be created.
+Looks at the logs for this container and at the top you will see a webhook secret generated.
+Copy this and add it to your `.env` file.
 
-The following notes are applicable only after you got the app running locally via `make serve`
-
-- Make sure to add secrets in the .env file and in the admin panel: /admin/djstripe/apikey/
-
+The following notes are applicable only after you got the app running locally via `make serve`:
+- Make sure to add `STRIPE_LIVE_SECRET_KEY` and `STRIPE_TEST_SECRET_KEY` in the .env file and in the admin panel: /admin/djstripe/apikey/
+(djstripe will figure out if they are live or test keys automatically)
 - When creating a webhook in the admin, specify the latest version from here https://stripe.com/docs/api/versioning
-
 - Create your products in stripe (monthly, annual and one-time, for example), then sync them via `make stripe-sync` command.
-
 - Current (`user-settings.html` and `pricing.html`) template assumes you have 3 products: monthly, annual and one-time.
   I haven't found a reliable way to programmatcialy set this template. When you have created your products in Stripe and synced them, update the template with the correct plan id.
 {% endif %}
