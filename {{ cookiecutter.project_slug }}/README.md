@@ -5,16 +5,28 @@
 
 All the information on how to run, develop and update your new application can be found in the documentation.
 
-1. Update the name of the `.env.example` to `.env`
+1. Update the name of the `.env.example` to `.env` and update relevant variables.
 
 To start you'll need to run these commands:
 1. `poetry install`
-2. `poetry run python makemigrations`
-3. `make serve` : Make sure you have a Docker Engine running. I recommend OrbStack.
+2. `poetry export -f requirements.txt --output requirements.txt --without-hashes`
+3. `poetry run python makemigrations`
+4. `make serve` : Make sure you have a Docker Engine running. I recommend OrbStack.
+
+
+## Next steps
+- When everything is running, go to http://localhost:8000/ to check if the backend is running.
+- You can sign up via regular signup. The first user will be made admin and superuser.
+- Go to http://localhost:8000/admin/ and update Site info (http://localhost:8000/admin/sites/site/1/change/) to
+  - localhost:8000 (if you are developing locally, and real domain when you are in prod)
+  - Your project name
+
 
 {% if cookiecutter.use_stripe == 'y' -%}
 ## Stripe
 - For local. When you run make serve for the first time, a stripe-cli container will be created. Looks at the logs for this container and at the top you will see a webhook secret generated. Copy this and add it to your `.env` file.
+
+The following notes are applicable only after you got the app running locally via `make serve`
 
 - Make sure to add secrets in the .env file and in the admin panel: /admin/djstripe/apikey/
 

@@ -9,6 +9,11 @@ services:
       - POSTGRES_DB={{ cookiecutter.project_slug }}
       - POSTGRES_USER={{ cookiecutter.project_slug }}
       - POSTGRES_PASSWORD={{ cookiecutter.project_slug }}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U {{ cookiecutter.project_slug }}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7-alpine
@@ -31,9 +36,12 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
-      - redis
-      - frontend
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      frontend:
+        condition: service_started
     env_file:
       - .env
 
@@ -46,8 +54,10 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     env_file:
       - .env
 
@@ -71,7 +81,7 @@ services:
 
   {% if cookiecutter.use_stripe == 'y' -%}
   stripe:
-    image: stripe/stripe-cli:v1.21.7
+    image: stripe/stripe-cli:latest
     command: [
       "listen",
       "-H", "x-djstripe-webhook-secret: ${DJSTRIPE_WEBHOOK_SECRET}",
@@ -81,7 +91,10 @@ services:
       - STRIPE_API_KEY=${STRIPE_TEST_SECRET_KEY}
       - STRIPE_DEVICE_NAME=djstripe_docker
       - DJSTRIPE_WEBHOOK_SECRET=${DJSTRIPE_WEBHOOK_SECRET}
-  {% endif -%}
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+  {% endif %}
 
 volumes:
   postgres_data:

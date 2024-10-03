@@ -12,7 +12,7 @@ class Profile(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     key = models.CharField(max_length=10, unique=True, default=generate_random_key)
 
-    {% if cookiecutter.use_stripe == 'y' -%}
+    {% if cookiecutter.use_stripe == 'y' %}
     subscription = models.ForeignKey(
         "djstripe.Subscription",
         null=True,
@@ -65,4 +65,4 @@ class ProfileStateTransition(BaseModel):
     backup_profile_id = models.IntegerField()
     metadata = models.JSONField(null=True, blank=True)
 
-{% endif -%}
+{% endif %}

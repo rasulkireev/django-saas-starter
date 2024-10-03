@@ -25,7 +25,7 @@ urlpatterns = [
     path("anymail/", include("anymail.urls")),
     {% if cookiecutter.use_stripe == 'y' -%}
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
-    {% endif -%}
+    {% endif %}
     path("", include("core.urls")),
     path(
         "sitemap.xml",

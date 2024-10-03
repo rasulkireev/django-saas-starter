@@ -2,7 +2,7 @@ from urllib.parse import urlencode
 
 {% if cookiecutter.use_stripe == 'y' -%}
 import stripe
-{% endif -%}
+{% endif %}
 from allauth.account.models import EmailAddress
 from allauth.account.utils import send_email_confirmation
 from django.contrib.auth.decorators import login_required
@@ -15,7 +15,7 @@ from django.views.generic import TemplateView, UpdateView
 
 {% if cookiecutter.use_stripe == 'y' -%}
 from djstripe import models as djstripe_models, settings as djstripe_settings
-{% endif -%}
+{% endif %}
 
 from core.forms import ProfileUpdateForm
 from core.models import Profile
@@ -25,7 +25,7 @@ from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_sl
 
 {% if cookiecutter.use_stripe == 'y' -%}
 stripe.api_key = djstripe_settings.djstripe_settings.STRIPE_SECRET_KEY
-{% endif -%}
+{% endif %}
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
@@ -42,7 +42,7 @@ class HomeView(TemplateView):
             context["show_confetti"] = True
         elif payment_status == "failed":
             messages.error(self.request, "Something went wrong with the payment.")
-        {% endif -%}
+        {% endif %}
 
         return context
 
@@ -132,4 +132,4 @@ def create_customer_portal_session(request):
     )
 
     return redirect(session.url, code=303)
-{% endif -%}
+{% endif %}

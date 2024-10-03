@@ -14,7 +14,9 @@ import os
 from pathlib import Path
 import environ
 import structlog
+{% if cookiecutter.use_sentry == 'y' -%}
 import sentry_sdk
+{% endif %}
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -54,13 +56,13 @@ INSTALLED_APPS = [
     "anymail",
     {% if cookiecutter.use_stripe == 'y' -%}
     "djstripe",
-    {% endif -%}
+    {% endif %}
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
     {% if cookiecutter.use_github_auth == 'y' -%}
     "allauth.socialaccount.providers.github",
-    {% endif -%}
+    {% endif %}
     "django_q",
     "django_extensions",
     "core.apps.CoreConfig",
@@ -214,7 +216,7 @@ SOCIALACCOUNT_PROVIDERS = {
             "secret": env("GITHUB_CLIENT_SECRET"),
         },
     },
-    {% endif -%}
+    {% endif %}
 }
 
 ANYMAIL = {
@@ -308,19 +310,21 @@ if ENVIRONMENT == "prod":
     LOGGING["loggers"]["{{ cookiecutter.project_slug }}"]["handlers"] = ["json_console"]
     LOGGING["loggers"]["django_structlog"]["handlers"] = ["json_console"]
 
+{% if cookiecutter.use_sentry == 'y' -%}
 SENTRY_DSN = env("SENTRY_DSN")
 if ENVIRONMENT == "prod" and SENTRY_DSN:
     sentry_sdk.init(dsn=env("SENTRY_DSN"))
+{% endif %}
 
 {% if cookiecutter.use_posthog == 'y' -%}
 POSTHOG_API_KEY = env("POSTHOG_API_KEY")
 if ENVIRONMENT == "prod" and POSTHOG_API_KEY:
     sentry_sdk.init(dsn=env("POSTHOG_API_KEY"))
-{% endif -%}
+{% endif %}
 
 {% if cookiecutter.use_buttondown == 'y' -%}
 BUTTONDOWN_API_KEY=env("BUTTONDOWN_API_KEY")
-{% endif -%}
+{% endif %}
 
 {% if cookiecutter.use_stripe == 'y' -%}
 STRIPE_LIVE_SECRET_KEY = env("STRIPE_LIVE_SECRET_KEY")
@@ -334,4 +338,4 @@ if ENVIRONMENT == "prod":
 
 DJSTRIPE_WEBHOOK_SECRET = env("DJSTRIPE_WEBHOOK_SECRET")
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
-{% endif -%}
+{% endif %}

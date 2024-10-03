@@ -10,5 +10,7 @@
   "use_social_auth": "y",
   "use_github_auth": "y",
   "use_buttondown": "y",
-  "use_stripe": "y"
+  "use_stripe": "y",
+  "use_opentelemetry": "y",
+  "use_sentry": "y"
 }

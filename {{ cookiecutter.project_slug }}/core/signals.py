@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from django_q.tasks import async_task
 
 from core.tasks import add_email_to_buttondown
-from core.models import Profile{% if cookiecutter.use_stripe == 'y' -%}, ProfileStates{% endif -%}
+from core.models import Profile{% if cookiecutter.use_stripe == 'y' -%}, ProfileStates{% endif %}
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
@@ -13,23 +13,23 @@ logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
-    user = instance
-    if user.id == 1:
-        user.is_staff = True
-        user.is_superuser = True
-        user.save()
     if created:
-        Profile.objects.create(user=instance)
+        profile = Profile.objects.create(user=instance)
         {% if cookiecutter.use_stripe == 'y' -%}
         profile.track_state_change(
             to_state=ProfileStates.SIGNED_UP,
         )
-        {% endif -%}
+        {% endif %}
 
+    if instance.id == 1:
+        # Use update() to avoid triggering the signal again
+        User.objects.filter(id=1).update(is_staff=True, is_superuser=True)
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
+    if hasattr(instance, 'profile'):
+        instance.profile.save()
+
 
 
 {% if cookiecutter.use_buttondown == 'y' -%}
@@ -41,7 +41,7 @@ def add_email_to_buttondown_on_confirm(sender, **kwargs):
         sender=sender,
     )
     async_task(add_email_to_buttondown, kwargs["email_address"], tag="user")
-{% endif -%}
+{% endif %}
 
 
 {% if cookiecutter.use_buttondown == 'y' and cookiecutter.use_social_auth == 'y' -%}
@@ -56,4 +56,4 @@ def email_confirmation_callback(sender, request, user, **kwargs):
         email = kwargs['sociallogin'].user.email
         if email:
             async_task(add_email_to_buttondown, email, tag="user")
-{% endif -%}
+{% endif %}
