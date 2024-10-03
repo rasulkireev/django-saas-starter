@@ -16,6 +16,8 @@ To start you'll need to run these commands:
 ## Stripe
 - For local. When you run make serve for the first time, a stripe-cli container will be created. Looks at the logs for this container and at the top you will see a webhook secret generated. Copy this and add it to your `.env` file.
 
+- Make sure to add secrets in the .env file and in the admin panel: /admin/djstripe/apikey/
+
 - When creating a webhook in the admin, specify the latest version from here https://stripe.com/docs/api/versioning
 
 - Create your products in stripe (monthly, annual and one-time, for example), then sync them via `make stripe-sync` command.
