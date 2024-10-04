@@ -7,6 +7,7 @@ urlpatterns = [
     path("settings", views.UserSettingsView.as_view(), name="settings"),
     path("resend-confirmation/", views.resend_confirmation_email, name="resend_confirmation"),
     {% if cookiecutter.use_stripe == 'y' -%}
+    path("pricing", views.PricingView.as_view(), name="pricing"),
     path(
         "create-checkout-session/<int:pk>/<str:plan>/",
         views.create_checkout_session,

@@ -1,7 +1,10 @@
-import random
-import string
-
 from django.forms.utils import ErrorList
+
+from core.models import Profile
+
+from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
+
+logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
 
 class DivErrorList(ErrorList):
@@ -27,7 +30,15 @@ class DivErrorList(ErrorList):
             </div>
          """
 
+{% if cookiecutter.use_stripe == 'y' -%}
+def check_if_profile_has_pro_subscription(profile_id):
+    has_pro_subscription = False
+    if profile_id:
+        try:
+            profile = Profile.objects.get(id=profile_id)
+            has_pro_subscription = profile.subscription is not None
+        except Profile.DoesNotExist:
+            logger.error("Profile does not exist", profile_id=profile_id)
 
-def generate_random_key():
-    characters = string.ascii_letters + string.digits
-    return ''.join(random.choice(characters) for _ in range(10))
+    return has_pro_subscription
+{% endif %}

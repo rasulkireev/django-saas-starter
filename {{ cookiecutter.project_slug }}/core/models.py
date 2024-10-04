@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from core.base_models import BaseModel
-from core.utils import generate_random_key
+from core.model_utils import generate_random_key
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)

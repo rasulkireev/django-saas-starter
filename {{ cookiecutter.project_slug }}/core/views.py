@@ -15,6 +15,7 @@ from django.views.generic import TemplateView, UpdateView
 
 {% if cookiecutter.use_stripe == 'y' -%}
 from djstripe import models as djstripe_models, settings as djstripe_settings
+from core.utils import check_if_profile_has_pro_subscription
 {% endif %}
 
 from core.forms import ProfileUpdateForm
@@ -69,6 +70,8 @@ class UserSettingsView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return context
 
 
+
+
 @login_required
 def resend_confirmation_email(request):
     user = request.user
@@ -78,6 +81,24 @@ def resend_confirmation_email(request):
 
 
 {% if cookiecutter.use_stripe == 'y' -%}
+class PricingView(TemplateView):
+    template_name = "pages/pricing.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.user.is_authenticated:
+            try:
+                profile = self.request.user.profile
+                context["has_pro_subscription"] = check_if_profile_has_pro_subscription(profile.id)
+            except Profile.DoesNotExist:
+                context["has_pro_subscription"] = False
+        else:
+            context["has_pro_subscription"] = False
+
+        return context
+
+
 def create_checkout_session(request, pk, plan):
     user = request.user
 
