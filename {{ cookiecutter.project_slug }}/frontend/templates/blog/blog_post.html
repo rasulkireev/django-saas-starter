@@ -13,7 +13,7 @@
 <meta property="og:title" content="{% raw %}{{ blog_post.title }}{% endraw %}" />
 <meta property="og:url" content="https://{% raw %}{{ request.get_host }}{{ blog_post.get_absolute_url }}{% endraw %}" />
 <meta property="og:description" content="{% raw %}{{ blog_post.description }}{% endraw %}" />
-<meta property="og:image" content="https://osig.app/g?site=x&style=base&font=markerfelt&title={% raw %}{{ blog_post.title }}{% endraw %} | {{ cookiecutter.project_name }} Blog&subtitle={% raw %}{{ blog_post.description }}{% endraw %}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
+<meta property="og:image" content="https://osig.app/g?site=x&style=base&font=markerfelt&title={% raw %}{{ blog_post.title }}{% endraw %} | {{ cookiecutter.project_name }} Blog&subtitle={% raw %}{{ blog_post.description }}{% endraw %}&image_url={% raw %}{{ blog_post.image.url }}{%- endraw %}" />
 <meta property="og:locale" content="en_US" />
 
 <meta name="twitter:card" content="summary_large_image" />
@@ -21,7 +21,7 @@
 <meta name="twitter:site" content="@rasulkireev" />
 <meta name="twitter:title" content="{% raw %}{{ blog_post.title }}{% endraw %}" />
 <meta name="twitter:description" content="{% raw %}{{ blog_post.description }}{% endraw %}" />
-<meta name="twitter:image" content="https://osig.app/g?site=x&style=base&font=markerfelt&title={% raw %}{{ blog_post.title }}{% endraw %} | {{ cookiecutter.project_name }} Blog&subtitle={% raw %}{{ blog_post.description }}{% endraw %}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
+<meta name="twitter:image" content="https://osig.app/g?site=x&style=base&font=markerfelt&title={% raw %}{{ blog_post.title }}{% endraw %} | {{ cookiecutter.project_name }} Blog&subtitle={% raw %}{{ blog_post.description }}{% endraw %}&image_url={% raw %}{{ blog_post.image.url }}{%- endraw %}" />
 {{ '{% endblock meta %}' }}
 
 {{ '{% block content %}' }}
@@ -43,7 +43,7 @@
     "@type": "BlogPosting",
     "headline": "{% raw %}{{ blog_post.title }}{% endraw %}",
     "description": "{% raw %}{{ blog_post.description }}{% endraw %}",
-    "image": "https://osig.app/g?site=x&style=base&font=markerfelt&title={% raw %}{{ blog_post.title }}{% endraw %} | {{ cookiecutter.project_name }} Blog&subtitle={% raw %}{{ blog_post.description }}{% endraw %}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}",
+    "image": "https://osig.app/g?site=x&style=base&font=markerfelt&title={% raw %}{{ blog_post.title }}{% endraw %} | {{ cookiecutter.project_name }} Blog&subtitle={% raw %}{{ blog_post.description }}{% endraw %}&image_url={% raw %}{{ blog_post.image.url }}{%- endraw %}",
     "url": "https://{% raw %}{{ request.get_host }}{{ blog_post.get_absolute_url }}{% endraw %}",
     "datePublished": "{% raw %}{{ blog_post.created_at|date:'c' }}{% endraw %}",
     "dateModified": "{% raw %}{{ blog_post.updated_at|date:'c' }}{% endraw %}",
