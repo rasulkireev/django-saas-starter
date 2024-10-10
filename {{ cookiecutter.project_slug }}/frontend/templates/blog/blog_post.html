@@ -1,0 +1,69 @@
+{{ '{% extends "base.html" %}' }}
+{{ '{% load webpack_loader static %}' }}
+{{ '{% load markdown_extras %}' }}
+
+{{ '{% block meta %}' }}
+<title>{% raw %}{{ blog_post.title }}{% endraw %} | {{ cookiecutter.project_name }} Blog</title>
+<meta name="description" content="{% raw %}{{ blog_post.description }}{% endraw %}" />
+<meta name="keywords" content="{% raw %}{{ blog_post.tags }}{% endraw %}" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://{% raw %}{{ request.get_host }}{{ blog_post.get_absolute_url }}{% endraw %}" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{% raw %}{{ blog_post.title }}{% endraw %}" />
+<meta property="og:url" content="https://{% raw %}{{ request.get_host }}{{ blog_post.get_absolute_url }}{% endraw %}" />
+<meta property="og:description" content="{% raw %}{{ blog_post.description }}{% endraw %}" />
+<meta property="og:image" content="https://osig.app/g?site=x&style=base&font=markerfelt&title={% raw %}{{ blog_post.title }}{% endraw %} | {{ cookiecutter.project_name }} Blog&subtitle={% raw %}{{ blog_post.description }}{% endraw %}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
+<meta property="og:locale" content="en_US" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@rasulkireev" />
+<meta name="twitter:site" content="@rasulkireev" />
+<meta name="twitter:title" content="{% raw %}{{ blog_post.title }}{% endraw %}" />
+<meta name="twitter:description" content="{% raw %}{{ blog_post.description }}{% endraw %}" />
+<meta name="twitter:image" content="https://osig.app/g?site=x&style=base&font=markerfelt&title={% raw %}{{ blog_post.title }}{% endraw %} | {{ cookiecutter.project_name }} Blog&subtitle={% raw %}{{ blog_post.description }}{% endraw %}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
+{{ '{% endblock meta %}' }}
+
+{{ '{% block content %}' }}
+<article class="container px-4 py-8 mx-auto md:relative">
+  <div class="mx-auto max-w-3xl">
+    <h1 class="mb-6 text-3xl font-bold">{% raw %}{{ blog_post.title }}{% endraw %}</h1>
+
+    <div class="max-w-none prose-lg">
+      {% raw %}{{ blog_post.content|markdown|safe }}{% endraw %}
+    </div>
+  </div>
+</article>
+{{ '{% endblock content %}' }}
+
+{{ '{% block schema %}' }}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "{% raw %}{{ blog_post.title }}{% endraw %}",
+    "description": "{% raw %}{{ blog_post.description }}{% endraw %}",
+    "image": "https://osig.app/g?site=x&style=base&font=markerfelt&title={% raw %}{{ blog_post.title }}{% endraw %} | {{ cookiecutter.project_name }} Blog&subtitle={% raw %}{{ blog_post.description }}{% endraw %}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}",
+    "url": "https://{% raw %}{{ request.get_host }}{{ blog_post.get_absolute_url }}{% endraw %}",
+    "datePublished": "{% raw %}{{ blog_post.created_at|date:'c' }}{% endraw %}",
+    "dateModified": "{% raw %}{{ blog_post.updated_at|date:'c' }}{% endraw %}",
+    "author": {
+      "@type": "Person",
+      "name": "Rasul Kireev",
+      "url": "https://rasulkireev.com/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "{{ cookiecutter.project_name }}",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "{% raw %}https://{{ request.get_host }}{% static 'vendors/images/logo.png' %}{%- endraw %}"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://{% raw %}{{ request.get_host }}{{ blog_post.get_absolute_url }}{% endraw %}"
+    }
+  }
+</script>
+{{ '{% endblock schema %}' }}

@@ -13,6 +13,12 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 **Fixed** for any bug fixes.
 **Security** in case of vulnerabilities.
 
+## [0.0.2] - 2024-10-10
+### Added
+- SEO tags + JSON-LD on all the pages
+- Optional Blog
+
+
 ## [0.0.1] - 2024-09-28
 ### Added
 - Sign-in with Github and Logout button don't go to separate screen anymore.

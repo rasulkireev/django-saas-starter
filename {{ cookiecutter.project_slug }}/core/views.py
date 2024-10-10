@@ -11,7 +11,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
-from django.views.generic import TemplateView, UpdateView
+from django.views.generic import TemplateView, UpdateView, ListView, DetailView
 
 {% if cookiecutter.use_stripe == 'y' -%}
 from djstripe import models as djstripe_models, settings as djstripe_settings
@@ -19,7 +19,7 @@ from core.utils import check_if_profile_has_pro_subscription
 {% endif %}
 
 from core.forms import ProfileUpdateForm
-from core.models import Profile
+from core.models import Profile{% if cookiecutter.generate_blog == 'y' -%}, BlogPost{% endif %}
 
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
@@ -153,4 +153,18 @@ def create_customer_portal_session(request):
     )
 
     return redirect(session.url, code=303)
+{% endif %}
+
+
+{% if cookiecutter.generate_blog == 'y' -%}
+class BlogView(ListView):
+    model = BlogPost
+    template_name = "blog/blog_posts.html"
+    context_object_name = "blog_posts"
+
+
+class BlogPostView(DetailView):
+    model = BlogPost
+    template_name = "blog/blog_post.html"
+    context_object_name = "blog_post"
 {% endif %}
