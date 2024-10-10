@@ -57,7 +57,7 @@
       "name": "{{ cookiecutter.project_name }}",
       "logo": {
         "@type": "ImageObject",
-        "url": "{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}"
+        "url": "{% raw %}https://{{ request.get_host }}{% static 'vendors/images/logo.png' %}{%- endraw %}"
       }
     },
     "mainEntityOfPage": {
