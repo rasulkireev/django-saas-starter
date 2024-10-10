@@ -21,6 +21,12 @@ class StaticViewSitemap(sitemaps.Sitemap):
         """
         return [
             "home",
+            {% if cookiecutter.use_stripe == 'y' -%}
+            "pricing",
+            {% -endif %}
+            {% if cookiecutter.generate_blog == 'y' %}
+            "blog_posts",
+            {% -endif %}
         ]
 
     def location(self, item):
