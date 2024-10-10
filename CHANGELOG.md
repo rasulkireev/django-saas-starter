@@ -17,6 +17,9 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 ### Added
 - SEO tags + JSON-LD on all the pages
 - Optional Blog
+- All pages to the sitemap
+
+
 
 
 ## [0.0.1] - 2024-09-28
