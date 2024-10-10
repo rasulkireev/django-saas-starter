@@ -1,5 +1,10 @@
 from django.contrib import sitemaps
 from django.urls import reverse
+from django.contrib.sitemaps import GenericSitemap
+
+{% if cookiecutter.generate_blog == 'y' %}
+from core.models import BlogPost
+{% endif %}
 
 
 class StaticViewSitemap(sitemaps.Sitemap):
@@ -31,4 +36,10 @@ class StaticViewSitemap(sitemaps.Sitemap):
 
 sitemaps = {
     "static": StaticViewSitemap,
-}
+    {% if cookiecutter.generate_blog == 'y' %}
+    "blog": GenericSitemap(
+        {"queryset": BlogPost.objects.all(), "date_field": "created_at"},
+        priority=0.85,
+        protocol="https",
+    ),
+    {% -endif %}

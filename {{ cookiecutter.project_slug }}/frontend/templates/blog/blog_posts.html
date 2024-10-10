@@ -1,0 +1,70 @@
+{{ '{% extends "base.html" %}' }}
+{{ '{% load webpack_loader static %}' }}
+
+{{ '{% block meta %}' }}
+<title>{{ cookiecutter.project_name }} Blog</title>
+<meta name="description" content="{{ cookiecutter.project_description }}" />
+<meta name="keywords" content="" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://{% raw %}{{ request.get_host }}{% endraw %}{% raw %}{% url 'blog_posts' %}{% endraw %}" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="{{ cookiecutter.project_name }} Blog" />
+<meta property="og:url" content="https://{% raw %}{{ request.get_host }}{% endraw %}{% raw %}{% url 'blog_posts' %}{% endraw %}" />
+<meta property="og:description" content="{{ cookiecutter.project_description }}" />
+<meta property="og:image" content="https://osig.app/g?site=x&style=logo&font=markerfelt&title={{ cookiecutter.project_name }} Blog&subtitle={{ cookiecutter.project_description }}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
+<meta property="og:locale" content="en_US" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@rasulkireev" />
+<meta name="twitter:site" content="@rasulkireev" />
+<meta name="twitter:title" content="{{ cookiecutter.project_name }} Blog" />
+<meta name="twitter:description" content="{{ cookiecutter.project_description }}" />
+<meta name="twitter:image" content="https://osig.app/g?site=x&style=logo&font=markerfelt&title={{ cookiecutter.project_name }} Blog&subtitle={{ cookiecutter.project_description }}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
+{{ '{% endblock meta %}' }}
+
+{{ '{% block content %}' }}
+<div class="container px-4 py-8 mx-auto md:relative">
+  <div class="mx-auto max-w-3xl">
+    <h1 class="mb-8 text-3xl font-bold text-center">{{ cookiecutter.project_name }} Blog</h1>
+    {{ '{% if blog_posts %}' }}
+      <div class="space-y-4">
+        {{ '{% for post in blog_posts %}' }}
+          <a href="{% raw %}{{ post.get_absolute_url }}{% endraw %}" class="block rounded-lg transition duration-150 ease-in-out hover:bg-gray-100">
+            <article class="flex items-start p-4">
+              {{ '{% if post.icon %}' }}
+                <img src="{% raw %}{{ post.icon.url }}{% endraw %}" alt="{% raw %}{{ post.title }}{% endraw %}" class="object-cover flex-shrink-0 mr-4 w-24 h-24 rounded-lg">
+              {{ '{% endif %}' }}
+              <div>
+                <h2 class="mb-2 text-2xl font-semibold text-gray-900">{% raw %}{{ post.title }}{% endraw %}</h2>
+                <p class="text-gray-600">{% raw %}{{ post.description }}{% endraw %}</p>
+              </div>
+            </article>
+          </a>
+        {{ '{% endfor %}' }}
+      </div>
+    {{ '{% else %}' }}
+      <p class="text-center text-gray-600">No blog posts available at the moment.</p>
+    {{ '{% endif %}' }}
+  </div>
+</div>
+{{ '{% endblock content %}' }}
+
+{{ '{% block schema %}' }}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "{{ cookiecutter.project_name }} Blog",
+    "description": "{{ cookiecutter.project_description }}",
+    "thumbnailUrl": "https://osig.app/g?site=x&style=logo&font=markerfelt&title={{ cookiecutter.project_name }} Blog&subtitle={{ cookiecutter.project_description }}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}",
+    "url": "https://{% raw %}{{ request.get_host }}{% endraw %}{% raw %}{% url 'blog_posts' %}{% endraw %}",
+    "author": {
+      "@type": "Person",
+      "givenName": "Rasul",
+      "familyName": "Kireev",
+      "url": "https://rasulkireev.com/"
+    }
+  }
+  </script>
+{{ '{% endblock schema %}' }}

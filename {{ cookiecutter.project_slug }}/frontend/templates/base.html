@@ -25,7 +25,7 @@
   <meta property="og:title" content="{{ cookiecutter.project_name }}" />
   <meta property="og:url" content="https://{{ '{{ request.get_host }}' }}/" />
   <meta property="og:description" content="{{ cookiecutter.project_description }}" />
-  <meta property="og:image" content="https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
+  <meta property="og:image" content="https://osig.app/g?site=meta&style=logo&font=markerfelt&title={{ cookiecutter.project_name }}&subtitle={{ cookiecutter.project_description }}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %} />
   <meta property="og:locale" content="en_US" />
 
   <meta name="twitter:card" content="summary" />
@@ -33,7 +33,7 @@
   <meta name="twitter:site" content="@rasulkireev" />
   <meta name="twitter:title" content="{{ cookiecutter.project_name }}" />
   <meta name="twitter:description" content="{{ cookiecutter.project_description }}" />
-  <meta name="twitter:image" content="https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
+  <meta name="twitter:image" content="https://osig.app/g?site=meta&style=logo&font=markerfelt&title={{ cookiecutter.project_name }}&subtitle={{ cookiecutter.project_description }}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %} />
   {{ "{% endblock meta %}" }}
 
   {{ "{% stylesheet_pack 'index' %}" }}
@@ -84,6 +84,11 @@
                       <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="px-3 py-2.5 -mx-3 text-base font-semibold leading-7 text-center text-gray-900 rounded-lg hover:bg-gray-50">
                         Home
                       </a>
+                      {% if cookiecutter.generate_blog == 'y' -%}
+                      <a href="{% raw %}{% url 'blog_posts' %}{%- endraw %}" class="px-3 py-2.5 -mx-3 text-base font-semibold leading-7 text-center text-gray-900 rounded-lg hover:bg-gray-50">
+                        Blog
+                      </a>
+                      {% endif %}
                       {% if cookiecutter.use_stripe == 'y' -%}
                       <a href="{% raw %}{% url 'pricing' %}{%- endraw %}" class="px-3 py-2.5 -mx-3 text-base font-semibold leading-7 text-center text-gray-900 rounded-lg hover:bg-gray-50">
                         Pricing
@@ -165,9 +170,16 @@
             </a>
           </div>
           <div class="flex items-center space-x-8">
+            {% if cookiecutter.generate_blog == 'y' -%}
+            <a href="{% raw %}{% url 'blog_posts' %}{%- endraw %}" class="text-base font-semibold leading-6 text-gray-900 hover:text-gray-700">
+              Blog
+            </a>
+            {% endif %}
+            {% if cookiecutter.use_stripe == 'y' -%}
             <a href="{% raw %}{% url 'pricing' %}{%- endraw %}" class="text-base font-semibold leading-6 text-gray-900 hover:text-gray-700">
               Pricing
             </a>
+            {% endif %}
             {{ "{% if user.is_authenticated %}" }}
             <!-- Profile dropdown -->
             <div data-controller="dropdown" class="relative ml-3">
@@ -221,7 +233,7 @@
       <div class="px-6 py-12 mx-auto max-w-7xl md:flex md:items-center md:justify-between lg:px-8">
         <div class="mt-8 md:mt-0">
           <p class="text-xs leading-5 text-center text-gray-500">
-            &copy; 2024 <a href="https://lvtd.dev">LVTD, LLC</a>. All rights reserved.
+            &copy; 2024 <a href="https://lvtd.dev?ref={{ '{{ request.get_host }}' }}">LVTD, LLC</a>. All rights reserved.
           </p>
         </div>
       </div>
@@ -236,7 +248,7 @@
       "@type": "WebSite",
       "name": "{{ cookiecutter.project_name }}",
       "description": "{{ cookiecutter.project_description }}",
-      "thumbnailUrl": "https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}",
+      "thumbnailUrl": "https://osig.app/g?site=meta&style=logo&font=markerfelt&title={{ cookiecutter.project_name }}&subtitle={{ cookiecutter.project_description }}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %},
       "url": "https://{{ '{{ request.get_host }}' }}/",
       "author": {
         "@type": "Person",

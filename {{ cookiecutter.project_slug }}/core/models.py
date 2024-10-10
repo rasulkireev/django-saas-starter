@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 
 from core.base_models import BaseModel
 from core.model_utils import generate_random_key
@@ -65,4 +66,21 @@ class ProfileStateTransition(BaseModel):
     backup_profile_id = models.IntegerField()
     metadata = models.JSONField(null=True, blank=True)
 
+{% endif %}
+
+{% if cookiecutter.generate_blog == 'y' %}
+class BlogPost(BaseModel):
+    title = models.CharField(max_length=250)
+    description = models.TextField(blank=True)
+    slug = models.SlugField(max_length=250)
+    tags = models.TextField()
+    content = models.TextField()
+    icon = models.ImageField(upload_to="blog_post_icons/", blank=True)
+    image = models.ImageField(upload_to="blog_post_images/", blank=True)
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse("blog_post", kwargs={"slug": self.slug})
 {% endif %}
