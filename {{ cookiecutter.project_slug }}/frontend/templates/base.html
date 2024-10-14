@@ -25,7 +25,7 @@
   <meta property="og:title" content="{{ cookiecutter.project_name }}" />
   <meta property="og:url" content="https://{{ '{{ request.get_host }}' }}/" />
   <meta property="og:description" content="{{ cookiecutter.project_description }}" />
-  <meta property="og:image" content="https://osig.app/g?site=meta&style=logo&font=markerfelt&title={{ cookiecutter.project_name }}&subtitle={{ cookiecutter.project_description }}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %} />
+  <meta property="og:image" content="https://osig.app/g?site=meta&style=logo&font=markerfelt&title={{ cookiecutter.project_name }}&subtitle={{ cookiecutter.project_description }}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
   <meta property="og:locale" content="en_US" />
 
   <meta name="twitter:card" content="summary" />
@@ -33,7 +33,7 @@
   <meta name="twitter:site" content="@rasulkireev" />
   <meta name="twitter:title" content="{{ cookiecutter.project_name }}" />
   <meta name="twitter:description" content="{{ cookiecutter.project_description }}" />
-  <meta name="twitter:image" content="https://osig.app/g?site=meta&style=logo&font=markerfelt&title={{ cookiecutter.project_name }}&subtitle={{ cookiecutter.project_description }}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %} />
+  <meta name="twitter:image" content="https://osig.app/g?site=meta&style=logo&font=markerfelt&title={{ cookiecutter.project_name }}&subtitle={{ cookiecutter.project_description }}&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
   {{ "{% endblock meta %}" }}
 
   {{ "{% stylesheet_pack 'index' %}" }}
