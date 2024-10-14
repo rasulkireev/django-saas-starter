@@ -23,19 +23,19 @@
       <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
         <div class="rounded-md shadow">
           <a href="{% raw %}{% url 'user_upgrade_checkout_session' pk=user.id plan='monthly' %}{%- endraw %}"
-             class="flex justify-center items-center px-4 py-3 h-full text-sm font-medium text-white bg-blue-600 rounded-md border border-transparent transition duration-150 ease-in-out md:text-base hover:bg-blue-700">
+             class="flex justify-center items-center px-4 py-3 h-full text-sm font-medium text-white bg-{{ cookiecutter.project_main_color }}-600 rounded-md border border-transparent transition duration-150 ease-in-out md:text-base hover:bg-{{ cookiecutter.project_main_color }}-700">
             Monthly - $10/m
           </a>
         </div>
         <div class="rounded-md shadow">
           <a href="{% raw %}{% url 'user_upgrade_checkout_session' pk=user.id plan='yearly' %}{%- endraw %}"
-             class="flex justify-center items-center px-4 py-3 h-full text-sm font-medium text-white bg-blue-600 rounded-md border border-transparent transition duration-150 ease-in-out md:text-base hover:bg-blue-700">
+             class="flex justify-center items-center px-4 py-3 h-full text-sm font-medium text-white bg-{{ cookiecutter.project_main_color }}-600 rounded-md border border-transparent transition duration-150 ease-in-out md:text-base hover:bg-{{ cookiecutter.project_main_color }}-700">
             Yearly - $100/y
           </a>
         </div>
         <div class="rounded-md shadow">
           <a href="{% raw %}{% url 'user_upgrade_checkout_session' pk=user.id plan='one-time' %}{%- endraw %}"
-             class="flex justify-center items-center px-4 py-3 h-full text-sm font-medium text-white bg-blue-600 rounded-md border border-transparent transition duration-150 ease-in-out md:text-base hover:bg-blue-700">
+             class="flex justify-center items-center px-4 py-3 h-full text-sm font-medium text-white bg-{{ cookiecutter.project_main_color }}-600 rounded-md border border-transparent transition duration-150 ease-in-out md:text-base hover:bg-{{ cookiecutter.project_main_color }}-700">
             One-time - $500
           </a>
         </div>
@@ -47,7 +47,7 @@
       <div class="rounded-md shadow">
         <a
           href="{% raw %}{% url 'create_customer_portal_session' %}{%- endraw %}"
-          class="flex justify-center items-center px-5 py-3 text-base font-medium text-white bg-blue-600 rounded-md border border-transparent hover:bg-blue-700">
+          class="flex justify-center items-center px-5 py-3 text-base font-medium text-white bg-{{ cookiecutter.project_main_color }}-600 rounded-md border border-transparent hover:bg-{{ cookiecutter.project_main_color }}-700">
           Update Subscription
         </a>
       </div>
@@ -68,24 +68,24 @@
                   <div class="col-span-6 sm:col-span-3">
                     {{ "{{ form.first_name.errors | safe }}" }}
                     <label for="{% raw %}{{ form.first_name.id_for_label }}{%- endraw %}" class="block text-sm font-medium text-gray-700">First name</label>
-                    {{ '{% render_field form.first_name id="first-name" name="first-name" type="text" autocomplete="given-name" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %}' }}
+                    {{ '{% render_field form.first_name id="first-name" name="first-name" type="text" autocomplete="given-name" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-{{ cookiecutter.project_main_color }}-500 focus:ring-{{ cookiecutter.project_main_color }}-500 sm:text-sm" %}' }}
                   </div>
 
                   <div class="col-span-6 sm:col-span-3">
                     {{ "{{ form.last_name.errors | safe }}" }}
                     <label for="{% raw %}{{ form.last_name.id_for_label }}{%- endraw %}" class="block text-sm font-medium text-gray-700">Last name</label>
-                    {{ '{% render_field form.last_name id="last-name" name="last-name" type="text" autocomplete="family-name" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %}' }}
+                    {{ '{% render_field form.last_name id="last-name" name="last-name" type="text" autocomplete="family-name" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-{{ cookiecutter.project_main_color }}-500 focus:ring-{{ cookiecutter.project_main_color }}-500 sm:text-sm" %}' }}
                   </div>
 
                   <div class="col-span-6">
                     {{ "{{ form.email.errors | safe }}" }}
                     <label for="{% raw %}{{ form.email.id_for_label }}{%- endraw %}" class="block text-sm font-medium text-gray-700">Email address</label>
-                    {{ '{% render_field form.email id="email-address" name="email-address" type="email" autocomplete="email" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %}' }}
+                    {{ '{% render_field form.email id="email-address" name="email-address" type="email" autocomplete="email" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-{{ cookiecutter.project_main_color }}-500 focus:ring-{{ cookiecutter.project_main_color }}-500 sm:text-sm" %}' }}
                   </div>
                 </div>
               </div>
               <div class="mt-6 text-right">
-                <button type="submit" class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md border border-transparent shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                <button type="submit" class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-{{ cookiecutter.project_main_color }}-600 rounded-md border border-transparent shadow-sm hover:bg-{{ cookiecutter.project_main_color }}-700 focus:outline-none focus:ring-2 focus:ring-{{ cookiecutter.project_main_color }}-500 focus:ring-offset-2">
                   Save Changes
                 </button>
             </div>
