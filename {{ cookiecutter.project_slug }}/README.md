@@ -10,7 +10,7 @@ All the information on how to run, develop and update your new application can b
 To start you'll need to run these commands:
 1. `poetry install`
 2. `poetry export -f requirements.txt --output requirements.txt --without-hashes`
-3. `poetry run python makemigrations`
+3. `poetry run python manage.py makemigrations`
 4. `make serve` : Make sure you have a Docker Engine running. I recommend OrbStack.
 
 
