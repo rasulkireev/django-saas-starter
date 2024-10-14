@@ -9,12 +9,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
+from django.conf import settings
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, UpdateView, ListView, DetailView
 
 {% if cookiecutter.use_stripe == 'y' -%}
-from djstripe import models as djstripe_models, settings as djstripe_settings
+from djstripe import models as djstripe_models
 from core.utils import check_if_profile_has_pro_subscription
 {% endif %}
 
@@ -25,7 +26,7 @@ from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_sl
 
 
 {% if cookiecutter.use_stripe == 'y' -%}
-stripe.api_key = djstripe_settings.djstripe_settings.STRIPE_SECRET_KEY
+stripe.api_key = settings.STRIPE_SECRET_KEY
 {% endif %}
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
