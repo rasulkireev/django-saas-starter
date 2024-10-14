@@ -23,10 +23,10 @@ class StaticViewSitemap(sitemaps.Sitemap):
             "home",
             {% if cookiecutter.use_stripe == 'y' -%}
             "pricing",
-            {% -endif %}
+            {%- endif %}
             {% if cookiecutter.generate_blog == 'y' %}
             "blog_posts",
-            {% -endif %}
+            {%- endif %}
         ]
 
     def location(self, item):
@@ -48,4 +48,5 @@ sitemaps = {
         priority=0.85,
         protocol="https",
     ),
-    {% -endif %}
+    {%- endif %}
+}

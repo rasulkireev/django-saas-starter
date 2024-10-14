@@ -1,16 +1,16 @@
-{% extends "base.html" %}
-{% load webpack_loader static %}
+{{ '{% extends "base.html" %}' }}
+{{ '{% load webpack_loader static %}' }}
 
-{% block meta %}
+{{ '{% block meta %}' }}
 <title>{{ cookiecutter.project_name }} - Pricing</title>
 <meta name="description" content="How much to use {{ cookiecutter.project_name }}?" />
 <meta name="keywords" content="" />
 <meta name="robots" content="index, follow" />
-<link rel="canonical" href="{% raw %}https://{{ request.get_host }}{% url 'pricing' %}" {% -endraw %}/>
+<link rel="canonical" href="{% raw %}https://{{ request.get_host }}{% url 'pricing' %}" {%- endraw %}/>
 
 <meta property="og:type" content="website" />
 <meta property="og:title" content="{{ cookiecutter.project_name }} - Pricing" />
-<meta property="og:url" content="{% raw %}https://{{ request.get_host }}{% url 'pricing' %}" {% -endraw %}/>
+<meta property="og:url" content="{% raw %}https://{{ request.get_host }}{% url 'pricing' %}" {%- endraw %}/>
 <meta property="og:description" content="How much to use {{ cookiecutter.project_name }}?" />
 <meta property="og:image" content="https://osig.app/g?site=x&style=logo&font=markerfelt&title={{ cookiecutter.project_name }} - Pricing&subtitle=How much to use {{ cookiecutter.project_name }}?&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
 <meta property="og:locale" content="en_US" />
@@ -21,9 +21,9 @@
 <meta name="twitter:title" content="{{ cookiecutter.project_name }} - Pricing" />
 <meta name="twitter:description" content="How much to use {{ cookiecutter.project_name }}?" />
 <meta name="twitter:image" content="https://osig.app/g?site=x&style=logo&font=markerfelt&title={{ cookiecutter.project_name }} - Pricing&subtitle=How much to use {{ cookiecutter.project_name }}?&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" />
-{% endblock meta %}
+{{ '{% endblock meta %}' }}
 
-{% block content %}
+{{ '{% block content %}' }}
 <div class="py-24 bg-white sm:py-32">
   <div class="px-6 mx-auto max-w-7xl lg:px-8">
     <div class="mx-auto max-w-4xl sm:text-center">
@@ -144,9 +144,9 @@
     </div>
   </div>
 </div>
-{% endblock content %}
+{{ '{% endblock content %}' }}
 
-{% block schema %}
+{{ '{% block schema %}' }}
 <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -154,7 +154,7 @@
     "name": "{{ cookiecutter.project_name }} - Pricing",
     "description": "How much to use {{ cookiecutter.project_name }}?",
     "thumbnailUrl": "https://osig.app/g?site=x&style=logo&font=markerfelt&title={{ cookiecutter.project_name }} - Pricing&subtitle=How much to use {{ cookiecutter.project_name }}?&image_url=https://{{ '{{ request.get_host }}' }}{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}",
-    "url": "{% raw %}https://{{ request.get_host }}{% url 'pricing' %}{% -endraw %}",
+    "url": "{% raw %}https://{{ request.get_host }}{% url 'pricing' %}{%- endraw %}",
     "author": {
       "@type": "Person",
       "givenName": "Rasul",
@@ -163,4 +163,4 @@
     }
   }
   </script>
-{% endblock schema %}
+{{ '{% endblock schema %}' }}

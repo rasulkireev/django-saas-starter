@@ -41,7 +41,6 @@ if [ "$server" = true ]; then
     export OTEL_SERVICE_NAME=${PROJECT_NAME}_${ENVIRONMENT:-dev}
     export OTEL_RESOURCE_ATTRIBUTES=service.name=${PROJECT_NAME}_${ENVIRONMENT:-dev}
     opentelemetry-instrument{% endif -%} gunicorn ${PROJECT_NAME}.wsgi:application --bind 0.0.0.0:80 --workers 3 --threads 2 --reload
-    {% endif %}
 else
     {% if cookiecutter.use_opentelemetry == 'y' -%}
     export OTEL_SERVICE_NAME="${PROJECT_NAME}_${ENVIRONMENT:-dev}_workers"
