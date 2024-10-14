@@ -162,6 +162,7 @@ STORAGES = {
           "endpoint_url": env("AWS_S3_ENDPOINT_URL"),
           "access_key": env("AWS_ACCESS_KEY_ID"),
           "secret_key": env("AWS_SECRET_ACCESS_KEY"),
+          "querystring_auth": False,
           "file_overwrite": False,
         },
     },
