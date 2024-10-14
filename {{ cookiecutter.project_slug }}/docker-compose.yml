@@ -96,6 +96,38 @@ services:
       - 8.8.4.4
   {% endif %}
 
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    environment:
+      MINIO_ROOT_USER: {{ cookiecutter.project_slug }}
+      MINIO_ROOT_PASSWORD: {{ cookiecutter.project_slug }}
+    command: server --console-address ":9001" /data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5 &&
+      /usr/bin/mc config host add myminio http://minio:9000 {{ cookiecutter.project_slug }} {{ cookiecutter.project_slug }} &&
+      /usr/bin/mc mb myminio/{{ cookiecutter.project_slug }}-dev &&
+      /usr/bin/mc anonymous set download myminio/{{ cookiecutter.project_slug }}-dev &&
+      exit 0;
+      "
+
 volumes:
   postgres_data:
   redis_data:
+  minio_data:
