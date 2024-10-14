@@ -29,9 +29,11 @@ Looks at the logs for this container and at the top you will see a webhook secre
 Copy this and add it to your `.env` file.
 
 The following notes are applicable only after you got the app running locally via `make serve`:
-- Make sure to add `STRIPE_LIVE_SECRET_KEY` and `STRIPE_TEST_SECRET_KEY` in the .env file and in the admin panel: /admin/djstripe/apikey/
+- Add Test and Prod Secret keys in the admin panel: /admin/djstripe/apikey/
 (djstripe will figure out if they are live or test keys automatically)
-- When creating a webhook in the admin, specify the latest version from here https://stripe.com/docs/api/versioning
+- Create a webhook in Django admin panel: /admin/djstripe/webhookendpoint/
+  - you can't use localhost as the domain for the webhook, so use something like `https://statushen.xyz/webhook/` or a real one if you have it. It doesn't matter for local.
+  - When creating a webhook in the admin, specify the latest version from here https://stripe.com/docs/api/versioning
 - Create your products in stripe (monthly, annual and one-time, for example), then sync them via `make stripe-sync` command.
 - Current (`user-settings.html` and `pricing.html`) template assumes you have 3 products: monthly, annual and one-time.
   I haven't found a reliable way to programmatcialy set this template. When you have created your products in Stripe and synced them, update the template with the correct plan id.
