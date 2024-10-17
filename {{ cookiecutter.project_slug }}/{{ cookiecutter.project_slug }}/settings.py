@@ -320,8 +320,6 @@ if ENVIRONMENT == "prod" and SENTRY_DSN:
 
 {% if cookiecutter.use_posthog == 'y' -%}
 POSTHOG_API_KEY = env("POSTHOG_API_KEY")
-if ENVIRONMENT == "prod" and POSTHOG_API_KEY:
-    sentry_sdk.init(dsn=env("POSTHOG_API_KEY"))
 {% endif %}
 
 {% if cookiecutter.use_buttondown == 'y' -%}
