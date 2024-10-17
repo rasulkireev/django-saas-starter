@@ -60,7 +60,7 @@ class ProfileStates(models.TextChoices):
 
 
 class ProfileStateTransition(BaseModel):
-    profile = models.ForeignKey(Profile, null=True, on_delete=models.SET_NULL, related_name="state_transitions")
+    profile = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL, related_name="state_transitions")
     from_state = models.CharField(max_length=255, choices=ProfileStates.choices)
     to_state = models.CharField(max_length=255, choices=ProfileStates.choices)
     backup_profile_id = models.IntegerField()
