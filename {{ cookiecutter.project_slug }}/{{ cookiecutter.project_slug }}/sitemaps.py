@@ -21,6 +21,7 @@ class StaticViewSitemap(sitemaps.Sitemap):
         """
         return [
             "home",
+            "uses",
             {% if cookiecutter.use_stripe == 'y' -%}
             "pricing",
             {%- endif %}
