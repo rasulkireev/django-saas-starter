@@ -29,3 +29,4 @@ Optional Integrations:
 - OpenTelemetry for tracing (Signoz in this case)
 
 ## Roadmap
+- Drastically improve the documentation structure. Right now everything leaves in the Generated README file.
