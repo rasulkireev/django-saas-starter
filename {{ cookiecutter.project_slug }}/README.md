@@ -29,9 +29,9 @@ Looks at the logs for this container and at the top you will see a webhook secre
 Copy this and add it to your `.env` file.
 
 The following notes are applicable only after you got the app running locally via `make serve`:
-- Add Test and Prod Secret keys in the admin panel: /admin/djstripe/apikey/
+- Add Test and Prod Secret keys in the admin panel: http://localhost:8000/admin/djstripe/apikey/
 (djstripe will figure out if they are live or test keys automatically)
-- Create a webhook in Django admin panel: /admin/djstripe/webhookendpoint/
+- Create a webhook in Django admin panel: http://localhost:8000/admin/djstripe/webhookendpoint/
   - you can't use localhost as the domain for the webhook, so use something like `https://statushen.xyz/webhook/` or a real one if you have it. It doesn't matter for local.
   - When creating a webhook in the admin, specify the latest version from here https://stripe.com/docs/api/versioning
 - Create your products in stripe (monthly, annual and one-time, for example), then sync them via `make stripe-sync` command.
