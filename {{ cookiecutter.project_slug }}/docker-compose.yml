@@ -41,7 +41,7 @@ services:
       redis:
         condition: service_started
       frontend:
-        condition: service_started
+        condition: service_healthy
     env_file:
       - .env
 
@@ -69,6 +69,12 @@ services:
       - .:/app
     ports:
       - "9091:9091"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   mailhog:
     image: mailhog/mailhog
