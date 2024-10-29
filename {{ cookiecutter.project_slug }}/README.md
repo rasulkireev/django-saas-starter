@@ -13,9 +13,9 @@ To start you'll need to run these commands:
 3. `poetry run python manage.py makemigrations`
 4. `make serve` : Make sure you have a Docker Engine running. I recommend OrbStack.
 
-
 ## Next steps
 - When everything is running, go to http://localhost:8000/ to check if the backend is running.
+  - If you get an error about manifest.json, just restart containers by doing Ctrl+C in the terminal and `make serve` again.
 - You can sign up via regular signup. The first user will be made admin and superuser.
 - Go to http://localhost:8000/admin/ and update Site info (http://localhost:8000/admin/sites/site/1/change/) to
   - localhost:8000 (if you are developing locally, and real domain when you are in prod)
