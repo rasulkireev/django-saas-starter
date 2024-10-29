@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.contrib.sitemaps.views import sitemap
+from django.views.generic import TemplateView
 
 from {{ cookiecutter.project_slug }}.sitemaps import sitemaps
 
