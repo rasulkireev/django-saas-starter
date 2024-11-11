@@ -19,6 +19,7 @@ To start you'll need to start the Mkdocs server, where a step-by-step process wi
 - Testing with pytest
 - Pre-commit for code quality checks
 - Optimized SEO - Added all the necessary metatags and json-ld schema on all the pages with nice looking OG images.
+- API support with django-ninja
 
 Optional Integrations:
 - Social Authentication (Github)
