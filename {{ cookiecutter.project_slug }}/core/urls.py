@@ -11,6 +11,8 @@ urlpatterns = [
     path("blog", views.BlogView.as_view(), name="blog_posts"),
     path("blog/<slug:slug>", views.BlogPostView.as_view(), name="blog_post"),
     {% endif %}
+    # app
+    path("api/", api.urls),
     # utils
     path("resend-confirmation/", views.resend_confirmation_email, name="resend_confirmation"),
     {% if cookiecutter.use_stripe == 'y' -%}
