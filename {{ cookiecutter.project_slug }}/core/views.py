@@ -1,6 +1,7 @@
 from urllib.parse import urlencode
 
 {% if cookiecutter.use_stripe == 'y' -%}
+from django.http import HttpResponse
 import stripe
 {% endif %}
 from allauth.account.models import EmailAddress
@@ -13,6 +14,9 @@ from django.conf import settings
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, UpdateView, ListView, DetailView
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.core.mail import EmailMultiAlternatives
 
 {% if cookiecutter.use_stripe == 'y' -%}
 from djstripe import models as djstripe_models
@@ -67,6 +71,7 @@ class UserSettingsView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         context["email_verified"] = email_address.verified
         context["resend_confirmation_url"] = reverse("resend_confirmation")
         context["has_subscription"] = user.profile.subscription is not None
+
 
         return context
 
@@ -168,4 +173,21 @@ class BlogPostView(DetailView):
     model = BlogPost
     template_name = "blog/blog_post.html"
     context_object_name = "blog_post"
+{% endif %}
+
+{% if cookiecutter.use_mjml == 'y' -%}
+def test_mjml(request):
+    html_content = render_to_string("emails/test_mjml.html", {})
+    text_content = strip_tags(html_content)
+
+    email = EmailMultiAlternatives(
+        "Subject",
+        text_content,
+        settings.DEFAULT_FROM_EMAIL,
+        ["test@test.com"],
+    )
+    email.attach_alternative(html_content, "text/html")
+    email.send()
+
+    return HttpResponse("Email sent")
 {% endif %}

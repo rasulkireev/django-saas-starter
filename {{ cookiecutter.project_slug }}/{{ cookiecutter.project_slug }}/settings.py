@@ -65,6 +65,9 @@ INSTALLED_APPS = [
     {% endif %}
     "django_q",
     "django_extensions",
+    {% if cookiecutter.use_mjml == 'y' -%}
+    "mjml",
+    {% endif %}
     "core.apps.CoreConfig",
 ]
 
@@ -338,4 +341,14 @@ if ENVIRONMENT == "prod":
 
 DJSTRIPE_WEBHOOK_SECRET = env("DJSTRIPE_WEBHOOK_SECRET")
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
+{% endif %}
+
+{% if cookiecutter.use_mjml == 'y' -%}
+MJML_BACKEND_MODE = "httpserver"
+MJML_HTTPSERVERS = [
+    {
+        "URL": "https://api.mjml.io/v1/render",
+        "HTTP_AUTH": (env('MJML_APPLICATION_ID'), env("MJML_SECRET")),
+    }
+]
 {% endif %}
