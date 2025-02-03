@@ -66,4 +66,5 @@
     {% if cookiecutter.use_mjml == 'y' -%}
     "mjml": "^4.15.3",
     {% endif %}
+  }
 }
