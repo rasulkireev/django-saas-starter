@@ -28,6 +28,7 @@ Optional Integrations:
 - Github Auth for social sign-ins
 - Sentry integration
 - OpenTelemetry for tracing (Signoz in this case)
+- MJML for email templating
 
 ## Roadmap
 - Drastically improve the documentation structure. Right now everything leaves in the Generated README file.

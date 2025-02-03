@@ -1,6 +1,7 @@
 from django.urls import path
 
 from core import views
+from core.api.views import api
 
 urlpatterns = [
     # pages

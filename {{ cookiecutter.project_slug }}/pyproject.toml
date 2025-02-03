@@ -24,10 +24,10 @@ django-storages = {extras = ["s3"], version = "^1.14.4"}
 structlog = "^24.4.0"
 django-structlog = "^8.1.0"
 markdown = "^3.7"
-# {% if cookiecutter.use_sentry == 'y' -%}
+{% if cookiecutter.use_sentry == 'y' -%}
 sentry-sdk = {extras = ["django"], version = "^2.14.0"}
-# {% endif -%}
-# {% if cookiecutter.use_opentelemetry == 'y' -%}
+{% endif -%}
+{% if cookiecutter.use_opentelemetry == 'y' -%}
 opentelemetry-exporter-otlp = "^1.27.0"
 opentelemetry-distro = "^0.48b0"
 opentelemetry-instrumentation-django = "^0.48b0"
@@ -36,20 +36,23 @@ opentelemetry-sdk = "^1.27.0"
 opentelemetry-instrumentation-psycopg2 = "^0.48b0"
 opentelemetry-instrumentation-redis = "^0.48b0"
 opentelemetry-instrumentation-logging = "^0.48b0"
-# {% endif -%}
+{% endif -%}
 gunicorn = "^23.0.0"
 pytest = "^8.3.3"
 pytest-django = "^4.9.0"
 redis = "^5.0.8"
 django-anymail = {extras = ["mailgun"], version = "^12.0"}
-# {% if cookiecutter.use_posthog == 'y' -%}
+{% if cookiecutter.use_posthog == 'y' -%}
 posthog = "^3.6.6"
-# {% endif -%}
-# {% if cookiecutter.use_stripe == 'y' -%}
+{% endif -%}
+{% if cookiecutter.use_stripe == 'y' -%}
 dj-stripe = "~2.8.4"
 stripe = "~4.0.0"
-# {% endif %}
+{% endif %}
 django-ninja = "^1.3.0"
+{% if cookiecutter.use_mjml == 'y' -%}
+django-mjml = "^1.3"
+{% endif %}
 
 [tool.poetry.dev-dependencies]
 
