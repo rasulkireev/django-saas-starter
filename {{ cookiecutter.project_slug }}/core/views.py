@@ -1,7 +1,7 @@
 from urllib.parse import urlencode
 
-{% if cookiecutter.use_stripe == 'y' -%}
 from django.http import HttpResponse
+{% if cookiecutter.use_stripe == 'y' -%}
 import stripe
 {% endif %}
 from allauth.account.models import EmailAddress
