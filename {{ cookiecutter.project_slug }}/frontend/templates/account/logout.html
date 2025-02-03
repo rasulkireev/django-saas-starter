@@ -11,7 +11,7 @@
                 <input type="hidden" name="{% raw %}{{ redirect_field_name }}{%- endraw %}" value="{% raw %}{{ redirect_field_value }}{%- endraw %}"/>
             {{ "{% endif %}" }}
 
-            <button class="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-red-600 border border-transparent border-solid rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            <button class="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-red-600 border border-transparent border-solid rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-{{cookiecutter.project_main_color}}-500"
                     type="submit">
                 Sign Out
             </button>
