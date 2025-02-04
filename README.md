@@ -1,7 +1,3 @@
-To start you'll need to start the Mkdocs server, where a step-by-step process will be provided to you. To do this:
-1. `poetry install`
-2. `poetry run mkdocs serve`
-
 ## Features
 
 - Django 5 and Python 3.11

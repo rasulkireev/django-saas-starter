@@ -6,6 +6,9 @@ authors = ["Rasul Kireev <me@rasulkireev.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+mkdocs = "^1.6.1"
+mkdocstrings = "^0.28.0"
+mkdocs-material = "^9.6.2"
 
 [tool.poetry.dev-dependencies]
 

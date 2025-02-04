@@ -1,0 +1,26 @@
+site_name: Django SaaS Starter
+
+theme:
+  name: "material"
+
+plugins:
+  - mkdocstrings
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Development:
+    - Local Development: local-development.md
+    - Environment Variables: environment-variables.md
+  - Deployment:
+    - CapRover Setup: caprover-setup.md
+    - GitHub Actions: github-actions.md
+  - Authentication: authentication.md
+  - Admin Panel: admin-panel.md
+  - Stripe Integration:
+    - Setup: stripe-setup.md
+    - Webhooks: stripe-webhooks.md
+    - Products & Plans: stripe-products.md
+  - Maintenance:
+    - Worker Tasks: worker-tasks.md
+    - Troubleshooting: troubleshooting.md
