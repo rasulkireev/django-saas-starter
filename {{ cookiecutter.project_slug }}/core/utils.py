@@ -29,16 +29,3 @@ class DivErrorList(ErrorList):
               </div>
             </div>
          """
-
-{% if cookiecutter.use_stripe == 'y' -%}
-def check_if_profile_has_pro_subscription(profile_id):
-    has_pro_subscription = False
-    if profile_id:
-        try:
-            profile = Profile.objects.get(id=profile_id)
-            has_pro_subscription = profile.subscription is not None
-        except Profile.DoesNotExist:
-            logger.error("Profile does not exist", profile_id=profile_id)
-
-    return has_pro_subscription
-{% endif %}

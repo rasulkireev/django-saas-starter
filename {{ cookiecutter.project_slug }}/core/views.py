@@ -20,7 +20,7 @@ from django.core.mail import EmailMultiAlternatives
 
 {% if cookiecutter.use_stripe == 'y' -%}
 from djstripe import models as djstripe_models
-from core.utils import check_if_profile_has_pro_subscription
+from core.choices import ProfileStates
 {% endif %}
 
 from core.forms import ProfileUpdateForm
@@ -70,7 +70,9 @@ class UserSettingsView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         email_address = EmailAddress.objects.get_for_user(user, user.email)
         context["email_verified"] = email_address.verified
         context["resend_confirmation_url"] = reverse("resend_confirmation")
-        context["has_subscription"] = user.profile.subscription is not None
+        {% if cookiecutter.use_stripe == 'y' -%}
+        context["has_subscription"] = user.profile.has_product_or_subscription
+        {% endif %}
 
 
         return context
@@ -96,7 +98,7 @@ class PricingView(TemplateView):
         if self.request.user.is_authenticated:
             try:
                 profile = self.request.user.profile
-                context["has_pro_subscription"] = check_if_profile_has_pro_subscription(profile.id)
+                context["has_pro_subscription"] = profile.has_active_subscription
             except Profile.DoesNotExist:
                 context["has_pro_subscription"] = False
         else:
