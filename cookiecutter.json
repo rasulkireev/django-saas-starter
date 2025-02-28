@@ -14,5 +14,7 @@
   "use_opentelemetry": "y",
   "use_sentry": "y",
   "generate_blog": "y",
-  "use_mjml": "y"
+  "use_mjml": "y",
+  "use_ai": "y",
+  "use_logfire": "y"
 }

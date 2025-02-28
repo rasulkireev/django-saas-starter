@@ -64,3 +64,4 @@ The following notes are applicable only after you got the app running locally vi
 ## Notes
 - Don't forget to update the site domain and name on the Admin Panel.
 - If you made changes to tasks, you need to restart the worker container with `make restart-worker`.
+- If you will need to use from `pgvector` don't forget to run `CREATE EXTENSION vector;` in your db, before running any migrations with `VectorFields`

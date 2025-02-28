@@ -16,6 +16,11 @@ import environ
 import structlog
 {% if cookiecutter.use_sentry == 'y' -%}
 import sentry_sdk
+import structlog
+from structlog_sentry import SentryProcessor
+{% endif %}
+{% if cookiecutter.use_logfire == 'y' -%}
+import logfire
 {% endif %}
 
 
@@ -29,6 +34,11 @@ env = environ.Env(
 )
 
 ENVIRONMENT = env("ENVIRONMENT")
+
+{% if cookiecutter.use_logfire == 'y' -%}
+if ENVIRONMENT == "prod":
+    logfire.configure(environment=ENVIRONMENT)
+{%- endif %}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -68,6 +78,7 @@ INSTALLED_APPS = [
     {% if cookiecutter.use_mjml == 'y' -%}
     "mjml",
     {% endif %}
+    "django_structlog",
     "core.apps.CoreConfig",
 ]
 
@@ -81,6 +92,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_structlog.middlewares.RequestMiddleware",
 ]
 
 ROOT_URLCONF = "{{ cookiecutter.project_slug }}.urls"
@@ -300,7 +312,13 @@ structlog.configure(
         structlog.processors.TimeStamper(fmt="iso"),
         structlog.stdlib.add_logger_name,
         structlog.stdlib.add_log_level,
+        {% if cookiecutter.use_sentry == 'y' -%}
+        SentryProcessor(event_level=logging.ERROR),
+        {%- endif %}
         structlog.stdlib.PositionalArgumentsFormatter(),
+        {% if cookiecutter.use_logfire == 'y' -%}
+        logfire.StructlogProcessor(),
+        {%- endif %}
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
         structlog.processors.UnicodeDecoder(),
