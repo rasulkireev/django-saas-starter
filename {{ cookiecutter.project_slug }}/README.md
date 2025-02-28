@@ -39,6 +39,16 @@ The following notes are applicable only after you got the app running locally vi
   I haven't found a reliable way to programmatcialy set this template. When you have created your products in Stripe and synced them, update the template with the correct plan id.
 {% endif %}
 
+{% if cookiecutter.use_logfire == 'y' %}
+## Logfire
+To start using Logfire, checkout their docs: https://logfire.pydantic.dev/docs/
+
+It will be simple:
+- Register
+- Create a project
+- Get a write token and add it to env vars in your prod environment
+{% endif %}
+
 ## Deployment
 
 1. Create 4 apps on CapRover.
