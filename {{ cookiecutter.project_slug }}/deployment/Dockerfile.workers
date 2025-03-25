@@ -17,10 +17,6 @@ COPY --from=build /app/frontend/build/ ./frontend/build/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-{% if cookiecutter.use_opentelemetry == 'y' -%}
-RUN opentelemetry-bootstrap -a install
-{% endif %}
-
 EXPOSE 80
 
 CMD ["deployment/entrypoint.sh", "-w"]

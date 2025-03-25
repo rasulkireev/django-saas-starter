@@ -27,7 +27,6 @@ Optional Integrations:
 - Buttondown for newsletters
 - Github Auth for social sign-ins
 - Sentry integration
-- OpenTelemetry for tracing (Signoz in this case)
 - MJML for email templating
 
 ## Roadmap
