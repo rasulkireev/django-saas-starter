@@ -91,3 +91,43 @@ class BlogPost(BaseModel):
     def get_absolute_url(self):
         return reverse("blog_post", kwargs={"slug": self.slug})
 {% endif %}
+
+class Feedback(BaseModel):
+    profile = models.ForeignKey(
+        Profile,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="feedback",
+        help_text="The user who submitted the feedback",
+    )
+    feedback = models.TextField(
+        help_text="The feedback text",
+    )
+    page = models.CharField(
+        max_length=255,
+        help_text="The page where the feedback was submitted",
+    )
+
+    def __str__(self):
+        return f"{self.profile.user.email}: {self.feedback}"
+
+    def save(self, *args, **kwargs):
+        is_new = self._state.adding
+        super().save(*args, **kwargs)
+
+        if is_new:
+            from django.conf import settings
+            from django.core.mail import send_mail
+
+            subject = "New Feedback Submitted"
+            message = f"""
+                New feedback was submitted:\n\n
+                User: {self.profile.user.email if self.profile else 'Anonymous'}
+                Feedback: {self.feedback}
+                Page: {self.page}
+            """
+            from_email = settings.DEFAULT_FROM_EMAIL
+            recipient_list = [settings.DEFAULT_FROM_EMAIL]
+
+            send_mail(subject, message, from_email, recipient_list, fail_silently=True)

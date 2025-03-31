@@ -1,8 +1,10 @@
 from ninja import Schema
 
-class TestIn(Schema):
-    greeting: str
 
+class SubmitFeedbackIn(Schema):
+    feedback: str
+    page: str
 
-class TestOut(Schema):
-    greeting: str
+class SubmitFeedbackOut(Schema):
+    success: bool
+    message: str
