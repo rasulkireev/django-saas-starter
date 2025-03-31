@@ -15,6 +15,7 @@ from pathlib import Path
 import environ
 import structlog
 {% if cookiecutter.use_sentry == 'y' -%}
+import logging
 import sentry_sdk
 import structlog
 from structlog_sentry import SentryProcessor

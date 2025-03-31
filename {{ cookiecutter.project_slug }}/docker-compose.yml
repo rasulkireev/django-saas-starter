@@ -1,6 +1,6 @@
 services:
   db:
-    image: rasulkireev/custom-postgres:15
+    image: rasulkireev/custom-postgres:17
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
