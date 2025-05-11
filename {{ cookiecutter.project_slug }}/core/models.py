@@ -5,6 +5,7 @@ from django.urls import reverse
 from core.base_models import BaseModel
 from core.model_utils import generate_random_key
 {% if cookiecutter.use_stripe == 'y' %}from core.choices import ProfileStates{% endif %}
+{% if cookiecutter.generate_blog == 'y' %}from core.choices import BlogPostStatus{% endif %}
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
@@ -84,6 +85,11 @@ class BlogPost(BaseModel):
     content = models.TextField()
     icon = models.ImageField(upload_to="blog_post_icons/", blank=True)
     image = models.ImageField(upload_to="blog_post_images/", blank=True)
+    status = models.CharField(
+        max_length=10,
+        choices=BlogPostStatus.choices,
+        default=BlogPostStatus.DRAFT,
+    )
 
     def __str__(self):
         return self.title

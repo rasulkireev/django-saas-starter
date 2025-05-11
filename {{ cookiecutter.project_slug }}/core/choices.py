@@ -9,3 +9,9 @@ class ProfileStates(models.TextChoices):
     CHURNED = "churned"
     ACCOUNT_DELETED = "account_deleted"
 {% endif %}
+
+{% if cookiecutter.generate_blog == 'y' %}
+class BlogPostStatus(models.TextChoices):
+    DRAFT = "draft"
+    PUBLISHED = "published"
+{% endif %}
