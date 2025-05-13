@@ -1,6 +1,6 @@
-{% if cookiecutter.use_stripe == 'y' %}
 from django.db import models
 
+{% if cookiecutter.use_stripe == 'y' %}
 class ProfileStates(models.TextChoices):
     STRANGER = "stranger"
     SIGNED_UP = "signed_up"

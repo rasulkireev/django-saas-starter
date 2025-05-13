@@ -2,7 +2,7 @@ from django.http import HttpRequest
 from ninja import NinjaAPI
 
 from core.api.auth import MultipleAuthSchema
-from core.models import Feedback
+from core.models import Feedback, {% if cookiecutter.generate_blog == 'y' %}BlogPost{% endif %}
 from core.api.schemas import (
     SubmitFeedbackIn,
     SubmitFeedbackOut,

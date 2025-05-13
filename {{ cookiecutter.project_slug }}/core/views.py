@@ -28,7 +28,6 @@ from core.models import Profile{% if cookiecutter.generate_blog == 'y' -%}, Blog
 
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
-
 {% if cookiecutter.use_stripe == 'y' -%}
 stripe.api_key = settings.STRIPE_SECRET_KEY
 {% endif %}
@@ -48,9 +47,9 @@ class HomeView(TemplateView):
             context["show_confetti"] = True
         elif payment_status == "failed":
             messages.error(self.request, "Something went wrong with the payment.")
-        {% endif %}
 
         return context
+    {% endif %}
 
 class UserSettingsView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url = "account_login"
