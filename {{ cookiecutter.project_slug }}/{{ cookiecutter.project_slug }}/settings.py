@@ -14,11 +14,13 @@ import os
 from pathlib import Path
 import environ
 import structlog
-{% if cookiecutter.use_sentry == 'y' -%}
 import logging
-import sentry_sdk
 import structlog
+{% if cookiecutter.use_sentry == 'y' -%}
+import sentry_sdk
 from structlog_sentry import SentryProcessor
+from {{ cookiecutter.project_slug }}.sentry_utils import CustomLoggingIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
 {% endif %}
 {% if cookiecutter.use_logfire == 'y' -%}
 import logfire
@@ -337,7 +339,16 @@ if ENVIRONMENT == "prod":
 {% if cookiecutter.use_sentry == 'y' -%}
 SENTRY_DSN = env("SENTRY_DSN")
 if ENVIRONMENT == "prod" and SENTRY_DSN:
-    sentry_sdk.init(dsn=env("SENTRY_DSN"))
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[
+            LoggingIntegration(
+                level=None,
+                event_level=None
+            ),
+            CustomLoggingIntegration(event_level=logging.ERROR)
+        ],
+    )
 {% endif %}
 
 {% if cookiecutter.use_posthog == 'y' -%}
