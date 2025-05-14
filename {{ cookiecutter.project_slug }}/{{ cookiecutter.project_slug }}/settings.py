@@ -93,7 +93,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_structlog.middlewares.RequestMiddleware",
+    # "django_structlog.middlewares.RequestMiddleware",
 ]
 
 ROOT_URLCONF = "{{ cookiecutter.project_slug }}.urls"
