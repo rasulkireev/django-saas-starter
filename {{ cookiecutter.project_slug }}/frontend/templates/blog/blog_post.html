@@ -60,6 +60,7 @@
         "url": "{% raw %}https://{{ request.get_host }}{% static 'vendors/images/logo.png' %}{%- endraw %}"
       }
     },
+    "articleBody": "{% raw %}{{ blog_post.content|safe|replace_quotes }}{% endraw %}",
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": "https://{% raw %}{{ request.get_host }}{{ blog_post.get_absolute_url }}{% endraw %}"
