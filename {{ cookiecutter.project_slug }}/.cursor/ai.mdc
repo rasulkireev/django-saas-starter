@@ -1,0 +1,7 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+- Don't add useless comments explaining what the code does. Only do so for the copmlex cases where it is not clear what the purpose of the next few lines. Never explain a single line of code.
+- Don't add docstrings
