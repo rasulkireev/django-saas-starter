@@ -46,7 +46,6 @@ class Profile(BaseModel):
         help_text="The current state of the user's profile",
     )
 
-
     def track_state_change(self, to_state, metadata=None):
         from_state = self.current_state
 
@@ -66,6 +65,17 @@ class Profile(BaseModel):
             return ProfileStates.STRANGER
         latest_transition = self.state_transitions.latest("created_at")
         return latest_transition.to_state
+
+    @property
+    def has_active_subscription(self):
+        return (
+            self.current_state
+            in [
+                ProfileStates.SUBSCRIBED,
+                ProfileStates.CANCELLED,
+            ]
+            or self.user.is_superuser
+        )
 
 class ProfileStateTransition(BaseModel):
     profile = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL, related_name="state_transitions")
