@@ -30,3 +30,11 @@ class BlogPostOut(Schema):
     status: str  # API response status: 'success' or 'failure'
     message: str
 {% endif %}
+
+
+class ProfileSettingsOut(Schema):
+    has_pro_subscription: bool
+
+
+class UserSettingsOut(Schema):
+    profile: ProfileSettingsOut

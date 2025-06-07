@@ -40,7 +40,7 @@
   {{ "{% javascript_pack 'index' attrs='defer' %}" }}
 </head>
 
-<body>
+<body {% raw %}{% if request.user.is_authenticated %}data-controller="user-settings"{% endif %}{%- endraw %}>
   {{ "{% block default_messages %}" }}
     {{ "{% include 'components/messages.html' with messages=messages %}" }}
   {{ "{% endblock default_messages %}" }}

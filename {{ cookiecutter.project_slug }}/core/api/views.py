@@ -1,5 +1,6 @@
 from django.http import HttpRequest
 from ninja import NinjaAPI
+from ninja.errors import HttpError
 
 from core.api.auth import MultipleAuthSchema
 from core.models import Feedback, {% if cookiecutter.generate_blog == 'y' %}BlogPost{% endif %}
@@ -9,7 +10,9 @@ from core.api.schemas import (
     {% if cookiecutter.generate_blog == 'y' %}
     BlogPostIn,
     BlogPostOut,
-    {% endif %}
+    {% endif %},
+    ProfileSettingsOut,
+    UserSettingsOut,
 )
 
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
@@ -45,3 +48,23 @@ def submit_blog_post(request: HttpRequest, data: BlogPostIn):
     except Exception as e:
         return BlogPostOut(status="failure", message=f"Failed to submit blog post: {str(e)}")
 {% endif %}
+
+@api.get("/user/settings", response=UserSettingsOut)
+def user_settings(request: HttpRequest, project_id: int):
+    profile = request.auth
+    try:
+        profile_data = {
+            "has_pro_subscription": profile.has_active_subscription,
+        }
+        data = {"profile": profile_data}
+
+        return data
+    except Exception as e:
+        logger.error(
+            "Error fetching user settings",
+            error=str(e),
+            project_id=project_id,
+            profile_id=profile.id,
+            exc_info=True,
+        )
+        raise HttpError(500, "An unexpected error occurred.")
