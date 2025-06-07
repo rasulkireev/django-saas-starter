@@ -50,7 +50,7 @@ def submit_blog_post(request: HttpRequest, data: BlogPostIn):
 {% endif %}
 
 @api.get("/user/settings", response=UserSettingsOut)
-def user_settings(request: HttpRequest, project_id: int):
+def user_settings(request: HttpRequest):
     profile = request.auth
     try:
         profile_data = {
@@ -63,7 +63,6 @@ def user_settings(request: HttpRequest, project_id: int):
         logger.error(
             "Error fetching user settings",
             error=str(e),
-            project_id=project_id,
             profile_id=profile.id,
             exc_info=True,
         )
