@@ -102,7 +102,10 @@ class AccountSignupView(SignupView):
             event="user_signed_up",
             properties={
                 "profile_id": profile.id,
-                "$set": {"email": profile.user.email},
+                "$set": {
+                    "email": user.email,
+                    "username": user.username,
+                },
             },
         )
 
