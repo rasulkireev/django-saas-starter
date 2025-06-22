@@ -21,6 +21,7 @@ To start you'll need to start the Mkdocs server, where a step-by-step process wi
 - Sitemaps enabled
 - Testing with pytest
 - Pre-commit for code quality checks
+  - ruff, djlint
 - Optimized SEO - Added all the necessary metatags and json-ld schema on all the pages with nice looking OG images.
 - API support with django-ninja
 - Way to collect feedback pre-installed via a nice widget
@@ -34,5 +35,6 @@ Optional Integrations:
 - MJML for email templating
 - Logfire for prod and dev logging dashboards
 
-## Roadmap
+## TODO
 - [ ] Drastically improve the documentation structure. Right now everything leaves in the Generated README file.
+- [ ] Go from poetry to uv
