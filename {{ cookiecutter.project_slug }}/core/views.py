@@ -10,6 +10,7 @@ from allauth.account.views import SignupView
 import json
 {% endif %}
 from allauth.account.models import EmailAddress
+from django_q.tasks import async_task
 from allauth.account.utils import send_email_confirmation
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -42,22 +43,35 @@ logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 class HomeView(TemplateView):
     template_name = "pages/home.html"
 
-    {% if cookiecutter.use_stripe == 'y' -%}
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        {% if cookiecutter.use_stripe == 'y' -%}
         payment_status = self.request.GET.get("payment")
         if payment_status == "success":
             messages.success(self.request, "Thanks for subscribing, I hope you enjoy the app!")
             context["show_confetti"] = True
         elif payment_status == "failed":
             messages.error(self.request, "Something went wrong with the payment.")
+        {% endif %}
+
+        {% if cookiecutter.use_posthog == 'y' -%}
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            profile = user.profile
+
+            async_task(
+                "core.tasks.try_create_posthog_alias",
+                profile_id=profile.id,
+                cookies=self.request.COOKIES,
+                source_function="HomeView - get_context_data",
+                group="Create Posthog Alias",
+            )
+        {% endif %}
 
         return context
-    {% endif %}
 
 
-{% if cookiecutter.use_posthog == 'y' -%}
 class AccountSignupView(SignupView):
     template_name = "account/signup.html"
 
@@ -67,50 +81,31 @@ class AccountSignupView(SignupView):
         user = self.user
         profile = user.profile
 
-        logger.info(
-            "[AccountSignupView - form_valid] Running after user signup",
-            user=user,
-            user_id=user.id,
+        {% if cookiecutter.use_posthog == 'y' -%}
+        async_task(
+            "core.tasks.try_create_posthog_alias",
             profile_id=profile.id,
-            email=user.email,
+            cookies=self.request.COOKIES,
+            source_function="AccountSignupView - form_valid",
+            group="Create Posthog Alias",
         )
 
-        posthog_cookie = self.request.COOKIES.get(f"ph_{settings.POSTHOG_API_KEY}_posthog")
-        if posthog_cookie:
-            logger.info(
-                "[set_posthog_alias] Setting PostHog alias",
-                profile_id=profile.id,
-                email=profile.user.email,
-            )
-
-            cookie_dict = json.loads(unquote(posthog_cookie))
-            frontend_distinct_id = cookie_dict.get("distinct_id")
-
-            posthog.alias(frontend_distinct_id, profile.user.email)
-            posthog.alias(frontend_distinct_id, profile.id)
-
-        else:
-            logger.warning(
-                "[AccountSignupView - form_valid] No PostHog cookie found",
-                user=user,
-                user_id=user.id,
-                profile_id=profile.id,
-            )
-
-        posthog.capture(
-            profile.user.email,
-            event="user_signed_up",
+        async_task(
+            "core.tasks.track_event",
+            profile_id=profile.id,
+            event_name="user_signed_up",
             properties={
-                "profile_id": profile.id,
                 "$set": {
-                    "email": user.email,
-                    "username": user.username,
+                    "email": profile.user.email,
+                    "username": profile.user.username,
                 },
             },
+            source_function="AccountSignupView - form_valid",
+            group="Track Event",
         )
+        {% endif %}
 
         return response
-{% endif %}
 
 class UserSettingsView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url = "account_login"

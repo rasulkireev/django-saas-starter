@@ -4,9 +4,13 @@ from django.urls import reverse
 
 from core.base_models import BaseModel
 from core.model_utils import generate_random_key
+from django_q.tasks import async_task
+
 {% if cookiecutter.use_stripe == 'y' %}from core.choices import ProfileStates{% endif %}
 {% if cookiecutter.generate_blog == 'y' %}from core.choices import BlogPostStatus{% endif %}
+
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
+
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
 
@@ -47,17 +51,15 @@ class Profile(BaseModel):
     )
 
     def track_state_change(self, to_state, metadata=None):
-        from_state = self.current_state
-
-        if from_state != to_state:
-            logger.info(
-                "Tracking State Change", from_state=from_state, to_state=to_state, profile_id=self.id, metadata=metadata
-            )
-            ProfileStateTransition.objects.create(
-                profile=self, from_state=from_state, to_state=to_state, backup_profile_id=self.id, metadata=metadata
-            )
-            self.state = to_state
-            self.save(update_fields=["state"])
+        async_task(
+            "core.tasks.track_state_change",
+            profile_id=self.id,
+            from_state=self.current_state,
+            to_state=to_state,
+            metadata=metadata,
+            source_function="Profile - track_state_change",
+            group="Track State Change",
+        )
 
     @property
     def current_state(self):
