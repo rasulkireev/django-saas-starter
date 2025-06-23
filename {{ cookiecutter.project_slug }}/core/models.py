@@ -6,8 +6,7 @@ from core.base_models import BaseModel
 from core.model_utils import generate_random_key
 from django_q.tasks import async_task
 
-{% if cookiecutter.use_stripe == 'y' %}from core.choices import ProfileStates{% endif %}
-{% if cookiecutter.generate_blog == 'y' %}from core.choices import BlogPostStatus{% endif %}
+from core.choices import ProfileStates {% if cookiecutter.generate_blog == 'y' %}, BlogPostStatus{% endif %}
 
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
@@ -16,7 +15,7 @@ logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
 class Profile(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    key = models.CharField(max_length=10, unique=True, default=generate_random_key)
+    key = models.CharField(max_length=30, unique=True, default=generate_random_key)
 
     {% if cookiecutter.use_stripe == 'y' %}
     subscription = models.ForeignKey(
@@ -43,6 +42,8 @@ class Profile(BaseModel):
         related_name="profile",
         help_text="The user's Stripe Customer object, if it exists",
     )
+    {% endif %}
+
     state = models.CharField(
         max_length=255,
         choices=ProfileStates.choices,
@@ -68,6 +69,7 @@ class Profile(BaseModel):
         latest_transition = self.state_transitions.latest("created_at")
         return latest_transition.to_state
 
+    {% if cookiecutter.use_stripe == 'y' %}
     @property
     def has_active_subscription(self):
         return (
@@ -78,15 +80,13 @@ class Profile(BaseModel):
             ]
             or self.user.is_superuser
         )
-
+    {% endif %}
 class ProfileStateTransition(BaseModel):
     profile = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL, related_name="state_transitions")
     from_state = models.CharField(max_length=255, choices=ProfileStates.choices)
     to_state = models.CharField(max_length=255, choices=ProfileStates.choices)
     backup_profile_id = models.IntegerField()
     metadata = models.JSONField(null=True, blank=True)
-
-{% endif %}
 
 {% if cookiecutter.generate_blog == 'y' %}
 class BlogPost(BaseModel):
