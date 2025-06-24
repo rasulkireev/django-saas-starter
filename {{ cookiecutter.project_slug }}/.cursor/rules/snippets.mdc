@@ -1,0 +1,11 @@
+---
+description:
+globs: snippets/**/*.py
+alwaysApply: false
+---
+This script will be ran in an ipython shell that is executed like so: `python ./manage.py shell_plus --ipython`, this means:
+
+- Run code linearly, no need to abstract away things needlessly
+- Don't run via `if __name__ == ...`. just write normally
+- No need for django setup stuff
+- I'm going to copy/paste the code into the shell
