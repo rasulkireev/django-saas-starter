@@ -17,6 +17,8 @@ migrate:
 test:
 	docker compose run --rm backend pytest
 
+restart-worker:
+	docker compose up -d workers --force-recreate
 {% if cookiecutter.use_stripe == 'y' -%}
 test-webhook:
 	docker compose run --rm stripe trigger customer.subscription.created
@@ -24,6 +26,3 @@ test-webhook:
 stripe-sync:
 	docker compose run --rm backend python ./manage.py djstripe_sync_models Product Price
 {% endif %}
-
-restart-worker:
-	docker compose up -d workers --force-recreate

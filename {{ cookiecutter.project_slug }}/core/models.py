@@ -16,6 +16,7 @@ logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 class Profile(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     key = models.CharField(max_length=30, unique=True, default=generate_random_key)
+    experimental_flag = models.BooleanField(default=False)
 
     {% if cookiecutter.use_stripe == 'y' %}
     subscription = models.ForeignKey(
@@ -82,7 +83,13 @@ class Profile(BaseModel):
         )
     {% endif %}
 class ProfileStateTransition(BaseModel):
-    profile = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL, related_name="state_transitions")
+    profile = models.ForeignKey(
+        Profile,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="state_transitions",
+    )
     from_state = models.CharField(max_length=255, choices=ProfileStates.choices)
     to_state = models.CharField(max_length=255, choices=ProfileStates.choices)
     backup_profile_id = models.IntegerField()

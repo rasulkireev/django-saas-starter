@@ -169,7 +169,7 @@ STATICFILES_DIRS = [
     BASE_DIR.joinpath("frontend/build"),
 ]
 
-bucket_name = f"{{ cookiecutter.project_slug }}-{ENVIRONMENT}"
+bucket_name = env("AWS_S3_BUCKET_NAME")
 
 STORAGES = {
     "default": {

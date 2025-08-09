@@ -15,6 +15,10 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 
 ## [0.0.3] - 2024-11-11
 ### Added
+- Experimental Flag
+
+## [0.0.3] - 2024-11-11
+### Added
 - Fix missing orphan on User settings page.
 - Ignore the djlint " vs. ' error.
 - Add django-ninja (with Auth and test endpoint)

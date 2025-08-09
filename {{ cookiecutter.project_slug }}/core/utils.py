@@ -1,4 +1,5 @@
 from django.forms.utils import ErrorList
+import requests
 
 from core.models import Profile
 
@@ -29,3 +30,11 @@ class DivErrorList(ErrorList):
               </div>
             </div>
          """ # noqa: E501
+
+{% if cookiecutter.use_healthchecks == 'y' %}
+def ping_healthchecks(ping_id):
+    try:
+        requests.get(f"https://healthchecks.cr.lvtd.dev/ping/{ping_id}", timeout=10)
+    except requests.RequestException as e:
+        logger.error("Ping failed", error=e, exc_info=True)
+{% endif %}

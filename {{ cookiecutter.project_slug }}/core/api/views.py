@@ -7,10 +7,10 @@ from core.models import Feedback, {% if cookiecutter.generate_blog == 'y' %}Blog
 from core.api.schemas import (
     SubmitFeedbackIn,
     SubmitFeedbackOut,
-    {% if cookiecutter.generate_blog == 'y' %}
+    {%- if cookiecutter.generate_blog == 'y' %}
     BlogPostIn,
     BlogPostOut,
-    {% endif %},
+    {% endif -%}
     ProfileSettingsOut,
     UserSettingsOut,
 )

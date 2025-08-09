@@ -1,6 +1,5 @@
 from django.db import models
 
-{% if cookiecutter.use_stripe == 'y' %}
 class ProfileStates(models.TextChoices):
     STRANGER = "stranger"
     SIGNED_UP = "signed_up"
@@ -10,7 +9,6 @@ class ProfileStates(models.TextChoices):
     CANCELLED = "cancelled"
     CHURNED = "churned"
     ACCOUNT_DELETED = "account_deleted"
-{% endif %}
 
 {% if cookiecutter.generate_blog == 'y' %}
 class BlogPostStatus(models.TextChoices):

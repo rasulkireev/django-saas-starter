@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from django_q.tasks import async_task
 
 from core.tasks import add_email_to_buttondown
-from core.models import Profile{% if cookiecutter.use_stripe == 'y' -%}, ProfileStates{% endif %}
+from core.models import Profile, ProfileStates
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
@@ -14,12 +14,10 @@ logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        profile = Profile.objects.create(user=instance)
-        {% if cookiecutter.use_stripe == 'y' -%}
+        profile = Profile.objects.create(user=instance, experimental_flag=True)
         profile.track_state_change(
             to_state=ProfileStates.SIGNED_UP,
         )
-        {% endif %}
 
     if instance.id == 1:
         # Use update() to avoid triggering the signal again

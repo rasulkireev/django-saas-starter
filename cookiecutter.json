@@ -15,5 +15,6 @@
   "generate_blog": "y",
   "use_mjml": "y",
   "use_ai": "y",
-  "use_logfire": "y"
+  "use_logfire": "y",
+  "use_healthchecks": "y"
 }
