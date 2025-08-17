@@ -264,6 +264,7 @@ Q_CLUSTER = {
     "workers": 4,
     "max_attempts": 2,
     "redis": env("REDIS_URL"),
+    "error_reporter": {}
 }
 
 LOGGING = {
@@ -350,6 +351,8 @@ if ENVIRONMENT == "prod" and SENTRY_DSN:
             CustomLoggingIntegration(event_level=logging.ERROR)
         ],
     )
+
+Q_CLUSTER["error_reporter"] = {"sentry": {"dsn": SENTRY_DSN}}
 {% endif %}
 
 {% if cookiecutter.use_posthog == 'y' -%}
