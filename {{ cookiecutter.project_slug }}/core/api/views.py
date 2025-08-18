@@ -34,6 +34,11 @@ def submit_feedback(request: HttpRequest, data: SubmitFeedbackIn):
 {% if cookiecutter.generate_blog == 'y' %}
 @api.post("/blog-posts/submit", response=BlogPostOut)
 def submit_blog_post(request: HttpRequest, data: BlogPostIn):
+    profile = request.auth
+
+    if not profile or not getattr(profile.user, "is_superuser", False):
+        return BlogPostOut(status="error", message="Forbidden: superuser access required."), 403
+
     try:
         BlogPost.objects.create(
             title=data.title,
