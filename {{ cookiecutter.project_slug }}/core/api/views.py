@@ -2,7 +2,7 @@ from django.http import HttpRequest
 from ninja import NinjaAPI
 from ninja.errors import HttpError
 
-from core.api.auth import MultipleAuthSchema
+from core.api.auth import session_auth, superuser_api_auth
 from core.models import Feedback, {% if cookiecutter.generate_blog == 'y' %}BlogPost{% endif %}
 from core.api.schemas import (
     SubmitFeedbackIn,
@@ -19,9 +19,9 @@ from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_sl
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
-api = NinjaAPI(auth=MultipleAuthSchema(), csrf=False)
+api = NinjaAPI(docs_url=None)
 
-@api.post("/submit-feedback", response=SubmitFeedbackOut)
+@api.post("/submit-feedback", response=SubmitFeedbackOut, auth=[session_auth])
 def submit_feedback(request: HttpRequest, data: SubmitFeedbackIn):
     profile = request.auth
     try:
@@ -32,7 +32,7 @@ def submit_feedback(request: HttpRequest, data: SubmitFeedbackIn):
         return {"status": False, "message": "Failed to submit feedback. Please try again."}
 
 {% if cookiecutter.generate_blog == 'y' %}
-@api.post("/blog-posts/submit", response=BlogPostOut)
+@api.post("/blog-posts/submit", response=BlogPostOut, auth=[superuser_api_auth])
 def submit_blog_post(request: HttpRequest, data: BlogPostIn):
     profile = request.auth
 
@@ -54,7 +54,7 @@ def submit_blog_post(request: HttpRequest, data: BlogPostIn):
         return BlogPostOut(status="failure", message=f"Failed to submit blog post: {str(e)}")
 {% endif %}
 
-@api.get("/user/settings", response=UserSettingsOut)
+@api.get("/user/settings", response=UserSettingsOut, auth=[session_auth])
 def user_settings(request: HttpRequest):
     profile = request.auth
     try:
