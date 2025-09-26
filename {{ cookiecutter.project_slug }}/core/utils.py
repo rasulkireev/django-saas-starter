@@ -1,5 +1,7 @@
-from django.forms.utils import ErrorList
 import requests
+
+from django.forms.utils import ErrorList
+from django.conf import settings
 
 from core.models import Profile
 

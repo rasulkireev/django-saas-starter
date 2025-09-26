@@ -28,8 +28,6 @@ def save_user_profile(sender, instance, **kwargs):
     if hasattr(instance, 'profile'):
         instance.profile.save()
 
-
-
 {% if cookiecutter.use_buttondown == 'y' -%}
 @receiver(email_confirmed)
 def add_email_to_buttondown_on_confirm(sender, **kwargs):
@@ -41,8 +39,7 @@ def add_email_to_buttondown_on_confirm(sender, **kwargs):
     async_task(add_email_to_buttondown, kwargs["email_address"], tag="user")
 {% endif %}
 
-
-{% if cookiecutter.use_buttondown == 'y' and cookiecutter.use_social_auth == 'y' -%}
+{% if cookiecutter.use_buttondown == 'y' -%}
 @receiver(user_signed_up)
 def email_confirmation_callback(sender, request, user, **kwargs):
     if 'sociallogin' in kwargs:

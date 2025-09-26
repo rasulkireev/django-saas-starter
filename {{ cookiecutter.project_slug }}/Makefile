@@ -1,6 +1,6 @@
 serve:
-	docker-compose up -d --build
-	docker compose logs -f backend
+	docker compose -f docker-compose-local.yml up -d --build
+	docker compose -f docker-compose-local.yml logs -f backend
 
 shell:
 	docker compose run --rm backend python ./manage.py shell_plus --ipython

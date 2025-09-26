@@ -15,11 +15,14 @@ logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
 {% if cookiecutter.use_buttondown == 'y' -%}
 def add_email_to_buttondown(email, tag):
+    if not settings.BUTTONDOWN_API_KEY:
+        return "Buttondown API key not found."
+
     data = {
         "email_address": str(email),
         "metadata": {"source": tag},
         "tags": [tag],
-        "referrer_url": "https://{{ cookiecutter.project_slug }}.app",
+        "referrer_url": "https://{{ cookiecutter.project_slug }}.com",
         "type": "regular",
     }
 
@@ -34,6 +37,9 @@ def add_email_to_buttondown(email, tag):
 
 {% if cookiecutter.use_posthog == 'y' -%}
 def try_create_posthog_alias(profile_id: int, cookies: dict, source_function: str = None) -> str:
+    if not settings.POSTHOG_API_KEY:
+        return "PostHog API key not found."
+
     base_log_data = {
         "profile_id": profile_id,
         "cookies": cookies,
@@ -67,6 +73,9 @@ def try_create_posthog_alias(profile_id: int, cookies: dict, source_function: st
 def track_event(
     profile_id: int, event_name: str, properties: dict, source_function: str = None
 ) -> str:
+    if not settings.POSTHOG_API_KEY:
+        return "PostHog API key not found."
+
     base_log_data = {
         "profile_id": profile_id,
         "event_name": event_name,

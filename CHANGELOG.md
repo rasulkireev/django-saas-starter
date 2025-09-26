@@ -13,6 +13,24 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 **Fixed** for any bug fixes.
 **Security** in case of vulnerabilities.
 
+## [0.0.4] - 2025-09-26
+### Added
+- New context_processor which figures out which social apps you have installed
+- New context_processor which figures out if user is a paying customer
+- render deployment configuration
+
+### Updated
+- .env.example file with better instructions and more options
+- S3 is now optional
+- README with better deployment instructions
+- apps.py to run POSTHOG if API key is available
+- tasks to only run if relevant env vars are present
+- settings file to work with new deployment options
+- docker-compose files to support both local and prod deployments
+
+### Removed
+- cookiecutter variable that makes social auth optional. instead the code takes care of that
+
 ## [0.0.3] - 2024-11-11
 ### Added
 - Experimental Flag

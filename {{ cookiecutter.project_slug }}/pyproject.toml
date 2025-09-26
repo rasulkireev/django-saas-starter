@@ -48,8 +48,6 @@ pydantic-ai = "^0.3.4"
 logfire = "^3.6.4"
 {% endif -%}
 
-[tool.poetry.dev-dependencies]
-
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.2.1"
 djlint = "^1.36.4"
