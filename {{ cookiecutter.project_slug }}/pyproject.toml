@@ -5,13 +5,13 @@ description = "{{ cookiecutter.project_description }}"
 authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.13"
 django-allauth = {extras = ["socialaccount"], version = "^64.0.0"}
 python-webpack-boilerplate = "^1.0.0"
 django-widget-tweaks = "^1.4.12"
 django = "^5.0.4"
 django-environ = "^0.11.2"
-psycopg2 = "^2.9.9"
+psycopg = {extras = ["binary"], version = "^3.2.10"}
 ipython = "^8.27.0"
 django-extensions = "^3.2.3"
 pillow = "^10.4.0"
@@ -46,9 +46,7 @@ pydantic-ai = "^0.3.4"
 {% endif -%}
 {% if cookiecutter.use_logfire == 'y' -%}
 logfire = "^3.6.4"
-{% endif -%}
-
-[tool.poetry.dev-dependencies]
+{% endif %}
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.2.1"

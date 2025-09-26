@@ -5,7 +5,7 @@ description = "Minimalistic SaaS Template for Django Projects"
 authors = ["Rasul Kireev <me@rasulkireev.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.13"
 
 [tool.poetry.dev-dependencies]
 

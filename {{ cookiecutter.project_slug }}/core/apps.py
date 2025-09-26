@@ -1,8 +1,10 @@
 {% if cookiecutter.use_posthog == 'y' -%}
 import posthog
 {% endif %}
+
 from django.conf import settings
 from django.apps import AppConfig
+
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
@@ -19,8 +21,9 @@ class CoreConfig(AppConfig):
         {% endif %}
 
         {% if cookiecutter.use_posthog == 'y' -%}
-        posthog.api_key = settings.POSTHOG_API_KEY
-        posthog.host = "https://us.i.posthog.com"
+        if settings.POSTHOG_API_KEY:
+            posthog.api_key = settings.POSTHOG_API_KEY
+            posthog.host = "https://us.i.posthog.com"
 
         if settings.ENVIRONMENT == "dev":
             posthog.debug = True

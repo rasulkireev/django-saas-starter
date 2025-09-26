@@ -68,7 +68,7 @@
         </div>
       </form>
 
-      {% if cookiecutter.use_social_auth == 'y' -%}
+      {{ "{% if has_social_providers %}" }}
       <div>
         <div class="relative mt-10">
           <div class="flex absolute inset-0 items-center" aria-hidden="true">
@@ -79,8 +79,8 @@
           </div>
         </div>
 
-        {% if cookiecutter.use_github_auth == 'y' -%}
         <div class="grid grid-cols-1 gap-4 mt-6">
+          {{ "{% if 'github' in available_social_providers %}" }}
           <form method="post" action="{% raw %}{% provider_login_url 'github' %}{%- endraw %}">
             {{ "{% csrf_token %}" }}
             <button class="flex gap-3 justify-center items-center px-3 py-2 w-full text-sm font-semibold text-gray-900 bg-white rounded-md ring-1 ring-inset ring-gray-300 shadow-sm hover:bg-gray-50 focus-visible:ring-transparent">
@@ -90,13 +90,10 @@
               <span class="text-sm font-semibold leading-6">GitHub</span>
             </button>
           </form>
+          {{ "{% endif %}" }}
         </div>
-        {% endif %}
-
       </div>
-      {% endif %}
-
-
+      {{ "{% endif %}" }}
     </div>
   </div>
 {{ '{% endblock content %}' }}

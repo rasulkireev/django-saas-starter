@@ -4,7 +4,7 @@ To start you'll need to start the Mkdocs server, where a step-by-step process wi
 
 ## Features
 
-- Django 5 and Python 3.11
+- Django 5 and Python 3.13
 - User authentication (regular + social) via django-allauth
 - Environment variables via django-environ
 - TailwindCSS & StimulusJS for frontend via Webpack
@@ -35,6 +35,6 @@ Optional Integrations:
 - MJML for email templating
 - Logfire for prod and dev logging dashboards
 
-## TODO
-- [ ] Drastically improve the documentation structure. Right now everything leaves in the Generated README file.
-- [ ] Go from poetry to uv
+## TODOs
+
+- [ ] update pricing page

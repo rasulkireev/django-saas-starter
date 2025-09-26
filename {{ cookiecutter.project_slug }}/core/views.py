@@ -56,7 +56,7 @@ class HomeView(TemplateView):
         {% endif %}
 
         {% if cookiecutter.use_posthog == 'y' -%}
-        if self.request.user.is_authenticated:
+        if self.request.user.is_authenticated and settings.POSTHOG_API_KEY:
             user = self.request.user
             profile = user.profile
 

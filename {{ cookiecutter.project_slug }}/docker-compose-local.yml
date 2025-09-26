@@ -98,6 +98,7 @@ services:
       - .env
   {% endif %}
 
+  {% if cookiecutter.use_s3 == 'y' -%}
   minio:
     image: minio/minio
     ports:
@@ -128,8 +129,11 @@ services:
       /usr/bin/mc anonymous set download myminio/{{ cookiecutter.project_slug }}-dev &&
       exit 0;
       "
+  {% endif %}
 
 volumes:
   postgres_data:
   redis_data:
+  {% if cookiecutter.use_s3 == 'y' -%}
   minio_data:
+  {% endif %}

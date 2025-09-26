@@ -36,12 +36,18 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 
+# Options: dev, prod
 ENVIRONMENT = env("ENVIRONMENT")
 
 {% if cookiecutter.use_logfire == 'y' -%}
-if ENVIRONMENT == "prod":
+LOGFIRE_TOKEN = env("LOGFIRE_TOKEN", default="")
+if LOGFIRE_TOKEN:
     logfire.configure(environment=ENVIRONMENT)
 {%- endif %}
+
+{% if cookiecutter.use_sentry == 'y' -%}
+SENTRY_DSN = env("SENTRY_DSN", default="")
+{% endif %}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -52,8 +58,12 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS")
+SITE_URL = env("SITE_URL")
+
+# Remove the port from the SITE_URL and the https prefix (mostly for dev)
+ALLOWED_HOSTS = [SITE_URL.replace("http://", "").replace("https://", "").split(":")[0]]
+
+CSRF_TRUSTED_ORIGINS = [SITE_URL]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -73,9 +83,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    {% if cookiecutter.use_github_auth == 'y' -%}
     "allauth.socialaccount.providers.github",
-    {% endif %}
     "django_q",
     "django_extensions",
     {% if cookiecutter.use_mjml == 'y' -%}
@@ -112,6 +120,10 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "core.context_processors.current_state",
+                {% if cookiecutter.use_posthog == 'y' -%}
+                "core.context_processors.posthog_api_key",
+                {% endif %}
+                "core.context_processors.available_social_providers",
             ],
         },
     },
@@ -123,8 +135,21 @@ WSGI_APPLICATION = "{{ cookiecutter.project_slug }}.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+POSTGRES_DB = env("POSTGRES_DB")
+POSTGRES_USER = env("POSTGRES_USER")
+POSTGRES_PASSWORD = env("POSTGRES_PASSWORD")
+POSTGRES_HOST = env("POSTGRES_HOST")
+POSTGRES_PORT = env("POSTGRES_PORT", default="5432")
+
 DATABASES = {
-    "default": env.db_url(),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": POSTGRES_DB,
+        "USER": POSTGRES_USER,
+        "PASSWORD": POSTGRES_PASSWORD,
+        "HOST": POSTGRES_HOST,
+        "PORT": POSTGRES_PORT,
+    }
 }
 
 # Password validation
@@ -169,29 +194,44 @@ STATICFILES_DIRS = [
     BASE_DIR.joinpath("frontend/build"),
 ]
 
-bucket_name = env("AWS_S3_BUCKET_NAME")
+folder_name = f"{{ cookiecutter.project_slug }}-{ENVIRONMENT}"
+aws_s3_endpoint_url = env("AWS_S3_ENDPOINT_URL", default="")
 
-STORAGES = {
-    "default": {
-        "BACKEND": "storages.backends.s3.S3Storage",
-        "OPTIONS": {
-          "bucket_name": bucket_name,
-          "default_acl": "public-read",
-          "region_name": "eu-east-1",
-          "endpoint_url": env("AWS_S3_ENDPOINT_URL"),
-          "access_key": env("AWS_ACCESS_KEY_ID"),
-          "secret_key": env("AWS_SECRET_ACCESS_KEY"),
-          "querystring_auth": False,
-          "file_overwrite": False,
-        },
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
-
-MEDIA_URL = f"{env('AWS_S3_ENDPOINT_URL')}/{bucket_name}/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+
+if not aws_s3_endpoint_url:
+    MEDIA_URL = f"/media/"
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+            "OPTIONS": {
+                "location": MEDIA_ROOT,
+            },
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
+else:
+    MEDIA_URL = f"{aws_s3_endpoint_url}/{folder_name}/"
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "bucket_name": folder_name,
+                "default_acl": "public-read",
+                "region_name": "eu-east-1",
+                "endpoint_url": aws_s3_endpoint_url,
+                "access_key": env("AWS_ACCESS_KEY_ID"),
+                "secret_key": env("AWS_SECRET_ACCESS_KEY"),
+                "querystring_auth": False,
+                "file_overwrite": False,
+            },
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
 
 WEBPACK_LOADER = {
     "MANIFEST_FILE": BASE_DIR.joinpath("frontend/build/manifest.json"),
@@ -223,12 +263,14 @@ ACCOUNT_FORMS = {
     "signup": "core.forms.CustomSignUpForm",
     "login": "core.forms.CustomLoginForm",
 }
-if ENVIRONMENT == "prod":
+if ENVIRONMENT != "dev":
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
-SOCIALACCOUNT_PROVIDERS = {
-    {% if cookiecutter.use_github_auth == 'y' -%}
-    "github": {
+SOCIALACCOUNT_PROVIDERS = {}
+
+GITHUB_CLIENT_ID = env("GITHUB_CLIENT_ID", default="")
+if GITHUB_CLIENT_ID != "":
+    SOCIALACCOUNT_PROVIDERS["github"] = {
         "VERIFIED_EMAIL": True,
         "EMAIL_AUTHENTICATION": True,
         "AUTO_SIGNUP": True,
@@ -236,12 +278,11 @@ SOCIALACCOUNT_PROVIDERS = {
             "client_id": env("GITHUB_CLIENT_ID"),
             "secret": env("GITHUB_CLIENT_SECRET"),
         },
-    },
-    {% endif %}
-}
+    }
 
+MAILGUN_API_KEY = env("MAILGUN_API_KEY", default="")
 ANYMAIL = {
-    "MAILGUN_API_KEY": env("MAILGUN_API_KEY"),
+    "MAILGUN_API_KEY": MAILGUN_API_KEY,
     "MAILGUN_SENDER_DOMAIN": "mg.{{ cookiecutter.project_slug }}.app",
 }
 DEFAULT_FROM_EMAIL = "Rasul from {{ cookiecutter.project_name }} <hello@{{ cookiecutter.project_slug }}.app>"
@@ -255,7 +296,16 @@ if DEBUG:
     EMAIL_HOST_USER = ""
     EMAIL_HOST_PASSWORD = ""
 else:
-    EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+    if MAILGUN_API_KEY == "":
+        EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    else:
+        EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+
+REDIS_HOST = env("REDIS_HOST", default="localhost")
+REDIS_PORT = env("REDIS_PORT", default="6379")
+REDIS_PASSWORD = env("REDIS_PASSWORD", default="")
+REDIS_DB = env("REDIS_DB", default="0")
+REDIS_URL = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
 
 Q_CLUSTER = {
     "name": "{{ cookiecutter.project_slug }}-q",
@@ -263,9 +313,14 @@ Q_CLUSTER = {
     "retry": 120,
     "workers": 4,
     "max_attempts": 2,
-    "redis": env("REDIS_URL"),
+    "redis": REDIS_URL,
     "error_reporter": {}
 }
+
+{% if cookiecutter.use_sentry == 'y' -%}
+Q_CLUSTER["error_reporter"] = {"sentry": {"dsn": SENTRY_DSN}}
+{% endif %}
+
 
 LOGGING = {
     "version": 1,
@@ -310,25 +365,37 @@ LOGGING = {
     },
 }
 
-structlog.configure(
-    processors=[
-        structlog.contextvars.merge_contextvars,
-        structlog.stdlib.filter_by_level,
-        structlog.processors.TimeStamper(fmt="iso"),
-        structlog.stdlib.add_logger_name,
-        structlog.stdlib.add_log_level,
-        {% if cookiecutter.use_sentry == 'y' -%}
-        SentryProcessor(event_level=logging.ERROR),
-        {%- endif %}
-        structlog.stdlib.PositionalArgumentsFormatter(),
-        {% if cookiecutter.use_logfire == 'y' -%}
-        logfire.StructlogProcessor(),
-        {%- endif %}
+structlog_processors = [
+    structlog.contextvars.merge_contextvars,
+    structlog.stdlib.filter_by_level,
+    structlog.processors.TimeStamper(fmt="iso"),
+    structlog.stdlib.add_logger_name,
+    structlog.stdlib.add_log_level,
+]
+
+{% if cookiecutter.use_sentry == 'y' -%}
+if SENTRY_DSN:
+    structlog_processors.append(SentryProcessor(event_level=logging.ERROR))
+{% endif %}
+
+structlog_processors.append(structlog.stdlib.PositionalArgumentsFormatter())
+
+{% if cookiecutter.use_logfire == 'y' -%}
+if LOGFIRE_TOKEN:
+    structlog_processors.append(logfire.StructlogProcessor())
+{% endif %}
+
+structlog_processors.extend(
+    [
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
         structlog.processors.UnicodeDecoder(),
         structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
-    ],
+    ]
+)
+
+structlog.configure(
+    processors=structlog_processors,
     logger_factory=structlog.stdlib.LoggerFactory(),
     cache_logger_on_first_use=True,
 )
@@ -339,7 +406,6 @@ if ENVIRONMENT == "prod":
     LOGGING["loggers"]["django_structlog"]["handlers"] = ["json_console"]
 
 {% if cookiecutter.use_sentry == 'y' -%}
-SENTRY_DSN = env("SENTRY_DSN")
 if ENVIRONMENT == "prod" and SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
@@ -356,16 +422,16 @@ Q_CLUSTER["error_reporter"] = {"sentry": {"dsn": SENTRY_DSN}}
 {% endif %}
 
 {% if cookiecutter.use_posthog == 'y' -%}
-POSTHOG_API_KEY = env("POSTHOG_API_KEY")
+POSTHOG_API_KEY = env("POSTHOG_API_KEY", default="")
 {% endif %}
 
 {% if cookiecutter.use_buttondown == 'y' -%}
-BUTTONDOWN_API_KEY=env("BUTTONDOWN_API_KEY")
+BUTTONDOWN_API_KEY=env("BUTTONDOWN_API_KEY", default="")
 {% endif %}
 
 {% if cookiecutter.use_stripe == 'y' -%}
-STRIPE_LIVE_SECRET_KEY = env("STRIPE_LIVE_SECRET_KEY")
-STRIPE_TEST_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY")
+STRIPE_LIVE_SECRET_KEY = env("STRIPE_LIVE_SECRET_KEY", default="")
+STRIPE_TEST_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY", default="")
 
 STRIPE_LIVE_MODE = False
 STRIPE_SECRET_KEY = STRIPE_TEST_SECRET_KEY
@@ -373,7 +439,7 @@ if ENVIRONMENT == "prod":
     STRIPE_LIVE_MODE = True
     STRIPE_SECRET_KEY = STRIPE_LIVE_SECRET_KEY
 
-DJSTRIPE_WEBHOOK_SECRET = env("DJSTRIPE_WEBHOOK_SECRET")
+DJSTRIPE_WEBHOOK_SECRET = env("DJSTRIPE_WEBHOOK_SECRET", default="")
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
 {% endif %}
 
