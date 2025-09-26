@@ -27,6 +27,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - tasks to only run if relevant env vars are present
 - settings file to work with new deployment options
 - docker-compose files to support both local and prod deployments
+- makefile commands to include local compose file
 
 ### Removed
 - cookiecutter variable that makes social auth optional. instead the code takes care of that
