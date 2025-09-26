@@ -4,7 +4,7 @@ To start you'll need to start the Mkdocs server, where a step-by-step process wi
 
 ## Features
 
-- Django 5 and Python 3.11
+- Django 5 and Python 3.13
 - User authentication (regular + social) via django-allauth
 - Environment variables via django-environ
 - TailwindCSS & StimulusJS for frontend via Webpack
