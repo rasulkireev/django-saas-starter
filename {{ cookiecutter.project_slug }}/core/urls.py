@@ -24,6 +24,10 @@ urlpatterns = [
         views.create_checkout_session,
         name="user_upgrade_checkout_session",
     ),
-    path("create-customer-portal/", views.create_customer_portal_session, name="create_customer_portal_session"),
+    path(
+      "create-customer-portal/",
+      views.create_customer_portal_session,
+      name="create_customer_portal_session"
+    ),
     {% endif %}
 ]

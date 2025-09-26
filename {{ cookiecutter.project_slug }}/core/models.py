@@ -1,12 +1,12 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
-
-from core.base_models import BaseModel
-from core.model_utils import generate_random_key
 from django_q.tasks import async_task
 
+from core.base_models import BaseModel
 from core.choices import ProfileStates {% if cookiecutter.generate_blog == 'y' %}, BlogPostStatus{% endif %}
+from core.model_utils import generate_random_key
+
 
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
@@ -148,7 +148,7 @@ class Feedback(BaseModel):
             subject = "New Feedback Submitted"
             message = f"""
                 New feedback was submitted:\n\n
-                User: {self.profile.user.email if self.profile else 'Anonymous'}
+                User: {self.profile.user.email if self.profile else "Anonymous"}
                 Feedback: {self.feedback}
                 Page: {self.page}
             """

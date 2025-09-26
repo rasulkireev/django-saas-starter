@@ -1,4 +1,4 @@
-from urllib.parse import urlencode, {% if cookiecutter.use_posthog == 'y' -%}unquote{% endif %}
+from urllib.parse import urlencode
 
 from django.http import HttpResponse
 {% if cookiecutter.use_stripe == 'y' -%}
