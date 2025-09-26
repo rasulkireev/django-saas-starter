@@ -45,6 +45,10 @@ if LOGFIRE_TOKEN:
     logfire.configure(environment=ENVIRONMENT)
 {%- endif %}
 
+{% if cookiecutter.use_sentry == 'y' -%}
+SENTRY_DSN = env("SENTRY_DSN", default="")
+{% endif %}
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -401,7 +405,6 @@ if ENVIRONMENT == "prod":
     LOGGING["loggers"]["django_structlog"]["handlers"] = ["json_console"]
 
 {% if cookiecutter.use_sentry == 'y' -%}
-SENTRY_DSN = env("SENTRY_DSN")
 if ENVIRONMENT == "prod" and SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,

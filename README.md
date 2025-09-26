@@ -35,6 +35,6 @@ Optional Integrations:
 - MJML for email templating
 - Logfire for prod and dev logging dashboards
 
-## TODO
-- [ ] Drastically improve the documentation structure. Right now everything leaves in the Generated README file.
-- [ ] Go from poetry to uv
+## TODOs
+
+- [ ] update pricing page

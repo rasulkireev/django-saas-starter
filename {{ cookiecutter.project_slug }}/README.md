@@ -105,5 +105,7 @@ You'd still need to make sure .env has correct values.
 ## Local Development
 
 1. Update the name of the `.env.example` to `.env` and update relevant variables.
-2. Run `make serve`
-3. Run `make restart-worker` just in case, it sometimes has troubles connecting to REDIS on first deployment.
+2. Run `poetry export -f requirements.txt --output requirements.txt --without-hashes`
+3. Run `poetry run python manage.py makemigrations`
+4. Run `make serve`
+5. Run `make restart-worker` just in case, it sometimes has troubles connecting to REDIS on first deployment.
