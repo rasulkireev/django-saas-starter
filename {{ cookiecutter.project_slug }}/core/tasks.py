@@ -20,7 +20,7 @@ def add_email_to_buttondown(email, tag):
         "metadata": {"source": tag},
         "tags": [tag],
         "referrer_url": "https://{{ cookiecutter.project_slug }}.app",
-        "subscriber_type": "regular",
+        "type": "regular",
     }
 
     r = requests.post(
