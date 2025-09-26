@@ -197,10 +197,10 @@ STATICFILES_DIRS = [
 folder_name = f"{{ cookiecutter.project_slug }}-{ENVIRONMENT}"
 aws_s3_endpoint_url = env("AWS_S3_ENDPOINT_URL", default="")
 
-MEDIA_URL = f"{aws_s3_endpoint_url}/{folder_name}/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
 if not aws_s3_endpoint_url:
+    MEDIA_URL = f"/media/"
     STORAGES = {
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -213,6 +213,7 @@ if not aws_s3_endpoint_url:
         },
     }
 else:
+    MEDIA_URL = f"{aws_s3_endpoint_url}/{folder_name}/"
     STORAGES = {
         "default": {
             "BACKEND": "storages.backends.s3.S3Storage",
