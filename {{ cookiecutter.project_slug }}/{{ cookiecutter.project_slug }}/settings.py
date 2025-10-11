@@ -14,13 +14,8 @@ import os
 from pathlib import Path
 import environ
 import structlog
-import logging
-import structlog
 {% if cookiecutter.use_sentry == 'y' -%}
 import sentry_sdk
-from structlog_sentry import SentryProcessor
-from {{ cookiecutter.project_slug }}.sentry_utils import CustomLoggingIntegration
-from sentry_sdk.integrations.logging import LoggingIntegration
 {% endif %}
 {% if cookiecutter.use_logfire == 'y' -%}
 import logfire
@@ -314,13 +309,7 @@ Q_CLUSTER = {
     "workers": 4,
     "max_attempts": 2,
     "redis": REDIS_URL,
-    "error_reporter": {}
 }
-
-{% if cookiecutter.use_sentry == 'y' -%}
-Q_CLUSTER["error_reporter"] = {"sentry": {"dsn": SENTRY_DSN}}
-{% endif %}
-
 
 LOGGING = {
     "version": 1,
@@ -373,11 +362,6 @@ structlog_processors = [
     structlog.stdlib.add_log_level,
 ]
 
-{% if cookiecutter.use_sentry == 'y' -%}
-if SENTRY_DSN:
-    structlog_processors.append(SentryProcessor(event_level=logging.ERROR))
-{% endif %}
-
 structlog_processors.append(structlog.stdlib.PositionalArgumentsFormatter())
 
 {% if cookiecutter.use_logfire == 'y' -%}
@@ -406,19 +390,16 @@ if ENVIRONMENT == "prod":
     LOGGING["loggers"]["django_structlog"]["handlers"] = ["json_console"]
 
 {% if cookiecutter.use_sentry == 'y' -%}
-if ENVIRONMENT == "prod" and SENTRY_DSN:
+if SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
-        integrations=[
-            LoggingIntegration(
-                level=None,
-                event_level=None
-            ),
-            CustomLoggingIntegration(event_level=logging.ERROR)
-        ],
+        enable_logs=True,
+        environment=ENVIRONMENT,
+        send_default_pii=True,
+        traces_sample_rate=1,
+        profile_session_sample_rate=1,
+        profile_lifecycle="trace",
     )
-
-Q_CLUSTER["error_reporter"] = {"sentry": {"dsn": SENTRY_DSN}}
 {% endif %}
 
 {% if cookiecutter.use_posthog == 'y' -%}

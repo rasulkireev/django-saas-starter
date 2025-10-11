@@ -13,6 +13,10 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 **Fixed** for any bug fixes.
 **Security** in case of vulnerabilities.
 
+## [0.0.4] - 2025-10-12
+### Changed
+- how sentry will capture logs
+
 ## [0.0.4] - 2025-09-26
 ### Added
 - New context_processor which figures out which social apps you have installed
