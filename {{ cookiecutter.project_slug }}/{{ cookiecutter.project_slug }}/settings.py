@@ -15,10 +15,16 @@ from pathlib import Path
 import environ
 import structlog
 {% if cookiecutter.use_sentry == 'y' -%}
+import logging
 import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
+from structlog_sentry import SentryProcessor
 {% endif %}
 {% if cookiecutter.use_logfire == 'y' -%}
 import logfire
+from {{ cookiecutter.project_slug }}.logging_utils import scrubbing_callback
 {% endif %}
 
 
@@ -37,7 +43,10 @@ ENVIRONMENT = env("ENVIRONMENT")
 {% if cookiecutter.use_logfire == 'y' -%}
 LOGFIRE_TOKEN = env("LOGFIRE_TOKEN", default="")
 if LOGFIRE_TOKEN:
-    logfire.configure(environment=ENVIRONMENT)
+    logfire.configure(
+        environment=ENVIRONMENT,
+        scrubbing=logfire.ScrubbingOptions(callback=scrubbing_callback),
+    )
 {%- endif %}
 
 {% if cookiecutter.use_sentry == 'y' -%}
@@ -309,15 +318,33 @@ Q_CLUSTER = {
     "workers": 4,
     "max_attempts": 2,
     "redis": REDIS_URL,
+    "error_reporter": {},
 }
+
+def extract_from_record(logger, name, event_dict):
+    """
+    Extract thread name and add them to the event dict.
+    """
+    record = event_dict["_record"]
+    event_dict["thread_id"] = record.thread
+    return event_dict
 
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
+        "simple": {"format": "%(levelname)s %(message)s"},
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s"
+        },
+        "json": {"format": "%(message)s"},
         "json_formatter": {
             "()": structlog.stdlib.ProcessorFormatter,
-            "processor": structlog.processors.JSONRenderer(),
+            "processors": [
+                extract_from_record,
+                structlog.stdlib.ProcessorFormatter.remove_processors_meta,
+                structlog.processors.JSONRenderer(),
+            ],
         },
         "plain_console": {
             "()": structlog.stdlib.ProcessorFormatter,
@@ -325,11 +352,27 @@ LOGGING = {
         },
         "key_value": {
             "()": structlog.stdlib.ProcessorFormatter,
-            "processor": structlog.processors.KeyValueRenderer(key_order=["timestamp", "level", "event", "logger"]),
+            "processor": structlog.processors.KeyValueRenderer(
+                key_order=["timestamp", "level", "event", "logger"]
+            ),
+        },
+    },
+    "filters": {
+        "require_debug_false": {
+            "()": "django.utils.log.RequireDebugFalse",
+        },
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
         },
     },
     "handlers": {
         "console": {
+            "filters": ["require_debug_true"],
+            "class": "logging.StreamHandler",
+            "formatter": "plain_console",
+            "level": "DEBUG",
+        },
+        "prod_console": {
             "class": "logging.StreamHandler",
             "formatter": "plain_console",
             "level": "DEBUG",
@@ -346,6 +389,22 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+        },
+        # django.server can log some low-level logs, but also does log requests,
+        # for some reason...
+        "django.server": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",  # so we don't chunder 404s, etc
+            "propagate": False,
+        },
         "{{ cookiecutter.project_slug }}": {
             "level": "DEBUG",
             "handlers": ["console"],
@@ -360,9 +419,24 @@ structlog_processors = [
     structlog.processors.TimeStamper(fmt="iso"),
     structlog.stdlib.add_logger_name,
     structlog.stdlib.add_log_level,
+    structlog.stdlib.PositionalArgumentsFormatter(),
+    structlog.processors.StackInfoRenderer(),
+    # structlog.processors.format_exc_info,
 ]
 
-structlog_processors.append(structlog.stdlib.PositionalArgumentsFormatter())
+{% if cookiecutter.use_sentry == 'y' -%}
+if SENTRY_DSN:
+    structlog_processors.append(
+        SentryProcessor(
+            event_level=logging.ERROR,
+            level=logging.INFO,
+            active=True,
+            as_context=True,
+            tag_keys="__all__",
+            verbose=True,
+        )
+    )
+{% endif %}
 
 {% if cookiecutter.use_logfire == 'y' -%}
 if LOGFIRE_TOKEN:
@@ -371,8 +445,6 @@ if LOGFIRE_TOKEN:
 
 structlog_processors.extend(
     [
-        structlog.processors.StackInfoRenderer(),
-        structlog.processors.format_exc_info,
         structlog.processors.UnicodeDecoder(),
         structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
     ]
@@ -385,20 +457,31 @@ structlog.configure(
 )
 
 if ENVIRONMENT == "prod":
+    LOGGING["loggers"]["django.server"]["level"] = "WARNING"
+    LOGGING["loggers"]["django_structlog"]["handlers"].append("json_console")
     LOGGING["loggers"]["{{ cookiecutter.project_slug }}"]["level"] = env("DJANGO_LOG_LEVEL", default="INFO")
-    LOGGING["loggers"]["{{ cookiecutter.project_slug }}"]["handlers"] = ["json_console"]
-    LOGGING["loggers"]["django_structlog"]["handlers"] = ["json_console"]
+    LOGGING["loggers"]["{{ cookiecutter.project_slug }}"]["handlers"].append("json_console")
 
 {% if cookiecutter.use_sentry == 'y' -%}
 if SENTRY_DSN:
+    Q_CLUSTER["error_reporter"]["sentry"] = {"dsn": SENTRY_DSN}
     sentry_sdk.init(
+        debug=DEBUG,
         dsn=SENTRY_DSN,
-        enable_logs=True,
         environment=ENVIRONMENT,
-        send_default_pii=True,
+        send_default_pii=False,
         traces_sample_rate=1,
         profile_session_sample_rate=1,
         profile_lifecycle="trace",
+        integrations=[
+            DjangoIntegration(),
+            RedisIntegration(),
+        ],
+        disabled_integrations=[
+            LoggingIntegration(),
+        ],
+        attach_stacktrace=True,
+        include_local_variables=True,
     )
 {% endif %}
 
