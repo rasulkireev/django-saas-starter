@@ -16,6 +16,10 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 ## [0.0.5] - 2025-10-23
 ### Added
 - support for self hosted mjml server
+- MJML email templates for allauth:
+  - Welcome email with confirmation link (sent on signup)
+  - Email confirmation resend template
+  - Both templates include subject lines and fallback for non-MJML users
 
 ### Changed
 - landing page and home page are now different pages
@@ -23,6 +27,11 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - user-settings now has a single button for all the forms on the page
 - stling of the upgrade flow
 - moved the blog and api logic to a separate app
+- use pg 18 for local db
+
+### Removed
+- test_mjml function and template (replaced with proper allauth email templates)
+- unused imports from core/views.py (HttpResponse, render_to_string, strip_tags, EmailMultiAlternatives)
 
 ## [0.0.4] - 2025-10-12
 ### Changed

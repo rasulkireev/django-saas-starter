@@ -1,6 +1,5 @@
 from urllib.parse import urlencode
 
-from django.http import HttpResponse
 {% if cookiecutter.use_stripe == 'y' -%}
 import stripe
 {% endif %}
@@ -20,9 +19,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, UpdateView, ListView, DetailView
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from django.core.mail import EmailMultiAlternatives
 
 {% if cookiecutter.use_stripe == 'y' -%}
 from djstripe import models as djstripe_models
@@ -286,21 +282,3 @@ class AdminPanelView(UserPassesTestMixin, TemplateView):
         )
 
         return context
-
-
-{% if cookiecutter.use_mjml == 'y' -%}
-def test_mjml(request):
-    html_content = render_to_string("emails/test_mjml.html", {})
-    text_content = strip_tags(html_content)
-
-    email = EmailMultiAlternatives(
-        "Subject",
-        text_content,
-        settings.DEFAULT_FROM_EMAIL,
-        ["test@test.com"],
-    )
-    email.attach_alternative(html_content, "text/html")
-    email.send()
-
-    return HttpResponse("Email sent")
-{% endif %}
