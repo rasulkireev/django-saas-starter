@@ -16,10 +16,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 ## [0.0.5] - 2025-10-23
 ### Added
 - support for self hosted mjml server
-- MJML email templates for allauth:
-  - Welcome email with confirmation link (sent on signup)
-  - Email confirmation resend template
-  - Both templates include subject lines and fallback for non-MJML users
+- MJML email templates for allauth (signup and email confirmation):
 
 ### Changed
 - landing page and home page are now different pages
