@@ -46,7 +46,7 @@ pydantic-ai = "^0.3.4"
 {% endif -%}
 {% if cookiecutter.use_logfire == 'y' -%}
 logfire = "^3.6.4"
-{% endif %}
+# {% endif %}
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.2.1"
