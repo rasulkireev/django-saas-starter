@@ -22,7 +22,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - added admin panel page for info and test triggers
 - user-settings now has a single button for all the forms on the page
 - stling of the upgrade flow
-- moved the blog logic to a separate app
+- moved the blog and api logic to a separate app
 
 ## [0.0.4] - 2025-10-12
 ### Changed
