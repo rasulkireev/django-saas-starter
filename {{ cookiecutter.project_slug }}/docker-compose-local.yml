@@ -98,6 +98,13 @@ services:
       - .env
   {% endif %}
 
+  {% if cookiecutter.use_mjml == 'y' -%}
+  mjml:
+    image: danihodovic/mjml-server
+    ports:
+      - "15500:15500"
+  {% endif %}
+
   {% if cookiecutter.use_s3 == 'y' -%}
   minio:
     image: minio/minio

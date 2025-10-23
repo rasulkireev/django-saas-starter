@@ -1,20 +1,15 @@
-{{ '{% extends "base.html" %}' }}
+{{ '{% extends "base_app.html" %}' }}
 
 {{ "{% block content %}" }}
 <div class="isolate relative px-6 mt-16 sm:mt-24 lg:px-8">
-  <div class="isolate relative px-6 mt-16 sm:mt-24 lg:px-8">
+  <div class="mx-auto max-w-7xl">
     <div class="mx-auto text-center">
         <h1 class="mx-auto mb-6 max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-          {{ cookiecutter.project_description }}
+          Welcome to {{ cookiecutter.project_name }}
         </h1>
-        <div class="flex flex-col gap-x-6 justify-center items-center mt-10 md:flex-row md:items-end">
-          <a
-            class="block px-3 py-2 text-sm font-semibold text-white bg-{{cookiecutter.project_main_color}}-600 rounded-md shadow-sm hover:bg-{{cookiecutter.project_main_color}}-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-{{cookiecutter.project_main_color}}-600"
-            href="{% raw %}{% url 'account_signup' %}{%- endraw %}"
-          >
-            Get Started
-          </a>
-        </div>
+        <p class="mt-6 text-lg leading-8 text-gray-600">
+          This is your main app dashboard. Start building your application here.
+        </p>
     </div>
   </div>
 </div>
@@ -30,6 +25,6 @@
   });
 </script>
 {{ "{% endif %}" }}
+{% endif %}
 
 {{ "{% endblock content %}" }}
-{% endif %}

@@ -95,6 +95,9 @@ INSTALLED_APPS = [
     {% endif %}
     "django_structlog",
     "core.apps.CoreConfig",
+    {% if cookiecutter.generate_blog == 'y' -%}
+    "blog.apps.BlogConfig",
+    {% endif %}
 ]
 
 MIDDLEWARE = [
@@ -255,7 +258,7 @@ SITE_ID = 1
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 LOGIN_REDIRECT_URL = "home"
-ACCOUNT_LOGOUT_REDIRECT_URL = "home"
+ACCOUNT_LOGOUT_REDIRECT_URL = "landing"
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = "username"
 ACCOUNT_AUTHENTICATION_METHOD = "username"

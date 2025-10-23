@@ -1,0 +1,105 @@
+---
+alwaysApply: true
+description: Rules for generating Django HTML templates in a Cookiecutter boilerplate
+---
+
+# Django HTML Template Generation Rules
+
+## Core Principle
+Django templates in a Cookiecutter boilerplate require special escaping to distinguish between:
+1. Cookiecutter template variables (processed during project generation)
+2. Django template variables (remain as-is in the generated project)
+
+## Escaping Syntax
+
+### Simple Django Tags: Use `{{ "{% ... %}" }}`
+Wrap simple Django template tags (no arguments or quotes) in Cookiecutter string literals:
+
+- `{{ "{% extends 'base.html' %}" }}`
+- `{{ "{% load static %}" }}`
+- `{{ "{% block content %}" }}`
+- `{{ "{% endblock content %}" }}`
+- `{{ "{% if user.is_authenticated %}" }}`
+- `{{ "{% csrf_token %}" }}`
+- `{{ "{{ form.field_name }}" }}`
+
+### Django Tags with Arguments: Use `{% raw %}...{% endraw %}`
+When Django tags contain arguments, quotes, dots, or filters, use raw blocks:
+
+- `{% raw %}{% url 'view_name' %}{% endraw %}`
+- `{% raw %}{% url 'user_profile' pk=user.id %}{% endraw %}`
+- `{% raw %}{% static 'path/to/file.css' %}{% endraw %}`
+- `{% raw %}{{ form.field.id_for_label }}{% endraw %}`
+- `{% raw %}{{ request.get_host }}{% endraw %}`
+- `{% raw %}{% if request.user.is_authenticated %}{% endif %}{% endraw %}`
+
+**Rule of thumb:** If the tag has arguments, use `{% raw %}...{% endraw %}`
+
+### Cookiecutter Variables: Use `{{ cookiecutter.variable }}`
+For values that should be injected during project generation:
+
+- `{{ cookiecutter.project_name }}`
+- `{{ cookiecutter.project_description }}`
+- `{{ cookiecutter.author_name }}`
+
+### Tailwind CSS Classes with Cookiecutter Variables
+Write the full class name with the variable inline (no spaces):
+
+```html
+<button class="bg-{{ cookiecutter.project_main_color }}-600 hover:bg-{{ cookiecutter.project_main_color }}-700">
+  Click me
+</button>
+
+<div class="text-{{ cookiecutter.project_main_color }}-500 border-{{ cookiecutter.project_main_color }}-300">
+  Styled content
+</div>
+```
+
+**Important:** Keep the entire class name together as one string for Tailwind to detect it properly.
+
+### Conditional Sections: Use `{% if cookiecutter.feature == 'y' -%}`
+For feature-specific HTML blocks:
+
+```html
+{% if cookiecutter.use_stripe == 'y' -%}
+<div>Stripe payment form</div>
+{% endif %}
+```
+
+## Common Patterns
+
+```html
+<!-- Static files -->
+{{ "{% load static %}" }}
+<img src="{% raw %}{% static 'images/logo.png' %}{% endraw %}" alt="{{ cookiecutter.project_name }}" />
+
+<!-- URLs -->
+<a href="{% raw %}{% url 'home' %}{% endraw %}">Home</a>
+<a href="{% raw %}{% url 'user_profile' pk=user.id %}{% endraw %}">Profile</a>
+
+<!-- Forms -->
+{{ "{% csrf_token %}" }}
+{{ "{{ form.email }}" }}
+{{ "{{ form.email.errors }}" }}
+
+<!-- Mixed Cookiecutter and Django -->
+<title>{{ cookiecutter.project_name }} - {{ "{{ page_title }}" }}</title>
+
+<!-- Tailwind with variables -->
+<button class="bg-{{ cookiecutter.project_main_color }}-600">Submit</button>
+
+<!-- Conditionals -->
+{% if cookiecutter.use_posthog == 'y' -%}
+{{ "{% if posthog_api_key %}" }}
+<script>/* PostHog code */</script>
+{{ "{% endif %}" }}
+{% endif %}
+```
+
+## Quick Decision Guide
+
+1. **Simple Django tag?** → `{{ "{% tag %}" }}`
+2. **Django tag with arguments?** → `{% raw %}{% tag 'arg' %}{% endraw %}`
+3. **Cookiecutter value?** → `{{ cookiecutter.variable }}`
+4. **Tailwind class with variable?** → `class="bg-{{ cookiecutter.project_main_color }}-600"`
+5. **Optional feature?** → `{% if cookiecutter.feature == 'y' -%}...{% endif %}`

@@ -1,0 +1,21 @@
+---
+alwaysApply: true
+description: Instructionon how an agent should behave in this repo. Always use!
+---
+
+# Cookiecutter Django Boilerplate - Cursor Rules
+
+## Core Principle
+This is a TEMPLATE repository. Never hardcode project-specific values. Always use Cookiecutter variables.
+
+## Available Variables
+- See @cookiecutter.json file to see what variable are available.
+
+## Rules
+- Always Use Variables, even for file names and directories (if they requre project name for example. though this is rarely the case)
+- Wrap optional features with `{% if cookiecutter.feature_name == 'y' %}...{% endif %}`
+- Don't run any commands unless specifically asked to (especially python, poetry and git commands)
+- Don't add new cookiecutter template variables, ask before you think it is a good idea.
+
+## Testing
+- Don't write or run test commands, unless specifically asked to.

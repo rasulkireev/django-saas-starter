@@ -9,9 +9,3 @@ class ProfileStates(models.TextChoices):
     CANCELLED = "cancelled"
     CHURNED = "churned"
     ACCOUNT_DELETED = "account_deleted"
-
-{% if cookiecutter.generate_blog == 'y' %}
-class BlogPostStatus(models.TextChoices):
-    DRAFT = "draft"
-    PUBLISHED = "published"
-{% endif %}

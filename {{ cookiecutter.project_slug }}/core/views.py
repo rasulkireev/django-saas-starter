@@ -13,7 +13,7 @@ from allauth.account.models import EmailAddress
 from django_q.tasks import async_task
 from allauth.account.utils import send_email_confirmation
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
 from django.conf import settings
@@ -30,7 +30,7 @@ from core.choices import ProfileStates
 {% endif %}
 
 from core.forms import ProfileUpdateForm
-from core.models import Profile{% if cookiecutter.generate_blog == 'y' -%}, BlogPost{% endif %}
+from core.models import Profile
 
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
@@ -40,7 +40,32 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
-class HomeView(TemplateView):
+
+class LandingPageView(TemplateView):
+    template_name = "pages/landing-page.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        {% if cookiecutter.use_posthog == 'y' -%}
+        if self.request.user.is_authenticated and settings.POSTHOG_API_KEY:
+            user = self.request.user
+            profile = user.profile
+
+            async_task(
+                "core.tasks.try_create_posthog_alias",
+                profile_id=profile.id,
+                cookies=self.request.COOKIES,
+                source_function="LandingPageView - get_context_data",
+                group="Create Posthog Alias",
+            )
+        {% endif %}
+
+        return context
+
+
+class HomeView(LoginRequiredMixin, TemplateView):
+    login_url = "account_login"
     template_name = "pages/home.html"
 
     def get_context_data(self, **kwargs):
@@ -53,20 +78,6 @@ class HomeView(TemplateView):
             context["show_confetti"] = True
         elif payment_status == "failed":
             messages.error(self.request, "Something went wrong with the payment.")
-        {% endif %}
-
-        {% if cookiecutter.use_posthog == 'y' -%}
-        if self.request.user.is_authenticated and settings.POSTHOG_API_KEY:
-            user = self.request.user
-            profile = user.profile
-
-            async_task(
-                "core.tasks.try_create_posthog_alias",
-                profile_id=profile.id,
-                cookies=self.request.COOKIES,
-                source_function="HomeView - get_context_data",
-                group="Create Posthog Alias",
-            )
         {% endif %}
 
         return context
@@ -212,25 +223,70 @@ def create_customer_portal_session(request):
 
     session = stripe.billing_portal.Session.create(
         customer=customer.id,
-        return_url=request.build_absolute_uri(reverse("home")),
+        return_url=request.build_absolute_uri(reverse("settings")),
     )
 
     return redirect(session.url, code=303)
 {% endif %}
 
+class AdminPanelView(UserPassesTestMixin, TemplateView):
+    template_name = "pages/admin-panel.html"
+    login_url = "account_login"
 
-{% if cookiecutter.generate_blog == 'y' -%}
-class BlogView(ListView):
-    model = BlogPost
-    template_name = "blog/blog_posts.html"
-    context_object_name = "blog_posts"
+    def test_func(self):
+        return self.request.user.is_superuser
 
+    def handle_no_permission(self):
+        messages.error(self.request, "You don't have permission to access this page.")
+        return redirect("home")
 
-class BlogPostView(DetailView):
-    model = BlogPost
-    template_name = "blog/blog_post.html"
-    context_object_name = "blog_post"
-{% endif %}
+    def get_context_data(self, **kwargs):
+        from django.db.models import Count
+        from django.contrib.auth.models import User
+        from django.utils import timezone
+        from datetime import timedelta
+        from core.models import Profile, Feedback
+
+        context = super().get_context_data(**kwargs)
+
+        now = timezone.now()
+        week_ago = now - timedelta(days=7)
+        month_ago = now - timedelta(days=30)
+
+        total_users = User.objects.count()
+        total_profiles = Profile.objects.count()
+        total_feedback = Feedback.objects.count()
+
+        new_users_week = User.objects.filter(date_joined__gte=week_ago).count()
+        new_users_month = User.objects.filter(date_joined__gte=month_ago).count()
+        feedback_week = Feedback.objects.filter(created_at__gte=week_ago).count()
+
+        recent_users = User.objects.select_related('profile').order_by('-date_joined')[:10]
+        recent_feedback = Feedback.objects.select_related('profile__user').order_by('-created_at')[:10]
+
+        # Calculate average users per day for last 30 days
+        avg_users_per_day = new_users_month / 30 if new_users_month > 0 else 0
+
+        context.update({
+            'total_users': total_users,
+            'total_profiles': total_profiles,
+            'total_feedback': total_feedback,
+            'new_users_week': new_users_week,
+            'new_users_month': new_users_month,
+            'feedback_week': feedback_week,
+            'recent_users': recent_users,
+            'recent_feedback': recent_feedback,
+            'avg_users_per_day': avg_users_per_day,
+        })
+
+        logger.info(
+            "Admin panel accessed",
+            email=self.request.user.email,
+            profile_id=self.request.user.profile.id
+        )
+
+        return context
+
 
 {% if cookiecutter.use_mjml == 'y' -%}
 def test_mjml(request):

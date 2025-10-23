@@ -28,6 +28,9 @@ urlpatterns = [
     {% if cookiecutter.use_stripe == 'y' -%}
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
     {% endif %}
+    {% if cookiecutter.generate_blog == 'y' -%}
+    path("blog/", include("blog.urls")),
+    {% endif %}
     path("", include("core.urls")),
     path(
         "sitemap.xml",

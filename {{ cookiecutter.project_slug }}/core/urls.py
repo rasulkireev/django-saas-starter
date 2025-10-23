@@ -5,13 +5,10 @@ from core.api.views import api
 
 urlpatterns = [
     # pages
-    path("", views.HomeView.as_view(), name="home"),
+    path("", views.LandingPageView.as_view(), name="landing"),
+    path("home", views.HomeView.as_view(), name="home"),
     path("settings", views.UserSettingsView.as_view(), name="settings"),
-    {% if cookiecutter.generate_blog == 'y' -%}
-    # blog
-    path("blog", views.BlogView.as_view(), name="blog_posts"),
-    path("blog/<slug:slug>", views.BlogPostView.as_view(), name="blog_post"),
-    {% endif %}
+    path("admin-panel", views.AdminPanelView.as_view(), name="admin_panel"),
     # app
     path("api/", api.urls),
     # utils

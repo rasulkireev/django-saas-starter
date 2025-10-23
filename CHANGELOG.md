@@ -13,6 +13,17 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 **Fixed** for any bug fixes.
 **Security** in case of vulnerabilities.
 
+## [0.0.5] - 2025-10-23
+### Added
+- support for self hosted mjml server
+
+### Changed
+- landing page and home page are now different pages
+- added admin panel page for info and test triggers
+- user-settings now has a single button for all the forms on the page
+- stling of the upgrade flow
+- moved the blog logic to a separate app
+
 ## [0.0.4] - 2025-10-12
 ### Changed
 - how sentry will capture logs

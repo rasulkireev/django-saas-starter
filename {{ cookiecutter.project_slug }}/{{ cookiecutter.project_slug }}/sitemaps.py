@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.sitemaps import GenericSitemap
 
 {% if cookiecutter.generate_blog == 'y' %}
-from core.models import BlogPost
+from blog.models import BlogPost
 {% endif %}
 
 
@@ -20,7 +20,7 @@ class StaticViewSitemap(sitemaps.Sitemap):
             List: urlNames that will be in the Sitemap
         """
         return [
-            "home",
+            "landing",
             "uses",
             {% if cookiecutter.use_stripe == 'y' -%}
             "pricing",

@@ -4,7 +4,7 @@ from django.urls import reverse
 from django_q.tasks import async_task
 
 from core.base_models import BaseModel
-from core.choices import ProfileStates {% if cookiecutter.generate_blog == 'y' %}, BlogPostStatus{% endif %}
+from core.choices import ProfileStates
 from core.model_utils import generate_random_key
 
 
@@ -94,28 +94,6 @@ class ProfileStateTransition(BaseModel):
     to_state = models.CharField(max_length=255, choices=ProfileStates.choices)
     backup_profile_id = models.IntegerField()
     metadata = models.JSONField(null=True, blank=True)
-
-{% if cookiecutter.generate_blog == 'y' %}
-class BlogPost(BaseModel):
-    title = models.CharField(max_length=250)
-    description = models.TextField(blank=True)
-    slug = models.SlugField(max_length=250)
-    tags = models.TextField()
-    content = models.TextField()
-    icon = models.ImageField(upload_to="blog_post_icons/", blank=True)
-    image = models.ImageField(upload_to="blog_post_images/", blank=True)
-    status = models.CharField(
-        max_length=10,
-        choices=BlogPostStatus.choices,
-        default=BlogPostStatus.DRAFT,
-    )
-
-    def __str__(self):
-        return self.title
-
-    def get_absolute_url(self):
-        return reverse("blog_post", kwargs={"slug": self.slug})
-{% endif %}
 
 class Feedback(BaseModel):
     profile = models.ForeignKey(
