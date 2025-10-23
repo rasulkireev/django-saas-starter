@@ -31,6 +31,7 @@ urlpatterns = [
     {% if cookiecutter.generate_blog == 'y' -%}
     path("blog/", include("blog.urls")),
     {% endif %}
+    path("api/", include("api.urls")),
     path("", include("core.urls")),
     path(
         "sitemap.xml",

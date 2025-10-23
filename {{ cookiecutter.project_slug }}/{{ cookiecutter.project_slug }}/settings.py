@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     {% endif %}
     "django_structlog",
     "core.apps.CoreConfig",
+    "api.apps.ApiConfig",
     {% if cookiecutter.generate_blog == 'y' -%}
     "blog.apps.BlogConfig",
     {% endif %}

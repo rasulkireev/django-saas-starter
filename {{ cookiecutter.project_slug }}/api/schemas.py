@@ -2,7 +2,7 @@ from ninja import Schema
 from typing import Optional
 
 {% if cookiecutter.generate_blog == 'y' %}
-from core.choices import BlogPostStatus
+from blog.choices import BlogPostStatus
 {% endif %}
 
 
