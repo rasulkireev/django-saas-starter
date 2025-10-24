@@ -173,7 +173,15 @@
 
     <footer class="bg-white">
       <div class="px-6 py-12 mx-auto max-w-7xl md:flex md:items-center md:justify-between lg:px-8">
-        <div class="mt-8 md:mt-0">
+        <div class="flex justify-center space-x-6 md:order-2">
+          <a href="{% raw %}{% url 'privacy_policy' %}{% endraw %}" class="text-sm leading-6 text-gray-600 hover:text-gray-900">
+            Privacy Policy
+          </a>
+          <a href="{% raw %}{% url 'terms_of_service' %}{% endraw %}" class="text-sm leading-6 text-gray-600 hover:text-gray-900">
+            Terms of Service
+          </a>
+        </div>
+        <div class="mt-8 md:order-1 md:mt-0">
           <p class="text-xs leading-5 text-center text-gray-500">
             &copy; 2025 <a href="https://lvtd.dev?ref={{ '{{ request.get_host }}' }}">LVTD, LLC</a>. All rights reserved.
           </p>

@@ -282,3 +282,11 @@ class AdminPanelView(UserPassesTestMixin, TemplateView):
         )
 
         return context
+
+
+class PrivacyPolicyView(TemplateView):
+    template_name = "pages/privacy-policy.html"
+
+
+class TermsOfServiceView(TemplateView):
+    template_name = "pages/terms-of-service.html"
