@@ -290,3 +290,9 @@ class PrivacyPolicyView(TemplateView):
 
 class TermsOfServiceView(TemplateView):
     template_name = "pages/terms-of-service.html"
+
+
+def custom_404_view(request, exception=None):
+    """Custom 404 error handler."""
+    from django.shortcuts import render
+    return render(request, "404.html", status=404)

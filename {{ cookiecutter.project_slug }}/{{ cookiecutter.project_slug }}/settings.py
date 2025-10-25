@@ -317,8 +317,8 @@ REDIS_URL = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
 
 Q_CLUSTER = {
     "name": "{{ cookiecutter.project_slug }}-q",
-    "timeout": 90,
-    "retry": 120,
+    "timeout": 3600,  # 1 hour
+    "retry": 4800,  # 80 minutes
     "workers": 4,
     "max_attempts": 2,
     "redis": REDIS_URL,
@@ -429,7 +429,7 @@ structlog_processors = [
 ]
 
 {% if cookiecutter.use_sentry == 'y' -%}
-if SENTRY_DSN:
+if SENTRY_DSN and ENVIRONMENT == "prod":
     structlog_processors.append(
         SentryProcessor(
             event_level=logging.ERROR,
@@ -467,7 +467,7 @@ if ENVIRONMENT == "prod":
     LOGGING["loggers"]["{{ cookiecutter.project_slug }}"]["handlers"].append("json_console")
 
 {% if cookiecutter.use_sentry == 'y' -%}
-if SENTRY_DSN:
+if SENTRY_DSN and ENVIRONMENT == "prod":
     Q_CLUSTER["error_reporter"]["sentry"] = {"dsn": SENTRY_DSN}
     sentry_sdk.init(
         debug=DEBUG,

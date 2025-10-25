@@ -19,6 +19,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
 
 from {{ cookiecutter.project_slug }}.sitemaps import sitemaps
+from core.views import custom_404_view
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -40,3 +41,6 @@ urlpatterns = [
         name="django.contrib.sitemaps.views.sitemap",
     ),
 ]
+
+# Custom error handlers
+handler404 = custom_404_view

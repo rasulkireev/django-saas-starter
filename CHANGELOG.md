@@ -13,6 +13,17 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 **Fixed** for any bug fixes.
 **Security** in case of vulnerabilities.
 
+
+## [0.0.6] - 2025-10-24
+### Added
+- Privacy Policy and Terms of Service Links
+- Healthcheck API endpoint
+- Custom 404 error page with modern design
+- Add FAQs to landing page
+
+### Changed
+- default timeout for tassk to be around an hour
+
 ## [0.0.5] - 2025-10-23
 ### Added
 - support for self hosted mjml server
