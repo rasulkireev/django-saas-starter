@@ -29,6 +29,11 @@ def posthog_api_key(request):
     return {"posthog_api_key": settings.POSTHOG_API_KEY}
 {% endif %}
 
+{% if cookiecutter.use_mjml == 'y' -%}
+def mjml_url(request):
+    return {"mjml_url": settings.MJML_URL}
+{% endif %}
+
 def available_social_providers(request):
     """
     Checks which social authentication providers are available.

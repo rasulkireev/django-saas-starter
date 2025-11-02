@@ -66,6 +66,8 @@ SITE_URL = env("SITE_URL")
 
 # Remove the port from the SITE_URL and the https prefix (mostly for dev)
 ALLOWED_HOSTS = [SITE_URL.replace("http://", "").replace("https://", "").split(":")[0]]
+if DEBUG:
+  ALLOWED_HOSTS.append("backend")
 
 CSRF_TRUSTED_ORIGINS = [SITE_URL]
 
@@ -130,6 +132,9 @@ TEMPLATES = [
                 "core.context_processors.current_state",
                 {% if cookiecutter.use_posthog == 'y' -%}
                 "core.context_processors.posthog_api_key",
+                {% endif %}
+                {% if cookiecutter.use_mjml == 'y' -%}
+                "core.context_processors.mjml_url",
                 {% endif %}
                 "core.context_processors.available_social_providers",
             ],
@@ -513,10 +518,10 @@ DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
 
 {% if cookiecutter.use_mjml == 'y' -%}
 MJML_BACKEND_MODE = "httpserver"
+MJML_URL = env("MJML_URL", default="")
 MJML_HTTPSERVERS = [
     {
-        "URL": "https://api.mjml.io/v1/render",
-        "HTTP_AUTH": (env('MJML_APPLICATION_ID'), env("MJML_SECRET")),
+        "URL": f"{MJML_URL}/v1/render",
     }
 ]
 {% endif %}

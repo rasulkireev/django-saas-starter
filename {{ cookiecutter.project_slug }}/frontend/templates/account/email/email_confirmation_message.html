@@ -1,7 +1,8 @@
 {% if cookiecutter.use_mjml == 'y' -%}
-{{ '{% load mjml %}' }}
 {{ "{% block subject %}" }}Please Confirm Your Email Address for {{ cookiecutter.project_name }}{{ "{% endblock %}" }}
 
+{% raw %}{% if mjml_url %}{% endraw %}
+{{ '{% load mjml %}' }}
 {{ '{% mjml %}' }}
 <mjml>
   <mj-head>
@@ -133,6 +134,21 @@
   </mj-body>
 </mjml>
 {{ '{% endmjml %}' }}
+{% raw %}{% else %}{% endraw %}
+Hello,
+
+Thank you for signing up for {{ cookiecutter.project_name }}! To complete your registration and start using your account, please confirm your email address by clicking the link below:
+
+{% raw %}{{ activate_url }}{% endraw %}
+
+If the link above doesn't work, copy and paste it into your browser.
+
+If you didn't create an account with {{ cookiecutter.project_name }}, you can safely ignore this email.
+
+---
+This email was sent by {{ cookiecutter.project_name }}
+© {{ "{% now 'Y' %}" }} {{ cookiecutter.project_name }}. All rights reserved.
+{% raw %}{% endif %}{% endraw %}
 {% else -%}
 {{ "{% block subject %}" }}Please Confirm Your Email Address for {{ cookiecutter.project_name }}{{ "{% endblock %}" }}
 

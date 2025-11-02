@@ -14,6 +14,14 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 **Security** in case of vulnerabilities.
 
 
+## [0.0.6] - 2025-10-28
+### Changed
+- use simple text if mjml is not setup
+
+## [0.0.6] - 2025-10-24
+### Changed
+- updated dj-stripe and stripe versions
+
 ## [0.0.6] - 2025-10-24
 ### Added
 - Privacy Policy and Terms of Service Links
