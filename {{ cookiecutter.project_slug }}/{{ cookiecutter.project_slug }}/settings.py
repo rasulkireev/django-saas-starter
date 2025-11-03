@@ -270,18 +270,21 @@ ACCOUNT_LOGOUT_REDIRECT_URL = "landing"
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = "username"
 ACCOUNT_AUTHENTICATION_METHOD = "username"
-ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
+ACCOUNT_LOGIN_METHODS = {"username"}
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_FORMS = {
     "signup": "core.forms.CustomSignUpForm",
     "login": "core.forms.CustomLoginForm",
 }
+ACCOUNT_ADAPTER = "{{cookiecutter.project_slug}}.adapters.CustomAccountAdapter"
 if ENVIRONMENT != "dev":
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
+SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_PROVIDERS = {}
+SOCIALACCOUNT_ADAPTER = "{{cookiecutter.project_slug}}.adapters.CustomSocialAccountAdapter"
 
 GITHUB_CLIENT_ID = env("GITHUB_CLIENT_ID", default="")
 if GITHUB_CLIENT_ID != "":

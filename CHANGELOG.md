@@ -16,7 +16,8 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 
 ## [0.0.6] - 2025-11-03
 ### Added
-- Added banner model to make it easy to create banners for specific Referrers
+- Added banner model to make it easy to create banners for specific Referrers.
+- Added EmailSent model to keep track of all the emails sent to users.
 
 ### Changes
 - All landing pages are now in `pages` app
