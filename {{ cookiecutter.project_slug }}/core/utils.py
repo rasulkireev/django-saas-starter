@@ -1,9 +1,9 @@
 import requests
 
 from django.forms.utils import ErrorList
-from django.conf import settings
 
-from core.models import Profile
+from core.models import EmailSent
+from core.choices import EmailType, Profile
 
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
@@ -40,3 +40,30 @@ def ping_healthchecks(ping_id):
     except requests.RequestException as e:
         logger.error("Ping failed", error=e, exc_info=True)
 {% endif %}
+
+
+def track_email_sent(email_address: str, email_type: EmailType, profile: Profile = None):
+    """
+    Track sent emails by creating EmailSent records.
+    """
+    try:
+        email_sent = EmailSent.objects.create(
+            email_address=email_address, email_type=email_type, profile=profile
+        )
+        logger.info(
+            "[Track Email Sent] Email tracked successfully",
+            email_address=email_address,
+            email_type=email_type,
+            profile_id=profile.id if profile else None,
+            email_sent_id=email_sent.id,
+        )
+        return email_sent
+    except Exception as e:
+        logger.error(
+            "[Track Email Sent] Failed to track email",
+            email_address=email_address,
+            email_type=email_type,
+            error=str(e),
+            exc_info=True,
+        )
+        return None

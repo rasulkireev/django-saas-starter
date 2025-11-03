@@ -1,10 +1,13 @@
+from decimal import Decimal, InvalidOperation
+
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from django_q.tasks import async_task
 
 from core.base_models import BaseModel
-from core.choices import ProfileStates
+from core.choices import ProfileStates, EmailType
 from core.model_utils import generate_random_key
 
 
@@ -123,6 +126,8 @@ class Feedback(BaseModel):
             from django.conf import settings
             from django.core.mail import send_mail
 
+            from core.utils import track_email_sent
+
             subject = "New Feedback Submitted"
             message = f"""
                 New feedback was submitted:\n\n
@@ -134,3 +139,32 @@ class Feedback(BaseModel):
             recipient_list = [settings.DEFAULT_FROM_EMAIL]
 
             send_mail(subject, message, from_email, recipient_list, fail_silently=True)
+
+            for recipient_email in recipient_list:
+                track_email_sent(
+                    email_address=recipient_email,
+                    email_type=EmailType.FEEDBACK_NOTIFICATION,
+                    profile=self.profile,
+                )
+
+class EmailSent(BaseModel):
+    email_address = models.EmailField(help_text="The recipient email address")
+    email_type = models.CharField(
+        max_length=50, choices=EmailType.choices, help_text="Type of email sent"
+    )
+    profile = models.ForeignKey(
+        Profile,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="emails_sent",
+        help_text="Associated user profile, if applicable",
+    )
+
+    class Meta:
+        verbose_name = "Email Sent"
+        verbose_name_plural = "Emails Sent"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.email_type} to {self.email_address}"

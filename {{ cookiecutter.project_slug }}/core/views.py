@@ -3,7 +3,7 @@ from urllib.parse import urlencode
 {% if cookiecutter.use_stripe == 'y' -%}
 import stripe
 {% endif %}
-from allauth.account.models import EmailAddress
+from allauth.account.models import EmailAddress, EmailConfirmation
 from allauth.account.utils import send_email_confirmation
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -77,10 +77,50 @@ class UserSettingsView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 @login_required
 def resend_confirmation_email(request):
     user = request.user
-    send_email_confirmation(request, user, EmailAddress.objects.get_for_user(user, user.email))
+
+    try:
+        email_address = EmailAddress.objects.get_for_user(user, user.email)
+
+        if not email_address:
+            messages.error(request, "No email address found for your account.")
+            logger.warning(
+                "[Resend Confirmation] No email address found",
+                user_id=user.id,
+                user_email=user.email,
+            )
+            return redirect("settings")
+
+        if email_address.verified:
+            messages.info(request, "Your email is already verified.")
+            logger.info(
+                "[Resend Confirmation] Email already verified",
+                user_id=user.id,
+                user_email=user.email,
+            )
+            return redirect("settings")
+
+        # Create or get existing email confirmation
+        email_confirmation = EmailConfirmation.create(email_address)
+        email_confirmation.send(request, signup=False)
+
+        messages.success(request, "Confirmation email has been sent. Please check your inbox.")
+        logger.info(
+            "[Resend Confirmation] Email sent successfully",
+            user_id=user.id,
+            user_email=user.email,
+        )
+
+    except Exception as e:
+        messages.error(request, "Failed to send confirmation email. Please try again later.")
+        logger.error(
+            "[Resend Confirmation] Failed to send email",
+            user_id=user.id,
+            user_email=user.email,
+            error=str(e),
+            exc_info=True,
+        )
 
     return redirect("settings")
-
 
 {% if cookiecutter.use_stripe == 'y' -%}
 def create_checkout_session(request, pk, plan):
