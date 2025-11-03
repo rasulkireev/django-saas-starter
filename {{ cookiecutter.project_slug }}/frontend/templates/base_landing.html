@@ -55,6 +55,9 @@
 </head>
 
 <body {% raw %}{% if request.user.is_authenticated %}data-controller="user-settings"{% endif %}{%- endraw %}>
+  <!-- Referrer Banner -->
+  {{ "{% include 'components/referrer_banner.html' %}" }}
+
   {{ "{% block default_messages %}" }}
     {{ "{% include 'components/messages.html' with messages=messages %}" }}
   {{ "{% endblock default_messages %}" }}

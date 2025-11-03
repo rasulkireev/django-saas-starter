@@ -98,6 +98,7 @@ INSTALLED_APPS = [
     "django_structlog",
     "core.apps.CoreConfig",
     "api.apps.ApiConfig",
+    "pages.apps.PagesConfig",
     {% if cookiecutter.generate_blog == 'y' -%}
     "blog.apps.BlogConfig",
     {% endif %}
@@ -137,6 +138,7 @@ TEMPLATES = [
                 "core.context_processors.mjml_url",
                 {% endif %}
                 "core.context_processors.available_social_providers",
+                "pages.context_processors.referrer_banner",
             ],
         },
     },
