@@ -20,9 +20,18 @@ from django.views.generic import TemplateView
 
 from {{ cookiecutter.project_slug }}.sitemaps import sitemaps
 from core.views import custom_404_view
+from pages.views import AccountSignupView
+
+def custom_404_view(request, exception=None):
+    """Custom 404 error handler."""
+    from django.shortcuts import render
+    return render(request, "404.html", status=404)
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    # Override allauth signup with custom view
+    path("accounts/signup/", AccountSignupView.as_view(), name="account_signup"),
     path("accounts/", include("allauth.urls")),
     path("anymail/", include("anymail.urls")),
     path("uses", TemplateView.as_view(template_name="pages/uses.html"), name="uses"),
@@ -33,6 +42,7 @@ urlpatterns = [
     path("blog/", include("blog.urls")),
     {% endif %}
     path("api/", include("api.urls")),
+    path("", include("pages.urls")),
     path("", include("core.urls")),
     path(
         "sitemap.xml",
