@@ -9,3 +9,9 @@ class ProfileStates(models.TextChoices):
     CANCELLED = "cancelled"
     CHURNED = "churned"
     ACCOUNT_DELETED = "account_deleted"
+
+
+class EmailType(models.TextChoices):
+    EMAIL_CONFIRMATION = "EMAIL_CONFIRMATION", "Email Confirmation"
+    WELCOME = "WELCOME", "Welcome"
+    FEEDBACK_NOTIFICATION = "FEEDBACK_NOTIFICATION", "Feedback Notification"
