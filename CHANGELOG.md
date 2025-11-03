@@ -14,6 +14,13 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 **Security** in case of vulnerabilities.
 
 
+## [0.0.6] - 2025-11-03
+### Added
+- Added banner model to make it easy to create banners for specific Referrers
+
+### Changes
+- All landing pages are now in `pages` app
+
 ## [0.0.6] - 2025-10-28
 ### Changed
 - use simple text if mjml is not setup
