@@ -47,6 +47,11 @@ pydantic-ai = "^1.9.1"
 # {% if cookiecutter.use_logfire == 'y' -%}
 logfire = "^3.6.4"
 # {% endif %}
+# {% if cookiecutter.generate_docs == 'y' -%}
+python-frontmatter = "^1.1.0"
+pyyaml = "^6.0.3"
+pygments = "^2.19.2"
+# {% endif -%}
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.2.1"

@@ -44,6 +44,9 @@ urlpatterns = [
     path("api/", include("api.urls")),
     path("", include("pages.urls")),
     path("", include("core.urls")),
+    {% if cookiecutter.generate_docs == 'y' -%}
+    path("docs/", include("docs.urls")),
+    {% endif %}
     path(
         "sitemap.xml",
         sitemap,

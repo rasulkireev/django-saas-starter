@@ -102,6 +102,9 @@ INSTALLED_APPS = [
     {% if cookiecutter.generate_blog == 'y' -%}
     "blog.apps.BlogConfig",
     {% endif %}
+    {% if cookiecutter.generate_docs == 'y' -%}
+    "docs.apps.DocsConfig",
+    {% endif %}
 ]
 
 MIDDLEWARE = [

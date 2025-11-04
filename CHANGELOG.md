@@ -14,6 +14,10 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 **Security** in case of vulnerabilities.
 
 
+## [0.0.6] - 2025-11-04
+### Added
+- Added Docs Section
+
 ## [0.0.6] - 2025-11-03
 ### Added
 - Added banner model to make it easy to create banners for specific Referrers.
