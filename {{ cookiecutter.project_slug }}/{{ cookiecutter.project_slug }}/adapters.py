@@ -63,6 +63,50 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             )
             raise
 
+    def send_mail(self, template_prefix, email, context):
+        """
+        Override to prevent sending password reset emails for non-existent accounts.
+        This is a security best practice - we still show a success message to users,
+        but we don't actually send an email if the account doesn't exist.
+
+        For password reset flows, django-allauth uses these template prefixes:
+        - 'account/email/password_reset_key' - when account exists
+        - 'account/email/unknown_account' - when account doesn't exist (we suppress this)
+        - 'account/email/account_already_exists' - when trying to sign up with existing email
+
+        Args:
+            template_prefix: The email template prefix
+            email: The recipient email address
+            context: Template context dictionary
+        """
+        # Don't send email for unknown accounts during password reset
+        if template_prefix == "account/email/unknown_account":
+            logger.info(
+                "[Send Mail] Suppressing unknown account email for security",
+                email=email,
+                template_prefix=template_prefix,
+            )
+            return
+
+        # For all other emails, proceed normally
+        logger.info(
+            "[Send Mail] Sending email",
+            email=email,
+            template_prefix=template_prefix,
+        )
+
+        try:
+            return super().send_mail(template_prefix, email, context)
+        except Exception as error:
+            logger.error(
+                "[Send Mail] Failed to send email",
+                error=str(error),
+                exc_info=True,
+                email=email,
+                template_prefix=template_prefix,
+            )
+            raise
+
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     """

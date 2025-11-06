@@ -5,7 +5,7 @@
 <mjml>
   <mj-head>
     <mj-style>
-      .btn-confirm {
+      .btn-login {
         display: inline-block;
         padding: 12px 24px;
         border-radius: 8px;
@@ -17,7 +17,7 @@
         line-height: 24px;
         text-align: center;
       }
-      .btn-confirm:hover {
+      .btn-login:hover {
         background-color: #1d4ed8;
       }
     </mj-style>
@@ -41,16 +41,19 @@
     <mj-section background-color="#ffffff" padding="0 20px 20px 20px">
       <mj-column>
         <mj-text font-size="18px" color="#1f2937" font-weight="600" padding="0 0 10px 0">
-          Confirm Your Email Address
+          Account Already Exists
         </mj-text>
         <mj-text font-size="16px" color="#4b5563" line-height="24px" padding="0 0 20px 0">
           Hello,
         </mj-text>
         <mj-text font-size="16px" color="#4b5563" line-height="24px" padding="0 0 20px 0">
-          Thank you for signing up! To complete your registration, please confirm your email address.
+          You attempted to sign up at {% raw %}{{ site_name }}{% endraw %}, but an account with this email address already exists.
+        </mj-text>
+        <mj-text font-size="16px" color="#4b5563" line-height="24px" padding="0 0 20px 0">
+          If you forgot your password, you can reset it by clicking the "Forgot Password" link on the login page.
         </mj-text>
         <mj-text font-size="16px" color="#4b5563" line-height="24px" padding="0 0 30px 0">
-          Click the button below to verify your email:
+          Otherwise, you can log in using the button below:
         </mj-text>
       </mj-column>
     </mj-section>
@@ -64,9 +67,9 @@
           font-weight="600"
           border-radius="8px"
           padding="12px 24px"
-          href="{% raw %}{{ activate_url }}{% endraw %}"
+          href="{% raw %}{{ site_url }}{% url 'account_login' %}{% endraw %}"
         >
-          Confirm Email Address
+          Log In
         </mj-button>
       </mj-column>
     </mj-section>
@@ -77,10 +80,10 @@
           Or copy and paste this link into your browser:
         </mj-text>
         <mj-text font-size="13px" color="#2563eb" line-height="20px" padding="0 0 20px 0">
-          {% raw %}{{ activate_url }}{% endraw %}
+          {% raw %}{{ site_url }}{% url 'account_login' %}{% endraw %}
         </mj-text>
         <mj-text font-size="14px" color="#6b7280" line-height="20px" padding="20px 0 0 0">
-          If you didn't create an account, you can safely ignore this email.
+          If you didn't try to create an account, you can safely ignore this email.
         </mj-text>
       </mj-column>
     </mj-section>
@@ -120,19 +123,20 @@
     </div>
 
     <div style="background-color: #ffffff; padding: 30px; border: 1px solid #e9ecef;">
-        <h2 style="color: #1f2937; margin-top: 0;">Confirm Your Email Address</h2>
+        <h2 style="color: #1f2937; margin-top: 0;">Account Already Exists</h2>
         <p>Hello,</p>
-        <p>Thank you for signing up! To complete your registration, please confirm your email address.</p>
-        <p>Click the button below to verify your email:</p>
+        <p>You attempted to sign up at {% raw %}{{ site_name }}{% endraw %}, but an account with this email address already exists.</p>
+        <p>If you forgot your password, you can reset it by clicking the "Forgot Password" link on the login page.</p>
+        <p>Otherwise, you can log in using the button below:</p>
 
         <div style="text-align: center; margin: 30px 0;">
-            <a href="{% raw %}{{ activate_url }}{% endraw %}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600;">Confirm Email Address</a>
+            <a href="{% raw %}{{ site_url }}{% url 'account_login' %}{% endraw %}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600;">Log In</a>
         </div>
 
         <p style="color: #6b7280; font-size: 14px;">Or copy and paste this link into your browser:</p>
-        <p style="color: #2563eb; font-size: 13px; word-break: break-all;">{% raw %}{{ activate_url }}{% endraw %}</p>
+        <p style="color: #2563eb; font-size: 13px; word-break: break-all;">{% raw %}{{ site_url }}{% url 'account_login' %}{% endraw %}</p>
 
-        <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">If you didn't create an account, you can safely ignore this email.</p>
+        <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">If you didn't try to create an account, you can safely ignore this email.</p>
     </div>
 
     <div style="background-color: #f9fafb; padding: 20px; text-align: center;">
