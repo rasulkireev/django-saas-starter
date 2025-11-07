@@ -1,0 +1,59 @@
+{{ "{% extends 'docs/base_docs.html' %}" }}
+
+{{ "{% block meta %}" }}
+<title>{{ "{{ page_title }}" }} - {{ "{{ category_title }}" }} | {{ cookiecutter.project_name }} Documentation</title>
+{% raw %}<meta name="description" content="{% if meta_description %}{{ meta_description }}{% else %}{{ page_title }} documentation for {% endraw %}{{ cookiecutter.project_name }}{% raw %}{% endif %}" />
+{% if meta_keywords %}<meta name="keywords" content="{{ meta_keywords }}" />{% endif %}
+{% if author %}<meta name="author" content="{{ author }}" />{% endif %}{% endraw %}
+<meta name="robots" content="index, follow" />
+{% raw %}{% if canonical_url %}
+<link rel="canonical" href="{{ canonical_url }}" />
+{% else %}
+<link rel="canonical" href="https://{{ request.get_host }}{% url 'docs_page' category=current_category page=current_page %}" />
+{% endif %}{% endraw %}
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{{ "{{ page_title }}" }} - {{ "{{ category_title }}" }} | {{ cookiecutter.project_name }} Documentation" />
+{% raw %}<meta property="og:url" content="https://{{ request.get_host }}{% url 'docs_page' category=current_category page=current_page %}" />
+<meta property="og:description" content="{% if meta_description %}{{ meta_description }}{% else %}{{ page_title }} documentation for {% endraw %}{{ cookiecutter.project_name }}{% raw %}{% endif %}" />{% endraw %}
+<meta property="og:site_name" content="{{ cookiecutter.project_name }}" />
+
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="{{ "{{ page_title }}" }} - {{ "{{ category_title }}" }} | {{ cookiecutter.project_name }} Documentation" />
+{% raw %}<meta name="twitter:description" content="{% if meta_description %}{{ meta_description }}{% else %}{{ page_title }} documentation for {% endraw %}{{ cookiecutter.project_name }}{% raw %}{% endif %}" />{% endraw %}
+{{ "{% endblock meta %}" }}
+
+{{ "{% block docs_content %}" }}
+<h1>{{ "{{ page_title }}" }}</h1>
+{% raw %}{{ content|safe }}{% endraw %}
+
+<nav class="pt-8 mt-12 border-t border-gray-200 not-prose" aria-label="Docs pages navigation">
+    <div class="flex gap-4 justify-between">
+        <div class="flex-1">
+{% raw %}            {% if previous_page %}
+            <a href="{{ previous_page.url }}" class="block p-4 no-underline rounded-lg border border-gray-300 transition-colors group hover:border-gray-400">
+                <div class="mb-1 text-xs font-medium text-gray-500">
+                    ← Previous
+                </div>
+                <div class="text-base font-medium text-gray-700 group-hover:text-gray-900">
+                    {{ previous_page.page_title }}
+                </div>
+            </a>
+            {% endif %}{% endraw %}
+        </div>
+
+        <div class="flex-1">
+{% raw %}            {% if next_page %}
+            <a href="{{ next_page.url }}" class="block p-4 text-right no-underline rounded-lg border border-gray-300 transition-colors group hover:border-gray-400">
+                <div class="mb-1 text-xs font-medium text-gray-500">
+                    Next →
+                </div>
+                <div class="text-base font-medium text-gray-700 group-hover:text-gray-900">
+                    {{ next_page.page_title }}
+                </div>
+            </a>
+            {% endif %}{% endraw %}
+        </div>
+    </div>
+</nav>
+{{ "{% endblock docs_content %}" }}
