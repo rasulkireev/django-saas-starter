@@ -1,232 +1,148 @@
 {% if cookiecutter.use_mjml == 'y' -%}
-{{ "{% block subject %}" }}Welcome to {{ cookiecutter.project_name }}! Please Confirm Your Email{{ "{% endblock %}" }}
+{{ "{% load mjml %}" }}
 
-{% raw %}{% if mjml_url %}{% endraw %}
-{{ '{% load mjml %}' }}
-{{ '{% mjml %}' }}
+{{ "{% mjml %}" }}
 <mjml>
   <mj-head>
-    <mj-attributes>
-      <mj-text font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" padding="0" />
-      <mj-section padding="0" />
-    </mj-attributes>
     <mj-style>
-      .text-link {
-        color: #3b82f6;
+      .btn-confirm {
+        display: inline-block;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        color: white;
+        background-color: #2563eb;
         text-decoration: none;
+        line-height: 24px;
+        text-align: center;
       }
-      .text-link:hover {
-        text-decoration: underline;
+      .btn-confirm:hover {
+        background-color: #1d4ed8;
       }
     </mj-style>
   </mj-head>
 
   <mj-body background-color="#f3f4f6">
-    <!-- Header -->
-    <mj-section background-color="#ffffff" padding="40px 25px 30px">
+    <mj-section background-color="#ffffff" padding="40px 20px">
       <mj-column>
         <mj-text
           font-size="28px"
           font-weight="bold"
-          color="#111827"
+          color="#1f2937"
           align="center"
+          padding="0 0 20px 0"
         >
           {{ cookiecutter.project_name }}
         </mj-text>
       </mj-column>
     </mj-section>
 
-    <!-- Main Content -->
-    <mj-section background-color="#ffffff" padding="0 25px 40px">
+    <mj-section background-color="#ffffff" padding="0 20px 20px 20px">
       <mj-column>
-        <mj-text
-          font-size="20px"
-          font-weight="600"
-          color="#111827"
-          padding-bottom="20px"
-        >
-          Welcome to {{ cookiecutter.project_name }}! 🎉
+        <mj-text font-size="18px" color="#1f2937" font-weight="600" padding="0 0 10px 0">
+          Welcome to {{ cookiecutter.project_name }}!
         </mj-text>
-
-        <mj-text
-          font-size="16px"
-          color="#4b5563"
-          line-height="24px"
-          padding-bottom="10px"
-        >
-          Hi there,
+        <mj-text font-size="16px" color="#4b5563" line-height="24px" padding="0 0 20px 0">
+          Hello,
         </mj-text>
-
-        <mj-text
-          font-size="16px"
-          color="#4b5563"
-          line-height="24px"
-          padding-bottom="10px"
-        >
-          Thanks for signing up! We're excited to have you on board.
+        <mj-text font-size="16px" color="#4b5563" line-height="24px" padding="0 0 20px 0">
+          Thank you for signing up at {% raw %}{{ site_name }}{% endraw %}! We're excited to have you on board.
         </mj-text>
-
-        <mj-text
-          font-size="16px"
-          color="#4b5563"
-          line-height="24px"
-          padding-bottom="20px"
-        >
-          To get started and unlock all features, please confirm your email address by clicking the button below:
+        <mj-text font-size="16px" color="#4b5563" line-height="24px" padding="0 0 20px 0">
+          To get started, please confirm your email address by clicking the button below:
         </mj-text>
+      </mj-column>
+    </mj-section>
 
-        <!-- CTA Button -->
+    <mj-section background-color="#ffffff" padding="0 20px 30px 20px">
+      <mj-column>
         <mj-button
-          background-color="#3b82f6"
+          background-color="#2563eb"
           color="#ffffff"
           font-size="16px"
           font-weight="600"
-          border-radius="6px"
-          padding="30px 0"
+          border-radius="8px"
+          padding="12px 24px"
           href="{% raw %}{{ activate_url }}{% endraw %}"
         >
-          Confirm Email & Get Started
+          Confirm Email Address
         </mj-button>
-
-        <mj-text
-          font-size="14px"
-          color="#6b7280"
-          line-height="20px"
-          padding-top="20px"
-        >
-          If the button above doesn't work, copy and paste this link into your browser:
-        </mj-text>
-
-        <mj-text
-          font-size="14px"
-          color="#3b82f6"
-          line-height="20px"
-          padding-top="10px"
-          padding-bottom="30px"
-        >
-          <a href="{% raw %}{{ activate_url }}{% endraw %}" class="text-link">{% raw %}{{ activate_url }}{% endraw %}</a>
-        </mj-text>
-
-        <mj-divider border-color="#e5e7eb" border-width="1px" padding="20px 0"></mj-divider>
-
-        <mj-text
-          font-size="16px"
-          color="#111827"
-          font-weight="600"
-          line-height="24px"
-          padding-top="10px"
-          padding-bottom="10px"
-        >
-          What's next?
-        </mj-text>
-
-        <mj-text
-          font-size="15px"
-          color="#4b5563"
-          line-height="22px"
-          padding-bottom="8px"
-        >
-          ✨ Complete your profile
-        </mj-text>
-
-        <mj-text
-          font-size="15px"
-          color="#4b5563"
-          line-height="22px"
-          padding-bottom="8px"
-        >
-          🚀 Explore the dashboard
-        </mj-text>
-
-        <mj-text
-          font-size="15px"
-          color="#4b5563"
-          line-height="22px"
-          padding-bottom="20px"
-        >
-          💡 Check out our getting started guide
-        </mj-text>
-
-        <mj-text
-          font-size="14px"
-          color="#6b7280"
-          line-height="20px"
-          padding-top="20px"
-        >
-          If you didn't create an account with {{ cookiecutter.project_name }}, you can safely ignore this email.
-        </mj-text>
       </mj-column>
     </mj-section>
 
-    <!-- Footer -->
-    <mj-section background-color="#f9fafb" padding="30px 25px">
+    <mj-section background-color="#ffffff" padding="0 20px 30px 20px">
       <mj-column>
-        <mj-text
-          font-size="14px"
-          color="#6b7280"
-          align="center"
-          line-height="20px"
-        >
-          This email was sent by {{ cookiecutter.project_name }}
+        <mj-text font-size="14px" color="#6b7280" line-height="20px" padding="0 0 10px 0">
+          Or copy and paste this link into your browser:
         </mj-text>
-        <mj-text
-          font-size="12px"
-          color="#9ca3af"
-          align="center"
-          line-height="18px"
-          padding-top="10px"
-        >
-          © {{ "{% now 'Y' %}" }} {{ cookiecutter.project_name }}. All rights reserved.
+        <mj-text font-size="13px" color="#2563eb" line-height="20px" padding="0 0 20px 0">
+          {% raw %}{{ activate_url }}{% endraw %}
+        </mj-text>
+        <mj-text font-size="14px" color="#6b7280" line-height="20px" padding="20px 0 0 0">
+          If you didn't create an account, you can safely ignore this email.
         </mj-text>
       </mj-column>
     </mj-section>
+
+    <mj-section background-color="#f9fafb" padding="30px 20px">
+      <mj-column>
+        <mj-text font-size="14px" color="#6b7280" align="center" line-height="20px">
+          Thanks,
+        </mj-text>
+        <mj-text font-size="14px" color="#6b7280" align="center" line-height="20px" padding="5px 0 0 0">
+          {{ cookiecutter.author_name }}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section background-color="#f3f4f6" padding="20px">
+      <mj-column>
+        <mj-text font-size="12px" color="#9ca3af" align="center">
+          © 2025 {{ cookiecutter.project_name }}. All rights reserved.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
   </mj-body>
 </mjml>
-{{ '{% endmjml %}' }}
-{% raw %}{% else %}{% endraw %}
-Welcome to {{ cookiecutter.project_name }}! 🎉
+{{ "{% endmjml %}" }}
+{%- else -%}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="background-color: #f8f9fa; padding: 20px; text-align: center;">
+        <h1 style="color: #1f2937; margin: 0;">{{ cookiecutter.project_name }}</h1>
+    </div>
 
-Hi there,
+    <div style="background-color: #ffffff; padding: 30px; border: 1px solid #e9ecef;">
+        <h2 style="color: #1f2937; margin-top: 0;">Welcome to {{ cookiecutter.project_name }}!</h2>
+        <p>Hello,</p>
+        <p>Thank you for signing up at {% raw %}{{ site_name }}{% endraw %}! We're excited to have you on board.</p>
+        <p>To get started, please confirm your email address by clicking the button below:</p>
 
-Thanks for signing up! We're excited to have you on board.
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{% raw %}{{ activate_url }}{% endraw %}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600;">Confirm Email Address</a>
+        </div>
 
-To get started and unlock all features, please confirm your email address by clicking this link:
+        <p style="color: #6b7280; font-size: 14px;">Or copy and paste this link into your browser:</p>
+        <p style="color: #2563eb; font-size: 13px; word-break: break-all;">{% raw %}{{ activate_url }}{% endraw %}</p>
 
-{% raw %}{{ activate_url }}{% endraw %}
+        <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">If you didn't create an account, you can safely ignore this email.</p>
+    </div>
 
-What's next?
+    <div style="background-color: #f9fafb; padding: 20px; text-align: center;">
+        <p style="color: #6b7280; font-size: 14px; margin: 5px 0;">Thanks,</p>
+        <p style="color: #6b7280; font-size: 14px; margin: 5px 0;">{{ cookiecutter.author_name }}</p>
+    </div>
 
-✨ Complete your profile
-🚀 Explore the dashboard
-💡 Check out our getting started guide
-
-If you didn't create an account with {{ cookiecutter.project_name }}, you can safely ignore this email.
-
----
-This email was sent by {{ cookiecutter.project_name }}
-© {{ "{% now 'Y' %}" }} {{ cookiecutter.project_name }}. All rights reserved.
-{% raw %}{% endif %}{% endraw %}
-{% else -%}
-{{ "{% block subject %}" }}Welcome to {{ cookiecutter.project_name }}! Please Confirm Your Email{{ "{% endblock %}" }}
-
-Welcome to {{ cookiecutter.project_name }}! 🎉
-
-Hi there,
-
-Thanks for signing up! We're excited to have you on board.
-
-To get started and unlock all features, please confirm your email address by clicking this link:
-
-{% raw %}{{ activate_url }}{% endraw %}
-
-What's next?
-
-✨ Complete your profile
-🚀 Explore the dashboard
-💡 Check out our getting started guide
-
-If you didn't create an account with {{ cookiecutter.project_name }}, you can safely ignore this email.
-
-Thank you for using {{ cookiecutter.project_name }}!
-{% raw %}{{ site_domain }}{% endraw %}
-{% endif -%}
+    <div style="text-align: center; padding: 20px; color: #9ca3af; font-size: 12px;">
+        <p>© 2025 {{ cookiecutter.project_name }}. All rights reserved.</p>
+    </div>
+</body>
+</html>
+{%- endif %}

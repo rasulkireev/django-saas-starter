@@ -274,6 +274,8 @@ ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
 ACCOUNT_LOGIN_METHODS = {"username"}
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
+ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
 ACCOUNT_FORMS = {
     "signup": "core.forms.CustomSignUpForm",
     "login": "core.forms.CustomLoginForm",
