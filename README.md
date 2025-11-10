@@ -22,7 +22,7 @@ Legend:
 ### Communication
 - ✅ **Anymail** for email sending with **Mailgun** (Mailhog for local)
 - ✅ **Messages** handling with nice tempalte component pre-installed
-- ✅ **MJML** for email templating
+- ❓ **MJML** for email templating
 - ❓ **Buttondown** for newsletters
 
 ### Frontend
@@ -48,19 +48,25 @@ Legend:
 - ✅ Testing with **pytest**
 - ✅ **Pre-commit** for code quality checks: **ruff**, **djlint**
 
-### Logging & Monitoring
-- ✅ Structlog for logging setup both for local (console) and prod (json)
-- ❓ Sentry integration
-- ❓ Logfire for prod and dev logging dashboards
+### Logging, Monitoring & Analytics
+- ✅ **Structlog** for logging setup both for local (console) and prod (json)
+- ❓ **Sentry** integration
+- ❓ **Logfire** for prod and dev logging dashboards
+- ❓ **Healthcheck** integration
+- ❓ **Posthog** integration
 
 ### Pages
-- ✅ landing, pricing, signin/signup, sitemap, blog, docs
-- ✅ API support with django-ninja
+- ✅ landing, pricing, signin/signup, sitemap, blog
 - ✅ Way to collect feedback pre-installed via a nice widget
+- ❓ Blog, models and pages taken care of.
 
 ### API
-- ✅ django-ninja for api endpoints
+- ✅ API support with **django-ninja**
 - ✅ 3 auth modes pre-installed (session, token, superuser)
+
+## AI
+- ❓ **pydanticai** for agents in the app
+- ✅ Cursor Rules
 
 ### Payments
 - ❓ Stripe for payments (subscriptions) via **djstripe**
