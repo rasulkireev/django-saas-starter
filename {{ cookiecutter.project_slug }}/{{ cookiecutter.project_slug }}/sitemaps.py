@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.sitemaps import GenericSitemap
 
 {% if cookiecutter.generate_blog == 'y' %}
-from blog.models import BlogPost
+from apps.blogmodels import BlogPost
 {% endif %}
 
 

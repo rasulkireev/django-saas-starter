@@ -1,6 +1,6 @@
 from django.views.generic import ListView, DetailView
 
-from blog.models import BlogPost
+from apps.blogmodels import BlogPost
 
 
 class BlogView(ListView):

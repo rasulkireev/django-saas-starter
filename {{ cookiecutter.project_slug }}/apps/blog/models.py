@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 
 from core.base_models import BaseModel
-from blog.choices import BlogPostStatus
+from apps.blogchoices import BlogPostStatus
 
 
 class BlogPost(BaseModel):
