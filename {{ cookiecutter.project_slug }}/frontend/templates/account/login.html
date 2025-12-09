@@ -55,6 +55,14 @@
                         Sign in
                     </button>
                 </div>
+
+                <div class="flex justify-center items-center">
+                    <div class="text-sm">
+                        <a href="{% raw %}{% url 'account_reset_password' %}{% endraw %}" class="font-medium text-{{cookiecutter.project_main_color}}-600 hover:text-{{cookiecutter.project_main_color}}-500">
+                            Forgot your password?
+                        </a>
+                    </div>
+                </div>
             </form>
 
             {{ "{% if has_social_providers %}" }}

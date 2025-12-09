@@ -4,12 +4,12 @@ from django.core.cache import cache
 from ninja import NinjaAPI
 from ninja.errors import HttpError
 
-from api.auth import session_auth, superuser_api_auth
+from apps.api.auth import session_auth, superuser_api_auth
 from core.models import Feedback
 {% if cookiecutter.generate_blog == 'y' -%}
-from blog.models import BlogPost
+from apps.blogmodels import BlogPost
 {% endif -%}
-from api.schemas import (
+from apps.api.schemas import (
     SubmitFeedbackIn,
     SubmitFeedbackOut,
     {%- if cookiecutter.generate_blog == 'y' %}

@@ -63,7 +63,6 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             )
             raise
 
-
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     """
     Custom adapter to automatically generate usernames from email addresses

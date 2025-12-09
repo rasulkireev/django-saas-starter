@@ -8,7 +8,7 @@ from pathlib import Path
 
 def remove_blog_app():
     """Remove blog app if generate_blog is 'n'."""
-    blog_app_path = Path("blog")
+    blog_app_path = Path("apps/blog")
     if blog_app_path.exists():
         shutil.rmtree(blog_app_path)
         print("Removed blog app directory")

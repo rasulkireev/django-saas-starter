@@ -4,37 +4,69 @@ To start you'll need to start the Mkdocs server, where a step-by-step process wi
 
 ## Features
 
-- Django 5 and Python 3.13
-- User authentication (regular + social) via django-allauth
-- Environment variables via django-environ
-- TailwindCSS & StimulusJS for frontend via Webpack
-- Will work with any DB of your choosing, as long as it is supported by django.
-  - Comes with Postgres 17 with pgvector and pg_stat_statements pre-installed
-- Local deploy via docker-compose and makefile for rapid local development
-- Media storage with any S3 compatible service.
-  - Comes with Minio both locally and in prod
-- Anymail for email sending with Mailgun (Mailhog for local)
-- Structlog for logging setup both for local (console) and prod (json)
-- Automated Deployment to Caprover via Github Actions
-- Messages handling
-  - with nice tempalte component pre-installed
-- Sitemaps enabled
-- Testing with pytest
-- Pre-commit for code quality checks
-  - ruff, djlint
-- Optimized SEO - Added all the necessary metatags and json-ld schema on all the pages with nice looking OG images.
-- API support with django-ninja
-- Way to collect feedback pre-installed via a nice widget
+Legend:
+- ✅ Non-optional
+- ❓ Optional
 
-Optional Integrations:
-- Social Authentication (Github)
-- Stripe for payments
-- Buttondown for newsletters
-- Github Auth for social sign-ins
-- Sentry integration
-- MJML for email templating
-- Logfire for prod and dev logging dashboards
+### Core
+- ✅ Django 5
+- ✅ Python 3.13
+- ✅ Environment variables via **django-environ**
 
-## TODOs
+### Auth
+- ✅ Regular User Auth via **django-allauth**
+- ❓ Socail Auth via **django-allauth**:
+  - ❓ **Google** pre configured
+  - ❓ **Github** pre configured
 
-- [ ] update pricing page
+### Communication
+- ✅ **Anymail** for email sending with **Mailgun** (Mailhog for local)
+- ✅ **Messages** handling with nice tempalte component pre-installed
+- ❓ **MJML** for email templating
+- ❓ **Buttondown** for newsletters
+
+### Frontend
+- ✅ **Webpack** pre-configured
+- ✅ **TailwindCSS** for styling
+- ✅ **StimulusJS** for interactivity via Webpack
+- ✅ SEO optimized templates, pre-configured:
+  - metatags
+  - json-ld schema
+  - OG images
+
+### Database & Storage
+- ✅ Any Django Supported db will work fine.
+- ✅ Custom **Postgres** 18 db pre-configured in env files and docker compose.
+- ✅ **pgvector** is installed both in Postgres and in the App
+- ✅ **pg_stat_statements** is pre-installed on postgres too.
+- ❓ Media storage with any **S3 compatible** service. Comes with **Minio** both locally and in prod.
+
+### Dev Tools
+- ✅ **Docker Compose** for **local dev** and **prod** pre-configured.
+- ✅ **Makefile** is preconfigured for necessary commands.
+- ✅ Automated Deployment to **Caprover** via **Github Actions** is pre-confuigured.
+- ✅ Testing with **pytest**
+- ✅ **Pre-commit** for code quality checks: **ruff**, **djlint**
+
+### Logging, Monitoring & Analytics
+- ✅ **Structlog** for logging setup both for local (console) and prod (json)
+- ❓ **Sentry** integration
+- ❓ **Logfire** for prod and dev logging dashboards
+- ❓ **Healthcheck** integration
+- ❓ **Posthog** integration
+
+### Pages
+- ✅ landing, pricing, signin/signup, sitemap, blog
+- ✅ Way to collect feedback pre-installed via a nice widget
+- ❓ Blog, models and pages taken care of.
+
+### API
+- ✅ API support with **django-ninja**
+- ✅ 3 auth modes pre-installed (session, token, superuser)
+
+## AI
+- ❓ **pydanticai** for agents in the app
+- ✅ Cursor Rules
+
+### Payments
+- ❓ Stripe for payments (subscriptions) via **djstripe**
