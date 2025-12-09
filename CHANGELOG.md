@@ -36,6 +36,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 ### Fixed
 - Various imports
 - App Config labels
+- No need for custom 404 view
 
 ## [0.0.5] - 2025-10-23
 ### Added
