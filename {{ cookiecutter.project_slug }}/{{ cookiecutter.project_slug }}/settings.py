@@ -141,15 +141,15 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "core.context_processors.current_state",
+                "apps.core.context_processors.current_state",
                 {% if cookiecutter.use_posthog == 'y' -%}
-                "core.context_processors.posthog_api_key",
+                "apps.core.context_processors.posthog_api_key",
                 {% endif %}
                 {% if cookiecutter.use_mjml == 'y' -%}
-                "core.context_processors.mjml_url",
+                "apps.core.context_processors.mjml_url",
                 {% endif %}
-                "core.context_processors.available_social_providers",
-                "pages.context_processors.referrer_banner",
+                "apps.core.context_processors.available_social_providers",
+                "apps.pages.context_processors.referrer_banner",
             ],
         },
     },
@@ -288,8 +288,8 @@ ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
 ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
 ACCOUNT_FORMS = {
-    "signup": "core.forms.CustomSignUpForm",
-    "login": "core.forms.CustomLoginForm",
+    "signup": "apps.core.forms.CustomSignUpForm",
+    "login": "apps.core.forms.CustomLoginForm",
 }
 ACCOUNT_ADAPTER = "{{cookiecutter.project_slug}}.adapters.CustomAccountAdapter"
 if ENVIRONMENT != "dev":

@@ -5,7 +5,7 @@ def referrer_banner(request):
     2. Black Friday banner as fallback (if it exists and is active)
     Only displays one banner at most.
     """
-    from apps.core.models import ReferrerBanner
+    from apps.pages.models import ReferrerBanner
 
     referrer_code = request.GET.get("ref") or request.GET.get("utm_source")
 
