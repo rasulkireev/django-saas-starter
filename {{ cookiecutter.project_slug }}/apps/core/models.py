@@ -6,9 +6,9 @@ from django.db import models
 from django.urls import reverse
 from django_q.tasks import async_task
 
-from core.base_models import BaseModel
-from core.choices import ProfileStates, EmailType
-from core.model_utils import generate_random_key
+from apps.core.base_models import BaseModel
+from apps.core.choices import ProfileStates, EmailType
+from apps.core.model_utils import generate_random_key
 
 
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
@@ -126,7 +126,7 @@ class Feedback(BaseModel):
             from django.conf import settings
             from django.core.mail import send_mail
 
-            from core.utils import track_email_sent
+            from apps.core.utils import track_email_sent
 
             subject = "New Feedback Submitted"
             message = f"""

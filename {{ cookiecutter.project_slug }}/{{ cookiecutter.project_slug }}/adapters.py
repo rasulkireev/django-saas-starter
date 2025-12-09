@@ -5,8 +5,8 @@ from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.contrib.auth import get_user_model
 
-from core.choices import EmailType
-from core.utils import track_email_sent
+from apps.core.choices import EmailType
+from apps.core.utils import track_email_sent
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)

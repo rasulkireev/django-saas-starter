@@ -8,7 +8,7 @@ import posthog
 import requests
 from django.conf import settings
 
-from core.models import Profile
+from apps.core.models import Profile
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
@@ -109,7 +109,7 @@ def track_event(
 def track_state_change(
     profile_id: int, from_state: str, to_state: str, metadata: dict = None
 ) -> None:
-    from core.models import Profile, ProfileStateTransition
+    from apps.core.models import Profile, ProfileStateTransition
 
     base_log_data = {
         "profile_id": profile_id,

@@ -5,7 +5,7 @@ from django_q.tasks import async_task
 from django.conf import settings
 from django.views.generic import TemplateView
 
-from core.models import Profile
+from apps.core.models import Profile
 
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 

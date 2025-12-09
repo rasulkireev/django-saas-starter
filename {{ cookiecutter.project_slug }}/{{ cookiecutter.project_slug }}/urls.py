@@ -19,8 +19,8 @@ from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
 
 from {{ cookiecutter.project_slug }}.sitemaps import sitemaps
-from core.views import custom_404_view
-from pages.views import AccountSignupView
+from apps.core.views import custom_404_view
+from apps.pages.views import AccountSignupView
 
 def custom_404_view(request, exception=None):
     """Custom 404 error handler."""

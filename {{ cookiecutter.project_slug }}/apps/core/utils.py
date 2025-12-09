@@ -2,8 +2,8 @@ import requests
 
 from django.forms.utils import ErrorList
 
-from core.models import EmailSent
-from core.choices import EmailType, Profile
+from apps.core.models import EmailSent
+from apps.core.choices import EmailType, Profile
 
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 

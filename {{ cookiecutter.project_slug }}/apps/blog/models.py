@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
-from core.base_models import BaseModel
+from apps.core.base_models import BaseModel
 from apps.blogchoices import BlogPostStatus
 
 

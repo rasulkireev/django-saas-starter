@@ -30,6 +30,8 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - use simple text if mjml is not setup
 - updated dj-stripe and stripe versions
 - default timeout for tassk to be around an hour
+- moved all apps to apps directory
+- move `core` and `pages` apps into `apps` directory.
 
 ## [0.0.5] - 2025-10-23
 ### Added

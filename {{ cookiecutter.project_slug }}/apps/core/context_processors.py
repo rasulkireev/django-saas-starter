@@ -1,7 +1,7 @@
 from allauth.socialaccount.models import SocialApp
 from django.conf import settings
 
-from core.choices import ProfileStates
+from apps.core.choices import ProfileStates
 
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 

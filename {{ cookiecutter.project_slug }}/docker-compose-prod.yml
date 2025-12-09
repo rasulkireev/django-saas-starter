@@ -1,4 +1,4 @@
-# docker-compose -f docker-compose.yml -p "{{ cookiecutter.project_slug }}" up --detach --remove-orphans || true
+# docker-compose -f docker-compose-prod.yml -p "{{ cookiecutter.project_slug }}" up --detach --remove-orphans || true
 
 services:
   db:

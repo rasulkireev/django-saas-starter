@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
-from core.base_models import BaseModel
+from apps.core.base_models import BaseModel
 
 class ReferrerBanner(BaseModel):
     referrer = models.CharField(

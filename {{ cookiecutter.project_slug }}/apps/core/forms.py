@@ -1,8 +1,8 @@
 from allauth.account.forms import LoginForm, SignupForm
 from django import forms
 
-from core.models import Profile
-from core.utils import DivErrorList
+from apps.core.models import Profile
+from apps.core.utils import DivErrorList
 
 
 class CustomSignUpForm(SignupForm):

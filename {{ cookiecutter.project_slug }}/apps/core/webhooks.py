@@ -2,7 +2,7 @@
 from djstripe.event_handlers import djstripe_receiver
 from djstripe.models import Customer, Event, Price, Product, Subscription
 
-from core.models import Profile, ProfileStates
+from apps.core.models import Profile, ProfileStates
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)

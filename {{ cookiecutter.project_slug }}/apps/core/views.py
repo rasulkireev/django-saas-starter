@@ -18,8 +18,8 @@ from django.views.generic import TemplateView, UpdateView
 from djstripe import models as djstripe_models
 {% endif %}
 
-from core.forms import ProfileUpdateForm
-from core.models import Profile
+from apps.core.forms import ProfileUpdateForm
+from apps.core.models import Profile
 
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
@@ -196,7 +196,7 @@ class AdminPanelView(UserPassesTestMixin, TemplateView):
         from django.contrib.auth.models import User
         from django.utils import timezone
         from datetime import timedelta
-        from core.models import Profile, Feedback
+        from apps.core.models import Profile, Feedback
 
         context = super().get_context_data(**kwargs)
 

@@ -5,7 +5,7 @@ from ninja import NinjaAPI
 from ninja.errors import HttpError
 
 from apps.api.auth import session_auth, superuser_api_auth
-from core.models import Feedback
+from apps.core.models import Feedback
 {% if cookiecutter.generate_blog == 'y' -%}
 from apps.blogmodels import BlogPost
 {% endif -%}

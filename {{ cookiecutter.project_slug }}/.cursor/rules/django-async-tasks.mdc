@@ -30,7 +30,7 @@ alwaysApply: false
 
         # This will raise a pickling error.
         async_task(
-            'core.tasks.my_task',
+            'apps.core.tasks.my_task',
             request=self.request
         )
         ```
@@ -45,7 +45,7 @@ alwaysApply: false
         cookies = self.request.COOKIES
 
         async_task(
-            'core.tasks.my_task',
+            'apps.core.tasks.my_task',
             user_id=user_id,
             cookies=cookies
         )

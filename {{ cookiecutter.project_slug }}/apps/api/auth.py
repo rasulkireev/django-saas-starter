@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from ninja.security import APIKeyQuery
 
-from core.models import Profile
+from apps.core.models import Profile
 
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 

@@ -71,7 +71,7 @@ if DEBUG:
 
 CSRF_TRUSTED_ORIGINS = [SITE_URL]
 
-INSTALLED_APPS = [
+DEFAULT_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -80,6 +80,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "django.contrib.sitemaps",
+]
+
+THIRD_PARTY_APPS = [
     "webpack_boilerplate",
     "widget_tweaks",
     "anymail",
@@ -96,9 +99,12 @@ INSTALLED_APPS = [
     "mjml",
     {% endif %}
     "django_structlog",
-    "core.apps.CoreConfig",
+]
+
+CUSTOM_APPS = [
+    "apps.core.CoreConfig",
     "apps.api.ApiConfig",
-    "pages.apps.PagesConfig",
+    "apps.pages.PagesConfig",
     {% if cookiecutter.generate_blog == 'y' -%}
     "apps.blog.BlogConfig",
     {% endif %}
@@ -106,6 +112,8 @@ INSTALLED_APPS = [
     "apps.docs.DocsConfig",
     {% endif %}
 ]
+
+INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
