@@ -100,7 +100,7 @@ INSTALLED_APPS = [
     "apps.api.config.ApiConfig",
     "pages.apps.PagesConfig",
     {% if cookiecutter.generate_blog == 'y' -%}
-    "apps.blog.config.BlogConfig",
+    "apps.blog.BlogConfig",
     {% endif %}
 ]
 
