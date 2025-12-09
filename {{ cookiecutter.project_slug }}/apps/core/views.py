@@ -4,7 +4,6 @@ from urllib.parse import urlencode
 import stripe
 {% endif %}
 from allauth.account.models import EmailAddress, EmailConfirmation
-from allauth.account.utils import send_email_confirmation
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
