@@ -12,6 +12,7 @@
   "use_stripe": "y",
   "use_sentry": "y",
   "generate_blog": "y",
+  "generate_docs": "y",
   "use_mjml": "y",
   "use_ai": "y",
   "use_logfire": "y",
