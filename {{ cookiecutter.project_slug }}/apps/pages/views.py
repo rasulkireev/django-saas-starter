@@ -1,6 +1,4 @@
-{% if cookiecutter.use_posthog == 'y' -%}
 from allauth.account.views import SignupView
-{% endif %}
 from django_q.tasks import async_task
 from django.conf import settings
 from django.views.generic import TemplateView

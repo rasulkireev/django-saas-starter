@@ -33,13 +33,13 @@ urlpatterns = [
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
     {% endif %}
     {% if cookiecutter.generate_blog == 'y' -%}
-    path("blog/", include("blog.urls")),
+    path("blog/", include("apps.blog.urls")),
     {% endif %}
-    path("api/", include("api.urls")),
-    path("", include("pages.urls")),
-    path("", include("core.urls")),
+    path("api/", include("apps.api.urls")),
+    path("", include("apps.pages.urls")),
+    path("", include("apps.core.urls")),
     {% if cookiecutter.generate_docs == 'y' -%}
-    path("docs/", include("docs.urls")),
+    path("docs/", include("apps.docs.urls")),
     {% endif %}
     path(
         "sitemap.xml",
