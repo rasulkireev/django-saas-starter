@@ -7,6 +7,10 @@ from django.conf import settings
 from django.http import Http404
 from django.shortcuts import render
 
+from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
+
+logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
+
 
 def load_navigation_config():
     """
@@ -180,11 +184,3 @@ def docs_page_view(request, category, page):
         }
 
         return render(request, "docs/docs_page.html", context)
-    except Exception as error:
-        print(f"ERROR in docs_page_view: {error}")
-        print(f"Category: {category}, Page: {page}")
-        print(f"Markdown file: {markdown_file}")
-        import traceback
-
-        traceback.print_exc()
-        raise

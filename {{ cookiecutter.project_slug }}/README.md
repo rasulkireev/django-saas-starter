@@ -58,9 +58,9 @@ This should also be pretty streamlined. On your server you can create a folder i
 
 Copy the contents of `.env.example` into `.env` and update all the necessary values.
 
-2. `docker-compose.yml`
+2. `docker-compose-prod.yml`
 
-Copy the contents of `docker-compose-prod.yml` into `docker-compose.yml` and run the suggested command from the top of the `docker-compose-prod.yml` file.
+Copy the contents of `docker-compose-prod.yml` into `docker-compose-prod.yml` and run the suggested command from the top of the `docker-compose-prod.yml` file.
 
 How you are going to expose the backend container is up to you. I usually do it via Nginx Reverse Proxy with `http://{{ cookiecutter.project_slug }}-backend-1:80` UPSTREAM_HTTP_ADDRESS.
 

@@ -1,6 +1,6 @@
 ---
 title: Docker Compose
-description: Learn how to deploy {{ cookiecutter.project_name }} on Render.
+description: Learn how to deploy {{ cookiecutter.project_name }} using Docker Compose.
 keywords: {{ cookiecutter.project_name }}, deployment, render, self-hosting
 author: {{ cookiecutter.author_name }}
 ---
@@ -80,13 +80,13 @@ Save the file (in nano: Ctrl+X, then Y, then Enter).
 Download the production docker-compose configuration from the {{ cookiecutter.project_name }} repository:
 
 ```bash
-wget {{ cookiecutter.repo_url }}/raw/main/docker-compose-prod.yml -O docker-compose.yml
+wget {{ cookiecutter.repo_url }}/raw/main/docker-compose-prod.yml -O docker-compose-prod.yml
 ```
 
 Or if you prefer curl:
 
 ```bash
-curl -o docker-compose.yml {{ cookiecutter.repo_url }}/raw/main/docker-compose-prod.yml
+curl -o docker-compose-prod.yml {{ cookiecutter.repo_url }}/raw/main/docker-compose-prod.yml
 ```
 You can use the file as-is, or customize it if needed.
 
