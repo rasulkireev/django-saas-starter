@@ -13,7 +13,7 @@ def load_navigation_config():
     Load navigation configuration from YAML file.
     Returns empty dict if file doesn't exist or has errors.
     """
-    navigation_file = Path(settings.BASE_DIR) / "docs" / "navigation.yaml"
+    navigation_file = Path(settings.BASE_DIR) / "apps" / "docs" / "navigation.yaml"
 
     if not navigation_file.exists():
         return {}

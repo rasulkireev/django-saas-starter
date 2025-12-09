@@ -24,7 +24,7 @@ def remove_blog_templates():
 
 def remove_docs_app():
     """Remove docs app if generate_docs is 'n'."""
-    docs_app_path = Path("docs")
+    docs_app_path = Path("apps/docs")
     if docs_app_path.exists():
         shutil.rmtree(docs_app_path)
         print("Removed docs app directory")

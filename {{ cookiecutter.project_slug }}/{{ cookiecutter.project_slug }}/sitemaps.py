@@ -3,10 +3,10 @@ from django.urls import reverse
 from django.contrib.sitemaps import GenericSitemap
 
 {% if cookiecutter.generate_blog == 'y' %}
-from apps.blogmodels import BlogPost
+from apps.blog.models import BlogPost
 {% endif %}
 {% if cookiecutter.generate_docs == 'y' -%}
-from docs.views import get_docs_navigation
+from apps.docs.views import get_docs_navigation
 {% endif %}
 
 class StaticViewSitemap(sitemaps.Sitemap):
