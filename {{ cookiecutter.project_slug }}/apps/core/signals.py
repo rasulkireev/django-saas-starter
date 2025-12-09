@@ -4,7 +4,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_q.tasks import async_task
 
+{% if cookiecutter.use_buttondown == 'y' -%}
 from apps.core.tasks import add_email_to_buttondown
+{% endif %}
 from apps.core.models import Profile, ProfileStates
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 

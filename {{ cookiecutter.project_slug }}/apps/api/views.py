@@ -7,7 +7,7 @@ from ninja.errors import HttpError
 from apps.api.auth import session_auth, superuser_api_auth
 from apps.core.models import Feedback
 {% if cookiecutter.generate_blog == 'y' -%}
-from apps.blogmodels import BlogPost
+from apps.blog.models import BlogPost
 {% endif -%}
 from apps.api.schemas import (
     SubmitFeedbackIn,

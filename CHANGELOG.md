@@ -33,6 +33,10 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - moved all apps to apps directory
 - move `core` and `pages` apps into `apps` directory.
 
+### Fixed
+- Various imports
+- App Config labels
+
 ## [0.0.5] - 2025-10-23
 ### Added
 - support for self hosted mjml server
