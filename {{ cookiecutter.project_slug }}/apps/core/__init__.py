@@ -12,7 +12,8 @@ logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
 class CoreConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "core"
+    name = "apps.core"
+    label = "core"
 
     def ready(self):
         import apps.core.signals  # noqa
