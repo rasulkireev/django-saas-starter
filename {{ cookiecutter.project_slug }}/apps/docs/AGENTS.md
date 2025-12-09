@@ -2,7 +2,7 @@
 
 ## Purpose
 
-These guidelines ensure documentation is user-friendly, clear, and actionable for TuxSEO users.
+These guidelines ensure documentation is user-friendly, clear, and actionable for {{ "{{ cookiecutter.project_name }}" }} users.
 
 ## Core Principles
 
