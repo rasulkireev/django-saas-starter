@@ -1,6 +1,6 @@
 from django.urls import path
 
-from pages import views
+from apps.pages import views
 
 urlpatterns = [
     path("", views.LandingPageView.as_view(), name="landing"),
