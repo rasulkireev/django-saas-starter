@@ -24,9 +24,9 @@ from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_sl
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
-api = NinjaAPI(docs_url=None)
+api = NinjaAPI()
 
-@api.get("/healthcheck")
+@api.get("/healthcheck", auth=None, include_in_schema=False, tags=["private"])
 def healthcheck(request: HttpRequest):
     """
     Comprehensive healthcheck endpoint for monitoring and load balancers.
@@ -103,7 +103,13 @@ def healthcheck(request: HttpRequest):
         return 503, health_status
 
 
-@api.post("/submit-feedback", response=SubmitFeedbackOut, auth=[session_auth])
+@api.post(
+    "/submit-feedback",
+    response=SubmitFeedbackOut,
+    auth=[session_auth],
+    include_in_schema=False,
+    tags=["private"],
+)
 def submit_feedback(request: HttpRequest, data: SubmitFeedbackIn):
     profile = request.auth
     try:
@@ -115,7 +121,13 @@ def submit_feedback(request: HttpRequest, data: SubmitFeedbackIn):
 
 
 {% if cookiecutter.generate_blog == 'y' %}
-@api.post("/blog-posts/submit", response=BlogPostOut, auth=[superuser_api_auth])
+@api.post(
+    "/blog-posts/submit",
+    response=BlogPostOut,
+    auth=[superuser_api_auth],
+    include_in_schema=False,
+    tags=["admin"],
+)
 def submit_blog_post(request: HttpRequest, data: BlogPostIn):
     profile = request.auth
 
@@ -137,7 +149,13 @@ def submit_blog_post(request: HttpRequest, data: BlogPostIn):
         return BlogPostOut(status="failure", message=f"Failed to submit blog post: {str(e)}")
 {% endif %}
 
-@api.get("/user/settings", response=UserSettingsOut, auth=[session_auth])
+@api.get(
+    "/user/settings",
+    response=UserSettingsOut,
+    auth=[session_auth],
+    include_in_schema=False,
+    tags=["private"],
+)
 def user_settings(request: HttpRequest):
     profile = request.auth
     try:

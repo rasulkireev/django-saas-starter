@@ -67,8 +67,9 @@ class UserSettingsView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         context["email_verified"] = email_address.verified
         context["resend_confirmation_url"] = reverse("resend_confirmation")
         {% if cookiecutter.use_stripe == 'y' -%}
-        context["has_subscription"] = user.profile.has_product_or_subscription
+        context["has_subscription"] = user.profile.has_active_subscription
         {% endif %}
+        context["api_key"] = user.profile.key
 
 
         return context

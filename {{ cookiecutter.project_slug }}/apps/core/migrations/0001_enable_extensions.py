@@ -14,10 +14,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        {% if cookiecutter.use_ai == 'y' -%}
         migrations.RunSQL(
             sql='CREATE EXTENSION IF NOT EXISTS vector;',
             reverse_sql='DROP EXTENSION IF EXISTS vector;',
-        ),
+            ),
+        {% endif %}
         migrations.RunSQL(
             sql='CREATE EXTENSION IF NOT EXISTS pg_stat_statements;',
             reverse_sql='DROP EXTENSION IF EXISTS pg_stat_statements;',

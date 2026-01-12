@@ -19,7 +19,6 @@ logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 class Profile(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     key = models.CharField(max_length=30, unique=True, default=generate_random_key)
-    experimental_flag = models.BooleanField(default=False)
 
     {% if cookiecutter.use_stripe == 'y' %}
     subscription = models.ForeignKey(
@@ -57,7 +56,7 @@ class Profile(BaseModel):
 
     def track_state_change(self, to_state, metadata=None):
         async_task(
-            "core.tasks.track_state_change",
+            "apps.core.tasks.track_state_change",
             profile_id=self.id,
             from_state=self.current_state,
             to_state=to_state,

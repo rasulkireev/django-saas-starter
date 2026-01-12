@@ -1,0 +1,63 @@
+---
+description: PydanticAI agent patterns for apps/core/agents (module-level agent, split prompts)
+globs: apps/core/agents/*.py
+alwaysApply: false
+---
+
+## Agent construction
+- Define the `Agent` **at module import time** (module-level), not inside a `_build_agent()` function.
+- Build the model via `build_model(provider=..., label=...)` and pass it into the agent.
+- Name the agent clearly (e.g. `blog_post_planner_agent`).
+
+## Prompt organization
+- Prefer `instructions` for most cases.
+- Use `instructions=` on the `Agent(...)` constructor for the **stable, high-level role** and “what this agent does”.
+- Use `@agent.instructions` for **dynamic per-run context** that depends on `RunContext` (e.g. idea/goal, keywords, links, output format name/prompt/example, section count targets).
+- Use `@agent.system_prompt` **only** when you explicitly want prompts to be **retained via `message_history`** across runs (and consider `dynamic=True` if the prompt depends on runtime context).
+- Split prompts into **small, focused decorators** (one concern per function) so they’re easy to inspect and update later.
+
+## Execution style
+- Keep execution **sync**: prefer `agent.run_sync(...)`.
+
+## Example skeleton
+```python
+from dataclasses import dataclass
+
+from pydantic import BaseModel
+from pydantic_ai import Agent, RunContext
+
+from apps.core.agents.base import build_model
+
+
+class MyOutput(BaseModel):
+    ...
+
+
+@dataclass(frozen=True, slots=True)
+class MyDeps:
+    ...
+
+
+model = build_model(provider="openai", label="balanced")
+my_agent = Agent(
+    model=model,
+    deps_type=MyDeps,
+    output_type=MyOutput,
+    instructions="High-level role and purpose of this agent.",
+)
+
+
+@my_agent.system_prompt
+def request_context(ctx: RunContext[MyDeps]) -> str:
+    return "Request: ..."
+
+
+@my_agent.instructions
+def output_constraints(ctx: RunContext[MyDeps]) -> str:
+    return "Output requirements: ..."
+
+
+def run_my_agent(deps: MyDeps) -> MyOutput:
+    result = my_agent.run_sync("Do the task.", deps=deps)
+    return result.output
+```

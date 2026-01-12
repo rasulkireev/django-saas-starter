@@ -543,3 +543,27 @@ MJML_HTTPSERVERS = [
     }
 ]
 {% endif %}
+
+SHELL_PLUS_IMPORTS = [
+    "from django_q.tasks import async_task",
+    "from core.tasks import *",
+]
+
+
+SUPPORTED_AI_MODELS = {
+    "openai": {
+        "fast": env("OPENAI_MODEL_FAST", default="gpt-5-nano"),
+        "balanced": env("OPENAI_MODEL_BALANCED", default="gpt-5-mini"),
+        "smart": env("OPENAI_MODEL_SMART", default="gpt-5.1"),
+    },
+    "anthropic": {
+        "fast": env("ANTHROPIC_MODEL_FAST", default="claude-haiku-4-5"),
+        "balanced": env("ANTHROPIC_MODEL_BALANCED", default="claude-sonnet-4-5"),
+        "smart": env("ANTHROPIC_MODEL_SMART", default="claude-opus-4-5"),
+    },
+    "google": {
+        "fast": env("GEMINI_MODEL_FAST", default="gemini-2.5-flash-lite"),
+        "balanced": env("GEMINI_MODEL_BALANCED", default="gemini-2.5-flash"),
+        "smart": env("GEMINI_MODEL_SMART", default="gemini-2.5-pro"),
+    },
+}

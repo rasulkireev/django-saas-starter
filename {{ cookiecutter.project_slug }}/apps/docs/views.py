@@ -36,7 +36,7 @@ def get_docs_navigation():  # noqa: C901
     Uses custom ordering from navigation.yaml if defined, otherwise uses alphabetical order.
     Returns a list of dicts with category names and their pages.
     """
-    content_dir = Path(settings.BASE_DIR) / "docs" / "content"
+    content_dir = Path(settings.BASE_DIR) / "apps" / "docs" / "content"
     navigation = []
 
     if not content_dir.exists():
@@ -148,7 +148,7 @@ def docs_page_view(request, category, page):
     """
     Render a documentation page from markdown file with frontmatter support.
     """
-    content_dir = Path(settings.BASE_DIR) / "docs" / "content"
+    content_dir = Path(settings.BASE_DIR) / "apps" / "docs" / "content"
     markdown_file = content_dir / category / f"{page}.md"
 
     if not markdown_file.exists():
@@ -184,3 +184,6 @@ def docs_page_view(request, category, page):
         }
 
         return render(request, "docs/docs_page.html", context)
+    except Exception as e:
+        logger.error("Error loading documentation page", category=category, page=page, error=str(e))
+        raise Http404("Documentation page not found")

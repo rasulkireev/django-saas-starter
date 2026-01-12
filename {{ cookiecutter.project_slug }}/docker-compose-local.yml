@@ -113,8 +113,8 @@ services:
     volumes:
       - minio_data:/data
     environment:
-      MINIO_ROOT_USER: {{ cookiecutter.project_slug }}
-      MINIO_ROOT_PASSWORD: {{ cookiecutter.project_slug }}
+      MINIO_ROOT_USER: {{ cookiecutter.project_slug }}-user
+      MINIO_ROOT_PASSWORD: {{ cookiecutter.project_slug }}-password
     command: server --console-address ":9001" /data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]

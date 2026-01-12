@@ -16,7 +16,7 @@ logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        profile = Profile.objects.create(user=instance, experimental_flag=True)
+        profile = Profile.objects.create(user=instance)
         profile.track_state_change(
             to_state=ProfileStates.SIGNED_UP,
         )

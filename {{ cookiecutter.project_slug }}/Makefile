@@ -18,7 +18,8 @@ test:
 	docker compose -f docker-compose-local.yml run --rm backend pytest
 
 restart-worker:
-	docker compose up -d workers --force-recreate
+	docker compose -f docker-compose-local.yml up -d workers --force-recreate
+
 {% if cookiecutter.use_stripe == 'y' -%}
 test-webhook:
 	docker compose -f docker-compose-local.yml run --rm stripe trigger customer.subscription.created
