@@ -6,14 +6,20 @@ COPY . .
 RUN npm install
 RUN npm run build
 
-FROM python:3.13
+FROM python:3.14
 
 WORKDIR /app
 
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+COPY pyproject.toml uv.lock ./
+RUN pip install --no-cache-dir uv
+RUN uv sync --frozen --no-dev --no-install-project
+
 COPY . .
 COPY --from=build /app/frontend/build/ ./frontend/build/
-
-RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 80
 

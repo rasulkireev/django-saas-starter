@@ -24,6 +24,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - Healthcheck API endpoint
 - Custom 404 error page with modern design
 - Add FAQs to landing page
+- npm lint command
 
 ### Changes
 - All landing pages are now in `pages` app
@@ -32,6 +33,8 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - default timeout for tassk to be around an hour
 - moved all apps to apps directory
 - move `core` and `pages` apps into `apps` directory.
+- Use uv instead of poetry for pakage management.
+  - No need for requirements.txt file
 
 ### Fixed
 - Various imports
