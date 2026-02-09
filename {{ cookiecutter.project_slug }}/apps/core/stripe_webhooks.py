@@ -87,7 +87,7 @@ def handle_created_subscription(event):
     if target_state:
         profile.track_state_change(
             to_state=target_state,
-            source="stripe_webhook handle_created_subscription",
+            source_function="stripe_webhook handle_created_subscription",
             metadata={
                 "event": "subscription_created",
                 "subscription_id": subscription_id,
@@ -147,7 +147,7 @@ def handle_updated_subscription(event):
     if target_state:
         profile.track_state_change(
             to_state=target_state,
-            source="stripe_webhook handle_updated_subscription",
+            source_function="stripe_webhook handle_updated_subscription",
             metadata={
                 "event": "subscription_updated",
                 "subscription_id": subscription_id,
@@ -204,7 +204,7 @@ def handle_deleted_subscription(event):
 
     profile.track_state_change(
         to_state=ProfileStates.CHURNED,
-        source="stripe_webhook handle_deleted_subscription",
+        source_function="stripe_webhook handle_deleted_subscription",
         metadata={
             "event": "subscription_deleted",
             "subscription_id": subscription_id,
@@ -275,7 +275,7 @@ def handle_checkout_completed(event):
 
         profile.track_state_change(
             to_state=ProfileStates.SUBSCRIBED,
-            source="stripe_webhook handle_checkout_completed",
+            source_function="stripe_webhook handle_checkout_completed",
             metadata={
                 "event": "checkout_payment_completed",
                 "payment_intent": payment_intent,
