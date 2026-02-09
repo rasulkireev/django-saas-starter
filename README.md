@@ -63,6 +63,3 @@ Legend:
 ## AI
 - ❓ **pydanticai** for agents in the app
 - ✅ Cursor Rules
-
-### Payments
-- ❓ Stripe for payments (subscriptions) via **djstripe**

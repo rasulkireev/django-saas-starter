@@ -4,6 +4,7 @@ from decimal import Decimal, InvalidOperation
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
+from django.conf import settings
 from django_q.tasks import async_task
 
 from apps.core.base_models import BaseModel
@@ -21,29 +22,17 @@ class Profile(BaseModel):
     key = models.CharField(max_length=30, unique=True, default=generate_random_key)
 
     {% if cookiecutter.use_stripe == 'y' %}
-    subscription = models.ForeignKey(
-        "djstripe.Subscription",
-        null=True,
+    stripe_subscription_id = models.CharField(
+        max_length=255,
         blank=True,
-        on_delete=models.SET_NULL,
-        related_name="profile",
-        help_text="The user's Stripe Subscription object, if it exists",
+        default="",
+        help_text="The user's Stripe subscription id, if it exists",
     )
-    product = models.ForeignKey(
-        "djstripe.Product",
-        null=True,
+    stripe_customer_id = models.CharField(
+        max_length=255,
         blank=True,
-        on_delete=models.SET_NULL,
-        related_name="profile",
-        help_text="The user's Stripe Product object, if it exists",
-    )
-    customer = models.ForeignKey(
-        "djstripe.Customer",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="profile",
-        help_text="The user's Stripe Customer object, if it exists",
+        default="",
+        help_text="The user's Stripe customer id, if it exists",
     )
     {% endif %}
 
@@ -54,14 +43,14 @@ class Profile(BaseModel):
         help_text="The current state of the user's profile",
     )
 
-    def track_state_change(self, to_state, metadata=None):
+    def track_state_change(self, to_state, metadata=None, source_function=None):
         async_task(
             "apps.core.tasks.track_state_change",
             profile_id=self.id,
             from_state=self.current_state,
             to_state=to_state,
             metadata=metadata,
-            source_function="Profile - track_state_change",
+            source_function=source_function,
             group="Track State Change",
         )
 
@@ -75,14 +64,10 @@ class Profile(BaseModel):
     {% if cookiecutter.use_stripe == 'y' %}
     @property
     def has_active_subscription(self):
-        return (
-            self.current_state
-            in [
-                ProfileStates.SUBSCRIBED,
-                ProfileStates.CANCELLED,
-            ]
-            or self.user.is_superuser
-        )
+        return self.state in [
+            ProfileStates.SUBSCRIBED,
+            ProfileStates.CANCELLED,
+        ] or (self.user.is_superuser and settings.ENVIRONMENT == "prod")
     {% endif %}
 class ProfileStateTransition(BaseModel):
     profile = models.ForeignKey(

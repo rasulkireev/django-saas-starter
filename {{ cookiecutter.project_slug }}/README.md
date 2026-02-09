@@ -26,6 +26,9 @@
   - [Pure Python / Django deployment](#pure-python--django-deployment)
   - [Custom Deployment on Caprover](#custom-deployment-on-caprover)
 - [Local Development](#local-development)
+- [Stripe Setup](#stripe-setup)
+  - [Configure Stripe](#configure-stripe)
+  - [Test Webhooks Locally](#test-webhooks-locally)
 
 ***
 
@@ -109,3 +112,29 @@ You'd still need to make sure .env has correct values.
 3. Run `poetry run python manage.py makemigrations`
 4. Run `make serve`
 5. Run `make restart-worker` just in case, it sometimes has troubles connecting to REDIS on first deployment.
+
+
+## Stripe Setup
+
+This app uses Stripe Checkout for purchases and the Billing Portal for subscription management.
+
+### Configure Stripe
+
+- Set the following in `.env`:
+  - `STRIPE_SECRET_KEY`
+  - `STRIPE_PUBLISHABLE_KEY` (optional, only needed for client-side Stripe.js)
+  - `STRIPE_WEBHOOK_SECRET`
+  - `STRIPE_PRICE_ID_MONTHLY`
+  - `STRIPE_PRICE_ID_YEARLY`
+  - `WEBHOOK_UUID` (optional, used to gate webhook URLs)
+- Enable the Billing Portal in the Stripe Dashboard and allow subscription updates and cancellations.
+- Create a webhook endpoint in the Stripe Dashboard:
+  - URL: `https://<your-domain>/stripe/webhook/<WEBHOOK_UUID>/` (or `/stripe/webhook/` if no UUID)
+  - Events: `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `checkout.session.completed`
+
+### Test Webhooks Locally
+
+- Use the Stripe CLI container (see `docker-compose-local.yml`) to forward webhooks:
+  - `docker compose -f docker-compose-local.yml run --rm stripe listen --forward-to http://backend:8000/stripe/webhook/${WEBHOOK_UUID}/`
+- Trigger a test event:
+  - `docker compose -f docker-compose-local.yml run --rm stripe trigger customer.subscription.created`

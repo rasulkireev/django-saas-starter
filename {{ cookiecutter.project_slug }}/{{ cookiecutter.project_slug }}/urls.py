@@ -29,9 +29,6 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     path("anymail/", include("anymail.urls")),
     path("uses", TemplateView.as_view(template_name="pages/uses.html"), name="uses"),
-    {% if cookiecutter.use_stripe == 'y' -%}
-    path("stripe/", include("djstripe.urls", namespace="djstripe")),
-    {% endif %}
     {% if cookiecutter.generate_blog == 'y' -%}
     path("blog/", include("apps.blog.urls")),
     {% endif %}

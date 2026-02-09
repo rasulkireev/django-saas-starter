@@ -1,0 +1,18 @@
+---
+description: Run tests in the sandbox container
+alwaysApply: true
+---
+
+## Adding new tests
+
+- When you create a new feature or fix a bug, add a new test that will cover the change.
+
+# Running tests
+
+- Run tests via `make test` from repo root to use the Docker sandbox.
+- Pass pytest targets after `make test`:
+  - `make test core/tests/test_stripe_webhooks.py`
+  - `make test core/tests/test_stripe_webhooks.py::test_handle_created_subscription_starts_trial`
+- Pass pytest flags after `--`:
+  - `make test -- -k trial -q`
+- Avoid running `pytest` directly on the host machine.

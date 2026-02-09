@@ -17,8 +17,9 @@ class CoreConfig(AppConfig):
 
     def ready(self):
         import apps.core.signals  # noqa
+
         {% if cookiecutter.use_stripe == 'y' -%}
-        import apps.core.webhooks # noqa
+        import apps.core.stripe_webhooks # noqa
         {% endif %}
 
         {% if cookiecutter.use_posthog == 'y' -%}

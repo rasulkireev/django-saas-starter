@@ -1,6 +1,7 @@
 from allauth.account.views import SignupView
 from django_q.tasks import async_task
 from django.conf import settings
+from django.contrib import messages
 from django.views.generic import TemplateView
 
 from apps.core.models import Profile
@@ -28,6 +29,14 @@ class LandingPageView(TemplateView):
                 source_function="LandingPageView - get_context_data",
                 group="Create Posthog Alias",
             )
+        {% endif %}
+
+        {% if cookiecutter.use_stripe == 'y' -%}
+        payment_status = self.request.GET.get("payment")
+        if payment_status == "success":
+            messages.success(self.request, "Thanks for subscribing, I hope you enjoy the app!")
+        elif payment_status == "failed":
+            messages.error(self.request, "Something went wrong with the payment.")
         {% endif %}
 
         return context

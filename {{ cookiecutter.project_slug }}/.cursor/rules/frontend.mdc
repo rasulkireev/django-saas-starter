@@ -3,6 +3,7 @@ description:
 globs: *.js,*.html
 alwaysApply: false
 ---
+
 - Prefer Stimulus JS for adding interactivity to Django templates instead of raw script elements
 - Use Stimulus controllers to encapsulate JavaScript behavior and keep it separate from HTML structure
 - Leverage Stimulus data attributes to connect HTML elements with JavaScript functionality
