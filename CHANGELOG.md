@@ -33,6 +33,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - default timeout for tassk to be around an hour
 - moved all apps to apps directory
 - move `core` and `pages` apps into `apps` directory.
+- remove djstripe. only use strip for payments
 - Use uv instead of poetry for pakage management.
   - No need for requirements.txt file
 
