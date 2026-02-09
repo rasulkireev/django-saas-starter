@@ -19,16 +19,13 @@ def create_user_profile(sender, instance, created, **kwargs):
         profile = Profile.objects.create(user=instance)
         profile.track_state_change(
             to_state=ProfileStates.SIGNED_UP,
+            source="create_user_profile signal",
         )
 
     if instance.id == 1:
         # Use update() to avoid triggering the signal again
         User.objects.filter(id=1).update(is_staff=True, is_superuser=True)
 
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    if hasattr(instance, 'profile'):
-        instance.profile.save()
 
 {% if cookiecutter.use_buttondown == 'y' -%}
 @receiver(email_confirmed)

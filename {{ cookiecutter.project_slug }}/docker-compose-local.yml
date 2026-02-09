@@ -81,18 +81,17 @@ services:
 
   {% if cookiecutter.use_stripe == 'y' -%}
   stripe:
-    build:
-      context: .
-      dockerfile: Dockerfile-python
-    working_dir: /app
-    command: python manage.py stripe_listen
-    volumes:
-      - .:/app
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_started
+    image: stripe/stripe-cli:latest
+    command: [
+      "listen",
+      "--forward-to", "http://backend:8000/stripe/webhook/"
+    ]
+    environment:
+      - STRIPE_API_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_DEVICE_NAME=cleanapp_docker
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     env_file:
       - .env
   {% endif %}
