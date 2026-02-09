@@ -91,7 +91,7 @@
                 </li>
                 {{ "{% if user.is_superuser %}" }}
                 <li>
-                  <a href="{% raw %}{% url 'admin:index' %}{%- endraw %}" class="rounded-full px-6 py-3 text-base font-semibold leading-[1.7] tracking-[-0.09px] text-{{ cookiecutter.project_main_color }}-600 transition-colors hover:bg-{{ cookiecutter.project_main_color }}-50">
+                  <a href="{% raw %}{% url 'admin_panel' %}{%- endraw %}" class="rounded-full px-6 py-3 text-base font-semibold leading-[1.7] tracking-[-0.09px] text-{{ cookiecutter.project_main_color }}-600 transition-colors hover:bg-{{ cookiecutter.project_main_color }}-50">
                     Admin
                   </a>
                 </li>

@@ -22,4 +22,4 @@ Welcome to {{ cookiecutter.project_name }}! This guide will help you get started
 
 ## Next Steps
 
-Ready to [get started](/docs/getting-started/quickstart)? Sign up for an account and explore the features!
+Sign up for an account and explore the features!

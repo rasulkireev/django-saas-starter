@@ -101,4 +101,4 @@ def test_handle_deleted_subscription_churns_and_clears_subscription_id(
 
     profile.refresh_from_db()
     assert profile.state == ProfileStates.CHURNED
-    assert profile.stripe_subscription_id is None
+    assert profile.stripe_subscription_id == ""

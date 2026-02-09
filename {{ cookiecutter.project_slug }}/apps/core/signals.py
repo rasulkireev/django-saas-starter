@@ -19,7 +19,7 @@ def create_user_profile(sender, instance, created, **kwargs):
         profile = Profile.objects.create(user=instance)
         profile.track_state_change(
             to_state=ProfileStates.SIGNED_UP,
-            source="create_user_profile signal",
+            source_function="create_user_profile signal",
         )
 
     if instance.id == 1:
