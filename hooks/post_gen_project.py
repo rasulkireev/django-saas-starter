@@ -38,10 +38,24 @@ def remove_docs_templates():
         print("Removed docs templates directory")
 
 
+def remove_stripe_files():
+    """Remove Stripe-related files if use_stripe is 'n'."""
+    stripe_webhooks_path = Path("apps/core/stripe_webhooks.py")
+    if stripe_webhooks_path.exists():
+        stripe_webhooks_path.unlink()
+        print("Removed Stripe webhooks module")
+
+    stripe_tests_path = Path("apps/core/tests/test_stripe_webhooks.py")
+    if stripe_tests_path.exists():
+        stripe_tests_path.unlink()
+        print("Removed Stripe webhook tests")
+
+
 def main():
     """Run post-generation tasks."""
     generate_blog = "{{ cookiecutter.generate_blog }}"
     generate_docs = "{{ cookiecutter.generate_docs }}"
+    use_stripe = "{{ cookiecutter.use_stripe }}"
 
     if generate_blog != "y":
         print("Blog generation disabled, removing blog-related files...")
@@ -54,6 +68,11 @@ def main():
         remove_docs_app()
         remove_docs_templates()
         print("Docs cleanup complete!")
+
+    if use_stripe != "y":
+        print("Stripe disabled, removing Stripe-related files...")
+        remove_stripe_files()
+        print("Stripe cleanup complete!")
 
 
 if __name__ == "__main__":

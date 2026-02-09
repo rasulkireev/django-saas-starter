@@ -108,12 +108,13 @@ You'd still need to make sure .env has correct values.
 ## Local Development
 
 1. Update the name of the `.env.example` to `.env` and update relevant variables.
-2. Run `poetry export -f requirements.txt --output requirements.txt --without-hashes`
-3. Run `poetry run python manage.py makemigrations`
+2. Run `uv sync`
+3. Run `uv run python manage.py makemigrations`
 4. Run `make serve`
 5. Run `make restart-worker` just in case, it sometimes has troubles connecting to REDIS on first deployment.
 
 
+{% if cookiecutter.use_stripe == 'y' -%}
 ## Stripe Setup
 
 This app uses Stripe Checkout for purchases and the Billing Portal for subscription management.
@@ -138,3 +139,4 @@ This app uses Stripe Checkout for purchases and the Billing Portal for subscript
   - `docker compose -f docker-compose-local.yml run --rm stripe listen --forward-to http://backend:8000/stripe/webhook/${WEBHOOK_UUID}/`
 - Trigger a test event:
   - `docker compose -f docker-compose-local.yml run --rm stripe trigger customer.subscription.created`
+{% endif %}

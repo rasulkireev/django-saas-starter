@@ -6,7 +6,7 @@
     "build": "cross-env NODE_ENV=production webpack --config frontend/webpack/webpack.config.prod.js",
     "start": "webpack serve --config frontend/webpack/webpack.config.dev.js",
     "watch": "webpack --watch --config frontend/webpack/webpack.config.watch.js",
-    "lint": "eslint \"frontend/src/**/*.js\"",
+    "lint": "eslint \"frontend/src/**/*.js\""
   },
   "repository": {
     "type": "git",

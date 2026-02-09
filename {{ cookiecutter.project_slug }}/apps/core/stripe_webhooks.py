@@ -212,7 +212,7 @@ def handle_deleted_subscription(event):
         },
     )
 
-    profile.stripe_subscription_id = None
+    profile.stripe_subscription_id = ""
     profile.save(update_fields=["stripe_subscription_id"])
 
     logger.info(

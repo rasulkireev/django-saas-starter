@@ -1,3 +1,9 @@
+## Usage
+
+Generate a project with Cookiecutter:
+
+`cookiecutter git@github.com:rasulkireev/django-saas-starter.git`
+
 ## Features
 
 Legend:

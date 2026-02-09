@@ -26,7 +26,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - Add FAQs to landing page
 - npm lint command
 
-### Changes
+### Changed
 - All landing pages are now in `pages` app
 - use simple text if mjml is not setup
 - updated dj-stripe and stripe versions
@@ -34,6 +34,8 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - moved all apps to apps directory
 - move `core` and `pages` apps into `apps` directory.
 - remove djstripe. only use strip for payments
+- Use psycopg-binary instead of psycopg2-binary
+- If use_stripe is no. then make sure to remove everything
 - Use uv instead of poetry for pakage management.
   - No need for requirements.txt file
 
