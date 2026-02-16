@@ -43,6 +43,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - Various imports
 - App Config labels
 - No need for custom 404 view
+- Cookiecutter `package.json` now renders valid JSON when `use_mjml = n` (removed dangling comma in dependencies)
 
 ## [0.0.5] - 2025-10-23
 ### Added
