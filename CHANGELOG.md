@@ -46,6 +46,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - Cookiecutter `package.json` now renders valid JSON when `use_mjml = n` (removed dangling comma in dependencies)
 - Production Gunicorn command no longer uses `--reload` in `deployment/entrypoint.sh`
 - Cookiecutter base templates now include dark-mode aware header/nav/mobile/footer styling classes
+- Cookiecutter auth templates (`login`, `signup`, `password_reset`) now include dark-mode friendly text/input/border styling
 
 ## [0.0.5] - 2025-10-23
 ### Added
