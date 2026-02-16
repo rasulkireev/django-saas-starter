@@ -67,16 +67,16 @@
     {{ "{% include 'components/feedback.html' %}" }}
   {{ "{% endif %}" }}
 
-  <div class="bg-white">
+  <div class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
     <header class="sticky left-0 top-3 z-10">
       <div class="mx-auto w-full max-w-[1376px] px-4">
-        <div class="flex gap-2 items-center px-4 py-3.5 bg-white rounded-xl border border-gray-200 sm:gap-4 md:px-6 lg:rounded-full">
+        <div class="flex gap-2 items-center px-4 py-3.5 bg-white rounded-xl border border-gray-200 dark:bg-gray-900 dark:border-gray-800 sm:gap-4 md:px-6 lg:rounded-full">
 
           <!-- Logo and Navigation -->
           <div class="flex gap-6 items-center">
             <a href="{% raw %}{% url 'landing' %}{%- endraw %}" class="flex gap-2 items-center">
               <img class="w-auto h-8" src="{% raw %}{% static 'vendors/images/logo.png' %}{%- endraw %}" alt="{{ cookiecutter.project_name }} Logo" />
-              <span class="text-base font-semibold text-gray-900">{{ cookiecutter.project_name }}</span>
+              <span class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ cookiecutter.project_name }}</span>
             </a>
 
             <!-- Desktop Navigation -->
@@ -84,21 +84,21 @@
               <ul class="flex gap-4 items-center">
                 {% if cookiecutter.generate_docs == 'y' -%}
                 <li>
-                  <a href="{% raw %}{% url 'docs_home' %}{%- endraw %}" class="rounded-full px-6 py-3 text-base font-semibold leading-[1.7] tracking-[-0.09px] text-gray-900 transition-colors hover:bg-gray-100">
+                  <a href="{% raw %}{% url 'docs_home' %}{%- endraw %}" class="rounded-full px-6 py-3 text-base font-semibold leading-[1.7] tracking-[-0.09px] text-gray-900 transition-colors hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800">
                       Docs
                     </a>
                   </li>
                 {% endif %}
                 {% if cookiecutter.generate_blog == 'y' -%}
                 <li>
-                  <a href="{% raw %}{% url 'blog_posts' %}{%- endraw %}" class="rounded-full px-6 py-3 text-base font-semibold leading-[1.7] tracking-[-0.09px] text-gray-900 transition-colors hover:bg-gray-100">
+                  <a href="{% raw %}{% url 'blog_posts' %}{%- endraw %}" class="rounded-full px-6 py-3 text-base font-semibold leading-[1.7] tracking-[-0.09px] text-gray-900 transition-colors hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800">
                     Blog
                   </a>
                 </li>
                 {% endif %}
                 {% if cookiecutter.use_stripe == 'y' -%}
                 <li>
-                  <a href="{% raw %}{% url 'pricing' %}{%- endraw %}" class="rounded-full px-6 py-3 text-base font-semibold leading-[1.7] tracking-[-0.09px] text-gray-900 transition-colors hover:bg-gray-100">
+                  <a href="{% raw %}{% url 'pricing' %}{%- endraw %}" class="rounded-full px-6 py-3 text-base font-semibold leading-[1.7] tracking-[-0.09px] text-gray-900 transition-colors hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800">
                     Pricing
                   </a>
                 </li>
@@ -110,9 +110,9 @@
           <!-- Desktop Auth Buttons -->
           <div class="hidden gap-2 items-center ml-auto lg:flex">
             {{ "{% if user.is_authenticated %}" }}
-              <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="inline-block rounded-full border-[1.5px] border-gray-300 px-6 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Dashboard</a>
+              <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="inline-block rounded-full border-[1.5px] border-gray-300 px-6 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-800">Dashboard</a>
             {{ "{% else %}" }}
-              <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="rounded-full border-[1.5px] border-gray-300 px-5 py-3 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-100">
+              <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="rounded-full border-[1.5px] border-gray-300 px-5 py-3 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-100 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-800">
                 Sign In
               </a>
               <a href="{% raw %}{% url 'account_signup' %}{%- endraw %}" class="px-5 py-3 text-sm font-semibold text-white bg-{{ cookiecutter.project_main_color }}-600 rounded-full transition-colors hover:bg-{{ cookiecutter.project_main_color }}-700">
@@ -123,53 +123,53 @@
 
           <!-- Mobile Menu Button -->
           <div class="ml-auto lg:hidden" data-controller="dropdown">
-            <button class="flex relative justify-center items-center w-10 h-10 rounded-full border border-gray-200"
+            <button class="flex relative justify-center items-center w-10 h-10 rounded-full border border-gray-200 dark:border-gray-700 dark:bg-gray-900"
                     aria-label="Toggle mobile menu"
                     data-action="dropdown#toggle click@window->dropdown#hide">
-              <span class="absolute left-1/2 top-[13px] flex h-[2px] w-4 -translate-x-1/2 rounded-full bg-black transition-transform"></span>
-              <span class="absolute left-1/2 top-1/2 flex h-[2px] w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black transition-transform"></span>
-              <span class="absolute bottom-[13px] left-1/2 flex h-[2px] w-4 -translate-x-1/2 rounded-full bg-black transition-transform"></span>
+              <span class="absolute left-1/2 top-[13px] flex h-[2px] w-4 -translate-x-1/2 rounded-full bg-black dark:bg-gray-200 transition-transform"></span>
+              <span class="absolute left-1/2 top-1/2 flex h-[2px] w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black dark:bg-gray-200 transition-transform"></span>
+              <span class="absolute bottom-[13px] left-1/2 flex h-[2px] w-4 -translate-x-1/2 rounded-full bg-black dark:bg-gray-200 transition-transform"></span>
             </button>
 
             <!-- Mobile Menu Dropdown -->
-            <div data-dropdown-target="menu" class="hidden absolute right-4 left-4 top-full z-10 mt-2 bg-white rounded-2xl border border-gray-200 shadow-lg">
+            <div data-dropdown-target="menu" class="hidden absolute right-4 left-4 top-full z-10 mt-2 bg-white rounded-2xl border border-gray-200 shadow-lg dark:bg-gray-900 dark:border-gray-800">
               <nav class="flex-1 justify-center items-center">
                 <ul class="flex flex-col px-4">
                   {% if cookiecutter.generate_docs == 'y' -%}
-                  <li class="py-5 text-center border-b border-gray-200">
-                    <a href="{% raw %}{% url 'docs_home' %}{%- endraw %}" class="text-sm font-semibold text-gray-900 hover:text-{{ cookiecutter.project_main_color }}-600">
+                  <li class="py-5 text-center border-b border-gray-200 dark:border-gray-800">
+                    <a href="{% raw %}{% url 'docs_home' %}{%- endraw %}" class="text-sm font-semibold text-gray-900 hover:text-{{ cookiecutter.project_main_color }}-600 dark:text-gray-100 dark:hover:text-{{ cookiecutter.project_main_color }}-400">
                       Docs
                     </a>
                   </li>
                   {% endif %}
                   {% if cookiecutter.generate_blog == 'y' -%}
-                  <li class="py-5 text-center border-b border-gray-200">
-                    <a href="{% raw %}{% url 'blog_posts' %}{%- endraw %}" class="text-sm font-semibold text-gray-900 hover:text-{{ cookiecutter.project_main_color }}-600">
+                  <li class="py-5 text-center border-b border-gray-200 dark:border-gray-800">
+                    <a href="{% raw %}{% url 'blog_posts' %}{%- endraw %}" class="text-sm font-semibold text-gray-900 hover:text-{{ cookiecutter.project_main_color }}-600 dark:text-gray-100 dark:hover:text-{{ cookiecutter.project_main_color }}-400">
                       Blog
                     </a>
                   </li>
                   {% endif %}
                   {% if cookiecutter.use_stripe == 'y' -%}
-                  <li class="py-5 text-center border-b border-gray-200">
-                    <a href="{% raw %}{% url 'pricing' %}{%- endraw %}" class="text-sm font-semibold text-gray-900 hover:text-{{ cookiecutter.project_main_color }}-600">
+                  <li class="py-5 text-center border-b border-gray-200 dark:border-gray-800">
+                    <a href="{% raw %}{% url 'pricing' %}{%- endraw %}" class="text-sm font-semibold text-gray-900 hover:text-{{ cookiecutter.project_main_color }}-600 dark:text-gray-100 dark:hover:text-{{ cookiecutter.project_main_color }}-400">
                       Pricing
                     </a>
                   </li>
                   {% endif %}
                   {{ "{% if user.is_authenticated %}" }}
                   <li class="py-5 text-center">
-                    <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="text-sm font-semibold text-gray-900 hover:text-{{ cookiecutter.project_main_color }}-600">
+                    <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="text-sm font-semibold text-gray-900 hover:text-{{ cookiecutter.project_main_color }}-600 dark:text-gray-100 dark:hover:text-{{ cookiecutter.project_main_color }}-400">
                       Dashboard
                     </a>
                   </li>
                   {{ "{% else %}" }}
-                  <li class="py-5 text-center border-b border-gray-200">
-                    <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="text-sm font-semibold text-gray-900 hover:text-{{ cookiecutter.project_main_color }}-600">
+                  <li class="py-5 text-center border-b border-gray-200 dark:border-gray-800">
+                    <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="text-sm font-semibold text-gray-900 hover:text-{{ cookiecutter.project_main_color }}-600 dark:text-gray-100 dark:hover:text-{{ cookiecutter.project_main_color }}-400">
                       Sign In
                     </a>
                   </li>
                   <li class="py-5 text-center">
-                    <a href="{% raw %}{% url 'account_signup' %}{%- endraw %}" class="text-sm font-semibold text-{{ cookiecutter.project_main_color }}-600 hover:text-{{ cookiecutter.project_main_color }}-700">
+                    <a href="{% raw %}{% url 'account_signup' %}{%- endraw %}" class="text-sm font-semibold text-{{ cookiecutter.project_main_color }}-600 hover:text-{{ cookiecutter.project_main_color }}-700 dark:text-{{ cookiecutter.project_main_color }}-400 dark:hover:text-{{ cookiecutter.project_main_color }}-300">
                       Start for Free
                     </a>
                   </li>
@@ -188,18 +188,18 @@
       {{ "{% endblock content %}" }}
     </div>
 
-    <footer class="bg-white">
+    <footer class="bg-white dark:bg-gray-950">
       <div class="px-6 py-12 mx-auto max-w-7xl md:flex md:items-center md:justify-between lg:px-8">
         <div class="flex justify-center space-x-6 md:order-2">
-          <a href="{% raw %}{% url 'privacy_policy' %}{% endraw %}" class="text-sm leading-6 text-gray-600 hover:text-gray-900">
+          <a href="{% raw %}{% url 'privacy_policy' %}{% endraw %}" class="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100">
             Privacy Policy
           </a>
-          <a href="{% raw %}{% url 'terms_of_service' %}{% endraw %}" class="text-sm leading-6 text-gray-600 hover:text-gray-900">
+          <a href="{% raw %}{% url 'terms_of_service' %}{% endraw %}" class="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100">
             Terms of Service
           </a>
         </div>
         <div class="mt-8 md:order-1 md:mt-0">
-          <p class="text-xs leading-5 text-center text-gray-500">
+          <p class="text-xs leading-5 text-center text-gray-500 dark:text-gray-400">
             &copy; 2025 <a href="https://lvtd.dev?ref={{ '{{ request.get_host }}' }}">LVTD, LLC</a>. All rights reserved.
           </p>
         </div>
