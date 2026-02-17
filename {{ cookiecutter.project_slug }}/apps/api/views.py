@@ -30,32 +30,33 @@ api = NinjaAPI()
 def healthcheck(request: HttpRequest):
     """
     Comprehensive healthcheck endpoint for monitoring and load balancers.
-    Checks database and Redis connectivity.
-    Returns 200 OK if all services are healthy, 503 if any service is down.
-    """
-    health_status = {
-        "status": "healthy",
-        "checks": {
-            "database": "unknown",
-            "redis": "unknown",
-        }
-    }
 
-    all_healthy = True
+    Checks database and Redis connectivity.
+
+    Returns:
+    - 200 OK if all services are healthy
+    - 503 if any service is down
+
+    NOTE: We intentionally return boolean health fields (instead of "healthy"/"unhealthy"
+    strings) to make healthcheck consumption trivial for load balancers and scripts.
+    """
+
+    checks = {
+        "database": False,
+        "redis": False,
+    }
 
     # Check database connectivity
     try:
         with connection.cursor() as cursor:
             cursor.execute("SELECT 1")
             cursor.fetchone()
-        health_status["checks"]["database"] = "healthy"
+        checks["database"] = True
     except Exception as e:
-        health_status["checks"]["database"] = "unhealthy"
-        all_healthy = False
         logger.error(
             "Healthcheck failed: Database connection error",
             error=str(e),
-            exc_info=True
+            exc_info=True,
         )
 
     # Check Redis connectivity
@@ -66,41 +67,32 @@ def healthcheck(request: HttpRequest):
         retrieved_value = cache.get(cache_key)
 
         if retrieved_value == cache_value:
-            health_status["checks"]["redis"] = "healthy"
+            checks["redis"] = True
         else:
-            health_status["checks"]["redis"] = "unhealthy"
-            all_healthy = False
             logger.error(
                 "Healthcheck failed: Redis value mismatch",
                 expected=cache_value,
-                retrieved=retrieved_value
+                retrieved=retrieved_value,
             )
     except Exception as e:
-        health_status["checks"]["redis"] = "unhealthy"
-        all_healthy = False
         logger.error(
             "Healthcheck failed: Redis connection error",
             error=str(e),
-            exc_info=True
+            exc_info=True,
         )
 
-    # Update overall status
-    if all_healthy:
-        health_status["status"] = "healthy"
-        logger.info(
-            "Healthcheck passed: All services healthy",
-            database=health_status["checks"]["database"],
-            redis=health_status["checks"]["redis"]
-        )
-        return health_status
-    else:
-        health_status["status"] = "unhealthy"
-        logger.error(
-            "Healthcheck failed: One or more services unhealthy",
-            database=health_status["checks"]["database"],
-            redis=health_status["checks"]["redis"]
-        )
-        return 503, health_status
+    healthy = all(checks.values())
+    payload = {
+        "healthy": healthy,
+        "checks": checks,
+    }
+
+    if healthy:
+        logger.info("Healthcheck passed", **checks)
+        return payload
+
+    logger.error("Healthcheck failed", **checks)
+    return 503, payload
 
 
 @api.post(
