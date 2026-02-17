@@ -2,7 +2,38 @@
 
 Generate a project with Cookiecutter:
 
-`cookiecutter git@github.com:rasulkireev/django-saas-starter.git`
+```bash
+cookiecutter git@github.com:rasulkireev/django-saas-starter.git
+```
+
+## Getting started (local dev)
+
+### Prereqs
+- Docker + Docker Compose
+- Cookiecutter (`pipx install cookiecutter` or similar)
+
+### Run
+From your newly-generated project directory:
+
+```bash
+# 1) Create your env file
+cp .env.example .env
+
+# 2) Boot everything (db/redis/backend/frontend/mailhog)
+make serve
+```
+
+Then:
+- App: http://localhost:8000
+- Mailhog inbox: http://localhost:8025
+
+### Common commands
+```bash
+make test
+make migrate
+make makemigrations
+make shell
+```
 
 ## Features
 

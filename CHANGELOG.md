@@ -17,6 +17,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 ## [Unreleased]
 ### Added
 - Added Docs Section
+- Added “Getting started (local dev)” instructions to the root README
 - Added Password Reset functinoality
 - Added banner model to make it easy to create banners for specific Referrers.
 - Added EmailSent model to keep track of all the emails sent to users.
