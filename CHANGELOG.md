@@ -40,6 +40,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
   - No need for requirements.txt file
 
 ### Fixed
+- Healthcheck endpoint now returns boolean `healthy` (instead of string statuses) for simpler monitoring integrations
 - Various imports
 - App Config labels
 - No need for custom 404 view
