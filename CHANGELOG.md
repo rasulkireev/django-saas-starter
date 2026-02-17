@@ -16,6 +16,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 ### Added
+- Added CLAUDE.md with repo + template architecture notes and common commands for AI coding agents
 - Added Docs Section
 - Added Password Reset functinoality
 - Added banner model to make it easy to create banners for specific Referrers.
