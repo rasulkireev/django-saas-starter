@@ -40,6 +40,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
   - No need for requirements.txt file
 
 ### Fixed
+- Docker deployment images no longer fail to build when `uv.lock` is missing (the default in freshly-generated projects)
 - Healthcheck endpoint now returns boolean `healthy` (instead of string statuses) for simpler monitoring integrations
 - Various imports
 - App Config labels
