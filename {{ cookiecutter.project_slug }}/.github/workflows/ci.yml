@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: rasulkireev/custom-postgres:18
+        env:
+          POSTGRES_DB: {{ cookiecutter.project_slug }}
+          POSTGRES_USER: {{ cookiecutter.project_slug }}
+          POSTGRES_PASSWORD: {{ cookiecutter.project_slug }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U {{ cookiecutter.project_slug }} -d {{ cookiecutter.project_slug }}"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    env:
+      ENVIRONMENT: test
+      DJANGO_READ_DOT_ENV: "0"
+      DEBUG: "0"
+      SECRET_KEY: test-secret-key
+      SITE_URL: "https://testserver"
+      ALLOWED_HOSTS: "localhost,127.0.0.1"
+
+      POSTGRES_DB: {{ cookiecutter.project_slug }}
+      POSTGRES_USER: {{ cookiecutter.project_slug }}
+      POSTGRES_PASSWORD: {{ cookiecutter.project_slug }}
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_PORT: 5432
+
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
+      REDIS_DB: 0
+
+      # Avoid external email providers in CI
+      MAILGUN_API_KEY: ""
+      AWS_S3_ENDPOINT_URL: ""
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "latest"
+
+      - name: Set up Python (uv-managed)
+        run: uv python install 3.14
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Create dummy webpack manifest (tests)
+        run: |
+          mkdir -p frontend/build
+          cat > frontend/build/manifest.json <<'EOF'
+          {
+            "entrypoints": {
+              "index": {
+                "assets": {
+                  "js": [],
+                  "css": []
+                }
+              }
+            }
+          }
+          EOF
+
+      - name: Django checks
+        run: uv run python manage.py check
+
+      - name: Pytest
+        run: uv run pytest -q
