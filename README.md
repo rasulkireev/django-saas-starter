@@ -2,7 +2,7 @@
 
 A production-ready Cookiecutter template for building Django SaaS apps fast.
 
-- **Stack:** Django 5 + Python 3.13 + Tailwind + Stimulus
+- **Stack:** Django 6 + Python 3.14 + Tailwind + Stimulus
 - **Pragmatic defaults:** auth, payments (optional), email, API, landing pages, blog/docs (optional)
 - **Deployment-ready:** Docker Compose (local + prod) + GitHub Actions (CapRover)
 
@@ -17,8 +17,8 @@ Then follow the generated project’s `README.md` for local development + deploy
 ## What you get (high level)
 
 ### Core
-- ✅ Django 5
-- ✅ Python 3.13
+- ✅ Django 6
+- ✅ Python 3.14
 - ✅ Environment variables via **django-environ**
 
 ### Auth
@@ -61,6 +61,7 @@ Then follow the generated project’s `README.md` for local development + deploy
 - ✅ pytest
 - ✅ Pre-commit: ruff + djlint
 - ✅ Automated deploy to **CapRover** via **GitHub Actions**
+- ❓ Optional CI workflow (runs Django checks + pytest on PRs)
 
 ### Observability & analytics
 - ✅ Structlog (console in dev, JSON in prod)

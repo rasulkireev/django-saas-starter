@@ -51,11 +51,20 @@ def remove_stripe_files():
         print("Removed Stripe webhook tests")
 
 
+def remove_ci_workflow():
+    """Remove CI workflow if use_ci is 'n'."""
+    ci_workflow_path = Path(".github/workflows/ci.yml")
+    if ci_workflow_path.exists():
+        ci_workflow_path.unlink()
+        print("Removed CI workflow")
+
+
 def main():
     """Run post-generation tasks."""
     generate_blog = "{{ cookiecutter.generate_blog }}"
     generate_docs = "{{ cookiecutter.generate_docs }}"
     use_stripe = "{{ cookiecutter.use_stripe }}"
+    use_ci = "{{ cookiecutter.use_ci }}"
 
     if generate_blog != "y":
         print("Blog generation disabled, removing blog-related files...")
@@ -73,6 +82,11 @@ def main():
         print("Stripe disabled, removing Stripe-related files...")
         remove_stripe_files()
         print("Stripe cleanup complete!")
+
+    if use_ci != "y":
+        print("CI disabled, removing CI workflow...")
+        remove_ci_workflow()
+        print("CI cleanup complete!")
 
 
 if __name__ == "__main__":

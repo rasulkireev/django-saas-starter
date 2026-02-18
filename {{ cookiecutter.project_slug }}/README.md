@@ -123,6 +123,14 @@ You'd still need to make sure .env has correct values.
 4. Run `make serve`
 5. Run `make restart-worker` just in case, it sometimes has troubles connecting to REDIS on first deployment.
 
+### CI (optional)
+
+If you generated the project with `use_ci = y`, it includes a GitHub Actions workflow at `.github/workflows/ci.yml` that runs on pull requests.
+
+It boots Postgres + Redis, runs `python manage.py check`, and then runs `pytest`.
+
+If you don’t want CI, set `use_ci = n` during Cookiecutter generation and the workflow will be removed.
+
 
 {% if cookiecutter.use_stripe == 'y' -%}
 ## Stripe Setup
