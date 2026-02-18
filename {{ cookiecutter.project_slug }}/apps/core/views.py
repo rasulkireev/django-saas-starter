@@ -14,6 +14,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import logout
+from django.db import transaction
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, UpdateView
 
@@ -125,6 +127,32 @@ def resend_confirmation_email(request):
         )
 
     return redirect("settings")
+
+
+@login_required
+@require_POST
+def delete_account(request):
+    """Permanently delete the current user and all related data.
+
+    Safety: requires a confirmation text value.
+    """
+
+    confirmation = request.POST.get("confirmation", "")
+    if confirmation != "DELETE":
+        messages.error(request, "Type DELETE to confirm account deletion.")
+        return redirect("settings")
+
+    user_id = request.user.id
+
+    # Ensure we log the user out and remove data in a single flow.
+    with transaction.atomic():
+        user = request.user
+        logout(request)
+        user.delete()
+
+    logger.info("User account deleted", user_id=user_id)
+    return redirect(f"{reverse('landing')}?account_deleted=1")
+
 
 {% if cookiecutter.use_stripe == 'y' -%}
 @login_required

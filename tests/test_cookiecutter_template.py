@@ -74,6 +74,10 @@ def test_generate_default_structure(tmp_path: Path) -> None:
     assert (project_dir / "pyproject.toml").exists()
     assert (project_dir / "frontend" / "templates").exists()
 
+    # new feature: account deletion flow
+    assert (project_dir / "apps" / "core" / "tests" / "test_delete_account.py").exists()
+    _assert_contains(project_dir / "apps" / "core" / "urls.py", "delete-account")
+
     # apps present by default
     assert (project_dir / "apps" / "core").exists()
     assert (project_dir / "apps" / "pages").exists()

@@ -16,6 +16,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 ### Added
+- Ability for users to permanently delete their account (Danger Zone modal in settings)
 - Dark/light mode toggle in navbar (generated projects)
 - `author_url` cookiecutter variable (replaces hard-coded rasulkireev.com)
 - pytest-based tests for the Cookiecutter template (generate projects + assert file structure)

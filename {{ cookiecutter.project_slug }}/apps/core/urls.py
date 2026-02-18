@@ -9,6 +9,7 @@ urlpatterns = [
     path("admin-panel", views.AdminPanelView.as_view(), name="admin_panel"),
     # Utils
     path("resend-confirmation/", views.resend_confirmation_email, name="resend_confirmation"),
+    path("delete-account/", views.delete_account, name="delete_account"),
     {% if cookiecutter.use_stripe == 'y' -%}
     # Payments
     path("stripe-webhook/", views.stripe_webhook, name="stripe_webhook"),
