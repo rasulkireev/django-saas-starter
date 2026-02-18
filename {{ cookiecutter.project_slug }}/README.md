@@ -14,6 +14,16 @@
 
 - Add info about your project here
 
+### Project structure: `/apps`
+
+This project keeps Django apps inside the `/apps` directory. This is both for human clarity and to help AI/code assistants put code in the right place.
+
+- `apps/core`: main app functionality (shared domain logic, base models, services, etc.)
+- `apps/docs`: user-facing documentation
+- `apps/api`: all API needs (Django Ninja routers, schemas, API-specific logic)
+- `apps/pages`: landing/marketing pages (pricing, TOS, privacy policy, etc.)
+- `apps/blog`: user-facing blog
+
 ***
 
 ## TOC
