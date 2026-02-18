@@ -17,6 +17,7 @@ def _generate(tmp_path: Path, **extra_context: str) -> Path:
         "project_description": "Test Project Description",
         "author_name": "Ada Lovelace",
         "author_email": "ada@example.com",
+        "author_url": "https://example.com",
         "project_main_color": "green",
         # defaults (can be overridden per test)
         "use_posthog": "n",
@@ -176,6 +177,9 @@ def test_use_posthog_toggles_posthog_snippet(tmp_path: Path) -> None:
 
 def test_generated_project_does_not_contain_unrendered_cookiecutter_vars(tmp_path: Path) -> None:
     project_dir = _generate(tmp_path)
+
+    _assert_not_contains(project_dir / "frontend" / "templates" / "base_app.html", "rasulkireev.com")
+    _assert_not_contains(project_dir / "frontend" / "templates" / "base_landing.html", "rasulkireev.com")
 
     # Some frontend templates intentionally embed Cookiecutter variables inside Django-template
     # string literals (so they are not evaluated by Cookiecutter). We keep this test as a
