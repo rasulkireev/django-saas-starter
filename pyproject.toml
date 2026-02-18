@@ -1,0 +1,15 @@
+[project]
+name = "django-saas-starter-template"
+version = "0.0.0"
+description = "Dev-only tooling for testing the django-saas-starter Cookiecutter template"
+requires-python = ">=3.12"
+
+[dependency-groups]
+test = [
+  "pytest>=8.0.0",
+  "cookiecutter>=2.6.0",
+]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]

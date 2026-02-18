@@ -84,3 +84,11 @@ This template aims to be:
 ## Contributing
 
 Issues and PRs are welcome. If you’re proposing a bigger change, open an issue first so we can align on scope.
+
+### Running template tests
+
+This repo includes pytest-based tests that generate a project via Cookiecutter and assert the expected files are present/removed for various options.
+
+```bash
+uv run --group test pytest
+```
