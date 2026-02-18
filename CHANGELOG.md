@@ -32,6 +32,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - updated dj-stripe and stripe versions
 - default timeout for tassk to be around an hour
 - moved all apps to apps directory
+- docs: generated project README now explains what each `/apps/*` package is for (helps humans + AI place code correctly)
 - move `core` and `pages` apps into `apps` directory.
 - remove djstripe. only use strip for payments
 - Use psycopg-binary instead of psycopg2-binary
