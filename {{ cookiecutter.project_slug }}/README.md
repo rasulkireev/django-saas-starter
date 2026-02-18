@@ -14,6 +14,10 @@
 
 - Add info about your project here
 
+### Theme
+
+This template includes a dark/light mode toggle in the navbar. The preference is stored in `localStorage` and applied early to avoid a flash of incorrect theme.
+
 ### Project structure: `/apps`
 
 This project keeps Django apps inside the `/apps` directory. This is both for human clarity and to help AI/code assistants put code in the right place.

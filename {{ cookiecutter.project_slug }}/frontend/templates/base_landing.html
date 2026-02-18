@@ -50,6 +50,25 @@
   {{ "{% endif %}" }}
   {% endif %}
 
+  <script>
+    // Set theme early to avoid a flash of incorrect theme.
+    (function () {
+      try {
+        var theme = localStorage.getItem("theme");
+        if (!theme) {
+          theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        if (theme === "dark") {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      } catch (e) {
+        // no-op
+      }
+    })();
+  </script>
+
   {{ "{% stylesheet_pack 'index' %}" }}
   {{ "{% javascript_pack 'index' attrs='defer' %}" }}
 </head>
@@ -109,6 +128,31 @@
 
           <!-- Desktop Auth Buttons -->
           <div class="hidden gap-2 items-center ml-auto lg:flex">
+            <button
+              type="button"
+              data-controller="theme"
+              data-action="theme#toggle"
+              class="inline-flex justify-center items-center w-11 h-11 rounded-full border border-gray-200 bg-white text-gray-900 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-800"
+              aria-label="Toggle theme"
+            >
+              <span class="sr-only" data-theme-target="label">Theme</span>
+              <!-- Sun (light) -->
+              <svg data-theme-target="iconLight" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="M4.93 4.93l1.41 1.41" />
+                <path d="M17.66 17.66l1.41 1.41" />
+                <path d="M2 12h2" />
+                <path d="M20 12h2" />
+                <path d="M4.93 19.07l1.41-1.41" />
+                <path d="M17.66 6.34l1.41-1.41" />
+              </svg>
+              <!-- Moon (dark) -->
+              <svg data-theme-target="iconDark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden w-5 h-5">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
+              </svg>
+            </button>
             {{ "{% if user.is_authenticated %}" }}
               <a href="{% raw %}{% url 'home' %}{%- endraw %}" class="inline-block rounded-full border-[1.5px] border-gray-300 px-6 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-800">Dashboard</a>
             {{ "{% else %}" }}
