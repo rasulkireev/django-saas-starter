@@ -5,6 +5,7 @@
   "project_description": "This project will help you be the best in the world",
   "author_name": "Jane Doe",
   "author_email": "janedoe@example.com",
+  "author_url": "",
   "project_main_color": "green",
   "use_posthog": "y",
   "use_buttondown": "y",

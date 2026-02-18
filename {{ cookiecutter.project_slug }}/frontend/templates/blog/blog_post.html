@@ -49,8 +49,8 @@
     "dateModified": "{% raw %}{{ blog_post.updated_at|date:'c' }}{% endraw %}",
     "author": {
       "@type": "Person",
-      "name": "{{ cookiecutter.author_name }}",
-      "url": "https://rasulkireev.com/"
+      "name": "{{ cookiecutter.author_name }}"{% if cookiecutter.author_url %},
+      "url": "{{ cookiecutter.author_url }}"{% endif %}
     },
     "publisher": {
       "@type": "Organization",

@@ -17,6 +17,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 ## [Unreleased]
 ### Added
 - Dark/light mode toggle in navbar (generated projects)
+- `author_url` cookiecutter variable (replaces hard-coded rasulkireev.com)
 - pytest-based tests for the Cookiecutter template (generate projects + assert file structure)
 - Refresh root README for clarity and stronger positioning
 - Optional GitHub Actions CI workflow in generated projects (Django checks + pytest on pull requests)
