@@ -15,6 +15,8 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 
 
 ## [Unreleased]
+
+- Fix pricing page dark mode styles.
 ### Added
 - Ability for users to permanently delete their account (Danger Zone modal in settings)
 - Dark/light mode toggle in navbar (generated projects)
