@@ -24,20 +24,20 @@
 {{ '{% endblock meta %}' }}
 
 {{ '{% block content %}' }}
-<div class="py-24 bg-white sm:py-32">
+<div class="py-24 bg-white dark:bg-gray-950 sm:py-32">
   <div class="px-6 mx-auto max-w-7xl lg:px-8">
     <div class="mx-auto max-w-4xl sm:text-center">
-      <h2 class="text-base font-semibold leading-7 text-{{cookiecutter.project_main_color}}-600">Pricing</h2>
-      <p class="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Free to use and self-host</p>
+      <h2 class="text-base font-semibold leading-7 text-{{cookiecutter.project_main_color}}-600 dark:text-{{cookiecutter.project_main_color}}-400">Pricing</h2>
+      <p class="mt-2 text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-5xl">Free to use and self-host</p>
     </div>
-    <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600 sm:text-center">Our app is completely free to use for anyone and can be <a href="https://github.com/rasulkireev/osig" class="prose">self-hosted</a>. For additional features and support, check out our paid plans below.</p>
+    <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600 dark:text-gray-300 sm:text-center">Our app is completely free to use for anyone and can be <a href="https://github.com/rasulkireev/osig" class="font-semibold text-{{cookiecutter.project_main_color}}-700 hover:underline dark:text-{{cookiecutter.project_main_color}}-400">self-hosted</a>. For additional features and support, check out our paid plans below.</p>
     <div class="flow-root mt-20">
-      <div class="grid isolate grid-cols-1 gap-y-16 -mt-16 max-w-sm divide-y divide-gray-100 sm:mx-auto lg:-mx-8 lg:mt-0 lg:max-w-none lg:grid-cols-3 lg:divide-x lg:divide-y-0 xl:-mx-4">
+      <div class="grid isolate grid-cols-1 gap-y-16 -mt-16 max-w-sm divide-y divide-gray-100 dark:divide-gray-800 sm:mx-auto lg:-mx-8 lg:mt-0 lg:max-w-none lg:grid-cols-3 lg:divide-x lg:divide-y-0 xl:-mx-4">
         <div class="pt-16 lg:px-8 lg:pt-0 xl:px-14">
-          <h3 id="tier-basic" class="text-base font-semibold leading-7 text-gray-900">Monthly</h3>
+          <h3 id="tier-basic" class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-100">Monthly</h3>
           <p class="flex gap-x-1 items-baseline mt-6">
-            <span class="text-5xl font-bold tracking-tight text-gray-900">$10</span>
-            <span class="text-sm font-semibold leading-6 text-gray-600">/month</span>
+            <span class="text-5xl font-bold tracking-tight text-gray-900 dark:text-gray-100">$10</span>
+            <span class="text-sm font-semibold leading-6 text-gray-600 dark:text-gray-300">/month</span>
           </p>
           {{ "{% if user.is_authenticated %}" }}
             {{ "{% if has_pro_subscription %}" }}
@@ -48,7 +48,7 @@
           {{ "{% else %}" }}
             <a href="{% raw %}{% url 'account_signup' %}{%- endraw %}" aria-describedby="tier-basic" class="block px-3 py-2 mt-10 text-sm font-semibold leading-6 text-center text-white bg-{{cookiecutter.project_main_color}}-600 rounded-md shadow-sm hover:bg-{{cookiecutter.project_main_color}}-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-{{cookiecutter.project_main_color}}-600">Buy plan</a>
           {{ "{% endif %}" }}
-          <ul role="list" class="mt-6 space-y-3 text-sm leading-6 text-gray-600">
+          <ul role="list" class="mt-6 space-y-3 text-sm leading-6 text-gray-600 dark:text-gray-300">
             <li class="flex gap-x-3">
               <svg class="flex-none w-5 h-6 text-{{cookiecutter.project_main_color}}-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" />
@@ -70,10 +70,10 @@
           </ul>
         </div>
         <div class="pt-16 lg:px-8 lg:pt-0 xl:px-14">
-          <h3 id="tier-essential" class="text-base font-semibold leading-7 text-gray-900">Annual</h3>
+          <h3 id="tier-essential" class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-100">Annual</h3>
           <p class="flex gap-x-1 items-baseline mt-6">
-            <span class="text-5xl font-bold tracking-tight text-gray-900">$100</span>
-            <span class="text-sm font-semibold leading-6 text-gray-600">/year</span>
+            <span class="text-5xl font-bold tracking-tight text-gray-900 dark:text-gray-100">$100</span>
+            <span class="text-sm font-semibold leading-6 text-gray-600 dark:text-gray-300">/year</span>
           </p>
           {{ "{% if user.is_authenticated %}" }}
             {{ "{% if has_pro_subscription %}" }}
@@ -84,7 +84,7 @@
           {{ "{% else %}" }}
             <a href="{% raw %}{% url 'account_signup' %}{%- endraw %}" aria-describedby="tier-basic" class="block px-3 py-2 mt-10 text-sm font-semibold leading-6 text-center text-white bg-{{cookiecutter.project_main_color}}-600 rounded-md shadow-sm hover:bg-{{cookiecutter.project_main_color}}-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-{{cookiecutter.project_main_color}}-600">Buy plan</a>
           {{ "{% endif %}" }}
-          <ul role="list" class="mt-6 space-y-3 text-sm leading-6 text-gray-600">
+          <ul role="list" class="mt-6 space-y-3 text-sm leading-6 text-gray-600 dark:text-gray-300">
             <li class="flex gap-x-3">
               <svg class="flex-none w-5 h-6 text-{{cookiecutter.project_main_color}}-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" />
@@ -106,9 +106,9 @@
           </ul>
         </div>
         <div class="pt-16 lg:px-8 lg:pt-0 xl:px-14">
-          <h3 id="tier-growth" class="text-base font-semibold leading-7 text-gray-900">One-time</h3>
+          <h3 id="tier-growth" class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-100">One-time</h3>
           <p class="flex gap-x-1 items-baseline mt-6">
-            <span class="text-5xl font-bold tracking-tight text-gray-900">$500</span>
+            <span class="text-5xl font-bold tracking-tight text-gray-900 dark:text-gray-100">$500</span>
           </p>
           {{ "{% if user.is_authenticated %}" }}
             {{ "{% if has_pro_subscription %}" }}
@@ -119,7 +119,7 @@
           {{ "{% else %}" }}
             <a href="{% raw %}{% url 'account_signup' %}{%- endraw %}" aria-describedby="tier-basic" class="block px-3 py-2 mt-10 text-sm font-semibold leading-6 text-center text-white bg-{{cookiecutter.project_main_color}}-600 rounded-md shadow-sm hover:bg-{{cookiecutter.project_main_color}}-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-{{cookiecutter.project_main_color}}-600">Buy plan</a>
           {{ "{% endif %}" }}
-          <ul role="list" class="mt-6 space-y-3 text-sm leading-6 text-gray-600">
+          <ul role="list" class="mt-6 space-y-3 text-sm leading-6 text-gray-600 dark:text-gray-300">
             <li class="flex gap-x-3">
               <svg class="flex-none w-5 h-6 text-{{cookiecutter.project_main_color}}-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" />
