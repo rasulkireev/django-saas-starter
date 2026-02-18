@@ -314,7 +314,7 @@ ANYMAIL = {
     "MAILGUN_API_KEY": MAILGUN_API_KEY,
     "MAILGUN_SENDER_DOMAIN": "mg.{{ cookiecutter.project_slug }}.app",
 }
-DEFAULT_FROM_EMAIL = "Rasul from {{ cookiecutter.project_name }} <hello@{{ cookiecutter.project_slug }}.app>"
+DEFAULT_FROM_EMAIL = "{{ cookiecutter.author_name }} from {{ cookiecutter.project_name }} <hello@{{ cookiecutter.project_slug }}.app>"
 SERVER_EMAIL = "{{ cookiecutter.project_name }} Errors <error@{{ cookiecutter.project_slug }}.app>"
 
 if DEBUG:
