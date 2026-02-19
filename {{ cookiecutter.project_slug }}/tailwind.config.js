@@ -1,4 +1,5 @@
 module.exports = {
+  darkMode: 'class',
   content: [
     './frontend/templates/**/*.html',
     './core/**/*.py',
