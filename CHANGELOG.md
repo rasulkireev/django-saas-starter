@@ -49,6 +49,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
   - No need for requirements.txt file
 
 ### Fixed
+- Added a regression test that scans generated projects for maintainer-specific hard-coded literals (e.g., `rasulkireev.com`, `Rasul`) to keep template output generic and reusable.
 - Docker deployment images no longer fail to build when `uv.lock` is missing (the default in freshly-generated projects)
 - Healthcheck endpoint now returns boolean `healthy` (instead of string statuses) for simpler monitoring integrations
 - Various imports
