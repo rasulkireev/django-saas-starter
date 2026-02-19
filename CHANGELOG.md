@@ -36,6 +36,8 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - npm lint command
 
 ### Changed
+- Upgraded generated frontend stack from Tailwind CSS v3 to v4 using `@tailwindcss/postcss` and v4 CSS directives.
+- Updated generated deployment Dockerfiles to use Node 22 build stage (required for Tailwind v4 toolchain compatibility).
 - Root README now reflects Django 6 + Python 3.14
 - All landing pages are now in `pages` app
 - use simple text if mjml is not setup
