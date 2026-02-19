@@ -20,7 +20,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, UpdateView
 
 {% if cookiecutter.use_stripe == 'y' -%}
-from core.stripe_webhooks import EVENT_HANDLERS
+from apps.core.stripe_webhooks import EVENT_HANDLERS
 {% endif %}
 
 from apps.core.forms import ProfileUpdateForm

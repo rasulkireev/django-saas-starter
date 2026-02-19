@@ -1,8 +1,8 @@
 import pytest
 from django.contrib.auth import get_user_model
 
-from core.choices import ProfileStates
-from core.models import Profile
+from apps.core.choices import ProfileStates
+from apps.core.models import Profile
 
 
 @pytest.mark.django_db

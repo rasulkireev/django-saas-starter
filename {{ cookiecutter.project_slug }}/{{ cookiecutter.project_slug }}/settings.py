@@ -543,7 +543,7 @@ MJML_HTTPSERVERS = [
 
 SHELL_PLUS_IMPORTS = [
     "from django_q.tasks import async_task",
-    "from core.tasks import *",
+    "from apps.core.tasks import *",
 ]
 
 
