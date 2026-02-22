@@ -82,6 +82,12 @@ def test_generate_default_structure(tmp_path: Path) -> None:
     assert (project_dir / "apps" / "core").exists()
     assert (project_dir / "apps" / "pages").exists()
 
+    # auth error styling should include dark-mode contrast classes
+    _assert_contains(
+        project_dir / "apps" / "core" / "utils.py",
+        'dark:bg-red-950/40',
+    )
+
     # optional apps on by default in this test helper
     assert (project_dir / "apps" / "blog").exists()
     assert (project_dir / "apps" / "docs").exists()
