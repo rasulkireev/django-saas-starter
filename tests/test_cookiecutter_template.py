@@ -227,3 +227,26 @@ def test_generated_project_does_not_contain_unrendered_cookiecutter_vars(tmp_pat
             offenders.append(str(rel))
 
     assert offenders == [], f"Unrendered cookiecutter vars found in: {offenders}"
+
+
+def test_generated_project_does_not_contain_template_author_leaks(tmp_path: Path) -> None:
+    project_dir = _generate(tmp_path)
+
+    banned_literals = ("rasulkireev.com", "Rasul")
+    offenders: list[str] = []
+
+    for path in project_dir.rglob("*"):
+        if not path.is_file():
+            continue
+        if path.suffix in {".png", ".jpg", ".jpeg", ".gif", ".ico", ".woff", ".woff2"}:
+            continue
+
+        try:
+            text = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+
+        if any(token in text for token in banned_literals):
+            offenders.append(str(path.relative_to(project_dir)))
+
+    assert offenders == [], f"Hard-coded template author literals found in: {offenders}"
