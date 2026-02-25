@@ -18,6 +18,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 
 - Fix pricing page dark mode styles.
 ### Added
+- Passkey authentication (WebAuthn) in generated projects: sign in + sign up flows via `django-allauth` MFA.
 - Ability for users to permanently delete their account (Danger Zone modal in settings)
 - Dark/light mode toggle in navbar (generated projects)
 - `author_url` cookiecutter variable (replaces hard-coded rasulkireev.com)

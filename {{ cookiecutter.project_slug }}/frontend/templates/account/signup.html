@@ -68,6 +68,26 @@
         </div>
       </form>
 
+      {{ "{% if PASSKEY_SIGNUP_ENABLED %}" }}
+      <div>
+        <div class="relative mt-10">
+          <div class="flex absolute inset-0 items-center" aria-hidden="true">
+            <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
+          </div>
+          <div class="flex relative justify-center text-sm font-medium leading-6">
+            <span class="px-6 text-gray-900 bg-white dark:text-gray-100 dark:bg-gray-900">Passkey</span>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <a href="{% raw %}{{ signup_by_passkey_url }}{%- endraw %}"
+             class="flex justify-center px-4 py-2 w-full text-sm font-medium text-gray-900 bg-white rounded-md border border-gray-300 border-solid hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-{{cookiecutter.project_main_color}}-500 dark:text-gray-100 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800">
+            Sign up using a passkey
+          </a>
+        </div>
+      </div>
+      {{ "{% endif %}" }}
+
       {{ "{% if has_social_providers %}" }}
       <div>
         <div class="relative mt-10">

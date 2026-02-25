@@ -56,6 +56,16 @@
                     </button>
                 </div>
 
+                {{ "{% if PASSKEY_LOGIN_ENABLED %}" }}
+                <div>
+                    <button type="button"
+                            id="passkey_login"
+                            class="flex justify-center px-4 py-2 w-full text-sm font-medium text-gray-900 bg-white rounded-md border border-gray-300 border-solid hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-{{cookiecutter.project_main_color}}-500 dark:text-gray-100 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800">
+                        Sign in with a passkey
+                    </button>
+                </div>
+                {{ "{% endif %}" }}
+
                 <div class="flex justify-center items-center">
                     <div class="text-sm">
                         <a href="{% raw %}{% url 'account_reset_password' %}{% endraw %}" class="font-medium text-{{cookiecutter.project_main_color}}-600 hover:text-{{cookiecutter.project_main_color}}-500">
@@ -64,6 +74,10 @@
                     </div>
                 </div>
             </form>
+
+            {{ "{% if PASSKEY_LOGIN_ENABLED %}" }}
+                {{ '{% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}' }}
+            {{ "{% endif %}" }}
 
             {{ "{% if has_social_providers %}" }}
             <div>

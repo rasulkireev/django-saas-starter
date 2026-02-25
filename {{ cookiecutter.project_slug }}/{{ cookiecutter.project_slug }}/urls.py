@@ -19,12 +19,13 @@ from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
 
 from {{ cookiecutter.project_slug }}.sitemaps import sitemaps
-from apps.pages.views import AccountSignupView
+from apps.pages.views import AccountSignupByPasskeyView, AccountSignupView
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # Override allauth signup with custom view
+    # Override allauth signup with custom views.
+    path("accounts/signup/passkey/", AccountSignupByPasskeyView.as_view(), name="account_signup_by_passkey"),
     path("accounts/signup/", AccountSignupView.as_view(), name="account_signup"),
     path("accounts/", include("allauth.urls")),
     path("anymail/", include("anymail.urls")),

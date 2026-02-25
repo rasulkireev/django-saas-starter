@@ -91,6 +91,7 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.github",
+    "allauth.mfa",
     "django_q",
     "django_extensions",
     {% if cookiecutter.use_mjml == 'y' -%}
@@ -285,6 +286,8 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
 ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True
 ACCOUNT_FORMS = {
     "signup": "apps.core.forms.CustomSignUpForm",
     "login": "apps.core.forms.CustomLoginForm",
@@ -292,6 +295,13 @@ ACCOUNT_FORMS = {
 ACCOUNT_ADAPTER = "{{cookiecutter.project_slug}}.adapters.CustomAccountAdapter"
 if ENVIRONMENT != "dev":
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+
+# Passkey (WebAuthn) auth support via django-allauth MFA.
+MFA_SUPPORTED_TYPES = ["webauthn"]
+MFA_PASSKEY_LOGIN_ENABLED = True
+MFA_PASSKEY_SIGNUP_ENABLED = True
+# Local dev uses http://localhost, so allow insecure origin only in debug.
+MFA_WEBAUTHN_ALLOW_INSECURE_ORIGIN = DEBUG
 
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_PROVIDERS = {}
