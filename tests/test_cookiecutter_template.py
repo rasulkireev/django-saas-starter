@@ -99,6 +99,39 @@ def test_generate_default_structure(tmp_path: Path) -> None:
     json.loads(_read_text(project_dir / "package.json"))
 
 
+def test_default_generation_includes_passkey_auth(tmp_path: Path) -> None:
+    project_dir = _generate(tmp_path)
+
+    settings_py = project_dir / "test_project" / "settings.py"
+    urls_py = project_dir / "test_project" / "urls.py"
+    views_py = project_dir / "apps" / "pages" / "views.py"
+
+    _assert_contains(project_dir / "pyproject.toml", "fido2>=1.1.2,<3")
+    _assert_contains(settings_py, '"allauth.mfa"')
+    _assert_contains(settings_py, 'ACCOUNT_EMAIL_VERIFICATION = "mandatory"')
+    _assert_contains(settings_py, "ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True")
+    _assert_contains(settings_py, "MFA_PASSKEY_LOGIN_ENABLED = True")
+    _assert_contains(settings_py, "MFA_PASSKEY_SIGNUP_ENABLED = True")
+    _assert_contains(settings_py, "MFA_WEBAUTHN_ALLOW_INSECURE_ORIGIN = DEBUG")
+
+    _assert_contains(urls_py, "accounts/signup/passkey/")
+    _assert_contains(urls_py, "account_signup_by_passkey")
+    _assert_contains(views_py, "AccountSignupByPasskeyView")
+
+    _assert_contains(
+        project_dir / "frontend" / "templates" / "account" / "login.html",
+        "Sign in with a passkey",
+    )
+    _assert_contains(
+        project_dir / "frontend" / "templates" / "account" / "signup.html",
+        "Sign up using a passkey",
+    )
+    _assert_contains(
+        project_dir / "frontend" / "templates" / "account" / "signup_by_passkey.html",
+        "Continue with passkey",
+    )
+
+
 def test_generate_without_blog_removes_blog_app_and_templates(tmp_path: Path) -> None:
     project_dir = _generate(tmp_path, generate_blog="n")
 
