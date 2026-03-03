@@ -85,6 +85,9 @@ jobs:
           }
           EOF
 
+      - name: Migrations check
+        run: uv run python manage.py makemigrations --check --dry-run
+
       - name: Django checks
         run: uv run python manage.py check
 
