@@ -124,6 +124,8 @@ You'd still need to make sure .env has correct values.
 1. Update the name of the `.env.example` to `.env` and update relevant variables.
 2. Run `uv sync`
 3. Run `uv run python manage.py makemigrations`
+   - Important: run this **without specifying app names** so Django detects changes across **all apps**.
+   - Do this before feature work and before first local run.
 4. Run `make serve`
 5. Run `make restart-worker` just in case, it sometimes has troubles connecting to REDIS on first deployment.
 
@@ -131,7 +133,7 @@ You'd still need to make sure .env has correct values.
 
 If you generated the project with `use_ci = y`, it includes a GitHub Actions workflow at `.github/workflows/ci.yml` that runs on pull requests.
 
-It boots Postgres + Redis, runs `python manage.py check`, and then runs `pytest`.
+It boots Postgres + Redis, runs `python manage.py makemigrations --check --dry-run`, then `python manage.py check`, and then runs `pytest`.
 
 If you don’t want CI, set `use_ci = n` during Cookiecutter generation and the workflow will be removed.
 
