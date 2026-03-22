@@ -28,6 +28,23 @@ This project keeps Django apps inside the `/apps` directory. This is both for hu
 - `apps/pages`: landing/marketing pages (pricing, TOS, privacy policy, etc.)
 - `apps/blog`: user-facing blog
 
+{% if cookiecutter.generate_blog == 'y' -%}
+### Blog management API endpoints (admin)
+
+When blog generation is enabled, the template includes a ready-to-extend blog post management API in `apps/api/views.py`:
+
+- `POST /api/blog-posts/submit`
+- `GET /api/internal/blog-posts`
+- `GET /api/internal/blog-posts/{blog_post_id}`
+- `PUT /api/internal/blog-posts/{blog_post_id}`
+- `PATCH /api/internal/blog-posts/{blog_post_id}`
+- `DELETE /api/internal/blog-posts/{blog_post_id}`
+- `POST /api/internal/blog-posts/{blog_post_id}/review`
+- `POST /api/internal/blog-posts/{blog_post_id}/publish`
+
+These endpoints use superuser API auth by default and are intended as a starter baseline you can adapt for your product-specific content workflows.
+{% endif %}
+
 ***
 
 ## TOC
