@@ -6,7 +6,7 @@ from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.contrib.auth import get_user_model
 
 from apps.core.choices import EmailType
-from apps.core.utils import track_email_sent
+from apps.core.utils import send_transactional_email
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
@@ -36,32 +36,41 @@ class CustomAccountAdapter(DefaultAccountAdapter):
 
         # Track as welcome email during signup, confirmation email on resend
         email_type = EmailType.WELCOME if signup else EmailType.EMAIL_CONFIRMATION
+        email_address = emailconfirmation.email_address.email
+        context = {
+            "flow": "signup" if signup else "confirmation_resend",
+            "user_id": emailconfirmation.email_address.user.id,
+        }
 
         logger.info(
             "[Send Confirmation Mail] Sending email",
             signup=signup,
             email_type=email_type,
             user_id=emailconfirmation.email_address.user.id,
-            email=emailconfirmation.email_address.email,
+            email=email_address,
         )
 
-        try:
-            result = super().send_confirmation_mail(request, emailconfirmation, signup)
-            track_email_sent(
-                email_address=emailconfirmation.email_address.email,
+        success = send_transactional_email(
+            lambda: super(CustomAccountAdapter, self).send_confirmation_mail(
+                request,
+                emailconfirmation,
+                signup,
+            ),
+            email_address=email_address,
+            email_type=email_type,
+            profile=profile,
+            context=context,
+        )
+
+        if not success:
+            logger.warning(
+                "[Send Confirmation Mail] Email send failed after retries",
+                signup=signup,
                 email_type=email_type,
-                profile=profile,
-            )
-            return result
-        except Exception as error:
-            logger.error(
-                "[Send Confirmation Mail] Failed to send email",
-                error=str(error),
-                exc_info=True,
                 user_id=emailconfirmation.email_address.user.id,
-                email=emailconfirmation.email_address.email,
+                email=email_address,
             )
-            raise
+
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     """

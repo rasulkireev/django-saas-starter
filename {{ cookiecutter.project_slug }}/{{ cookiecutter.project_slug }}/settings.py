@@ -340,6 +340,8 @@ else:
     else:
         EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
+EMAIL_DELIVERY_RETRY_BACKOFF_SECONDS = (0.0, 1.0, 3.0)
+
 REDIS_HOST = env("REDIS_HOST", default="localhost")
 REDIS_PORT = env("REDIS_PORT", default="6379")
 REDIS_PASSWORD = env("REDIS_PASSWORD", default="")
