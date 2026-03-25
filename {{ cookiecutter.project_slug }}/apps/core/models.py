@@ -5,11 +5,13 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from django.conf import settings
+from django.core.mail import send_mail
 from django_q.tasks import async_task
 
 from apps.core.base_models import BaseModel
 from apps.core.choices import ProfileStates, EmailType
 from apps.core.model_utils import generate_random_key
+from apps.core.utils import send_transactional_email
 
 
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
@@ -107,11 +109,6 @@ class Feedback(BaseModel):
         super().save(*args, **kwargs)
 
         if is_new:
-            from django.conf import settings
-            from django.core.mail import send_mail
-
-            from apps.core.utils import track_email_sent
-
             subject = "New Feedback Submitted"
             message = f"""
                 New feedback was submitted:\n\n
@@ -122,13 +119,22 @@ class Feedback(BaseModel):
             from_email = settings.DEFAULT_FROM_EMAIL
             recipient_list = [settings.DEFAULT_FROM_EMAIL]
 
-            send_mail(subject, message, from_email, recipient_list, fail_silently=True)
-
             for recipient_email in recipient_list:
-                track_email_sent(
+                send_transactional_email(
+                    lambda recipient=recipient_email: send_mail(
+                        subject,
+                        message,
+                        from_email,
+                        [recipient],
+                        fail_silently=False,
+                    ),
                     email_address=recipient_email,
                     email_type=EmailType.FEEDBACK_NOTIFICATION,
                     profile=self.profile,
+                    context={
+                        "flow": "feedback_notification",
+                        "feedback_id": self.id,
+                    },
                 )
 
 class EmailSent(BaseModel):

@@ -37,6 +37,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - npm lint command
 
 ### Changed
+- Transactional email delivery in generated projects now retries transient failures, emits structured observability fields/counters, and avoids bubbling email send errors into user-facing 500s for confirmation + feedback flows.
 - Upgraded generated frontend stack from Tailwind CSS v3 to v4 using `@tailwindcss/postcss` and v4 CSS directives.
 - Updated generated deployment Dockerfiles to use Node 22 build stage (required for Tailwind v4 toolchain compatibility).
 - Root README now reflects Django 6 + Python 3.14

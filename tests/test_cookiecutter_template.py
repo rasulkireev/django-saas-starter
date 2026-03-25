@@ -88,6 +88,13 @@ def test_generate_default_structure(tmp_path: Path) -> None:
         'dark:bg-red-950/40',
     )
 
+    # transactional email hardening should ship in generated projects
+    assert (project_dir / "apps" / "core" / "tests" / "test_email_delivery.py").exists()
+    _assert_contains(
+        project_dir / "apps" / "core" / "utils.py",
+        'def send_transactional_email(',
+    )
+
     # optional apps on by default in this test helper
     assert (project_dir / "apps" / "blog").exists()
     assert (project_dir / "apps" / "docs").exists()
@@ -110,6 +117,7 @@ def test_default_generation_includes_passkey_auth(tmp_path: Path) -> None:
     _assert_contains(settings_py, '"allauth.mfa"')
     _assert_contains(settings_py, 'ACCOUNT_EMAIL_VERIFICATION = "mandatory"')
     _assert_contains(settings_py, "ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True")
+    _assert_contains(settings_py, "EMAIL_DELIVERY_RETRY_BACKOFF_SECONDS = (0.0, 1.0, 3.0)")
     _assert_contains(settings_py, "MFA_PASSKEY_LOGIN_ENABLED = True")
     _assert_contains(settings_py, "MFA_PASSKEY_SIGNUP_ENABLED = True")
     _assert_contains(settings_py, "MFA_WEBAUTHN_ALLOW_INSECURE_ORIGIN = DEBUG")
