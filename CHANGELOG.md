@@ -131,3 +131,6 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 
 ### Fixed
 - close button on messages now works fine
+
+## Unreleased
+- Make shared footer and auth email footer years render dynamically instead of hardcoding 2025.
