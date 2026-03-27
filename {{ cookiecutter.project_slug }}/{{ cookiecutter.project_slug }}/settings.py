@@ -63,14 +63,25 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = env('DEBUG')
 
 SITE_URL = env("SITE_URL")
+SITE_HOST = SITE_URL.replace("http://", "").replace("https://", "").split("/")[0].split(":")[0]
 
-# Remove the port from the SITE_URL and the https prefix (mostly for dev)
-ALLOWED_HOSTS = [SITE_URL.replace("http://", "").replace("https://", "").split(":")[0]]
-if DEBUG:
-    # This is for local webhook receiving
-    ALLOWED_HOSTS.append("backend")
-
+# Keep production locked to the configured site hostname.
+ALLOWED_HOSTS = [SITE_HOST]
 CSRF_TRUSTED_ORIGINS = [SITE_URL]
+
+if DEBUG:
+    # Local integration work often runs through ephemeral tunnel hostnames.
+    ALLOWED_HOSTS = ["*"]
+    CSRF_TRUSTED_ORIGINS = [
+        SITE_URL,
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "http://backend:8000",
+        "https://*.ngrok-free.app",
+        "https://*.ngrok.app",
+        "https://*.trycloudflare.com",
+        "https://*.loca.lt",
+    ]
 
 DEFAULT_APPS = [
     "django.contrib.admin",
