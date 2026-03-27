@@ -1,5 +1,5 @@
 @import "tailwindcss";
+@import "./pygments.css";
 @config "../../../tailwind.config.js";
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
-@import "./pygments.css";
