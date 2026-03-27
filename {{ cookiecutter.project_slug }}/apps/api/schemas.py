@@ -62,7 +62,9 @@ class BlogPostDetailOut(Schema):
 
 
 class ProfileSettingsOut(Schema):
+    {% if cookiecutter.use_stripe == 'y' %}
     has_pro_subscription: bool
+    {% endif %}
 
 
 class UserSettingsOut(Schema):

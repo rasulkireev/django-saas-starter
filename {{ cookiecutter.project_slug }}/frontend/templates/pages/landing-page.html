@@ -48,10 +48,11 @@
           </dt>
           <el-disclosure id="faq-0" class="[&:not([hidden])]:contents">
             <dd class="pr-12 mt-2">
-              <p class="text-gray-600 text-base/7 dark:text-gray-400">Our platform includes everything you need to get started quickly. All plans include core features, with premium plans offering advanced functionality and priority support.</p>
+              <p class="text-gray-600 text-base/7 dark:text-gray-400">Our platform includes the core workflows you need to get started quickly, with room to customize the experience for your own product.</p>
             </dd>
           </el-disclosure>
         </div>
+        {% if cookiecutter.use_stripe == 'y' %}
         <div class="py-6 first:pt-0 last:pb-0">
           <dt>
             <button type="button" command="--toggle" commandfor="faq-1" class="flex justify-between items-start w-full text-left text-gray-900 dark:text-white">
@@ -72,6 +73,7 @@
             </dd>
           </el-disclosure>
         </div>
+        {% endif %}
       </dl>
     </div>
   </div>

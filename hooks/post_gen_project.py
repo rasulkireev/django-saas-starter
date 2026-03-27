@@ -50,6 +50,11 @@ def remove_stripe_files():
         stripe_tests_path.unlink()
         print("Removed Stripe webhook tests")
 
+    pricing_template_path = Path("frontend/templates/pages/pricing.html")
+    if pricing_template_path.exists():
+        pricing_template_path.unlink()
+        print("Removed pricing template")
+
 
 def remove_ci_workflow():
     """Remove CI workflow if use_ci is 'n'."""

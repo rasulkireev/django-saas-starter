@@ -318,7 +318,9 @@ def user_settings(request: HttpRequest):
     profile = request.auth
     try:
         profile_data = {
+            {% if cookiecutter.use_stripe == 'y' %}
             "has_pro_subscription": profile.has_active_subscription,
+            {% endif %}
         }
         data = {"profile": profile_data}
 

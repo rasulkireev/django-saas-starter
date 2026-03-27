@@ -83,12 +83,21 @@
       content is plagiarism-free, factually accurate, or suitable for your specific use case.
     </p>
 
+    {% if cookiecutter.use_stripe == 'y' %}
     <h2>7. Payment Terms</h2>
     <p>
       Paid subscriptions are billed in advance on a recurring basis. All fees are
       non-refundable unless otherwise stated. We reserve the right to change our pricing
       with 30 days' notice to existing subscribers.
     </p>
+    {% else %}
+    <h2>7. Service Access</h2>
+    <p>
+      The default starter does not include recurring paid subscriptions. If you later add
+      paid plans or commercial features, you should update these terms to describe billing,
+      refunds, and any product-specific limits.
+    </p>
+    {% endif %}
 
     <h2>8. Service Availability</h2>
     <p>
@@ -166,8 +175,9 @@
 
     <h2>18. Service Limits</h2>
     <p>
-      Your use of the Service is subject to rate limits and usage quotas based on your
-      subscription tier. Excessive use may result in temporary service restrictions.
+      Your use of the Service may be subject to reasonable rate limits and usage quotas
+      to protect reliability for all users. Excessive use may result in temporary service
+      restrictions.
     </p>
   </div>
 </div>
