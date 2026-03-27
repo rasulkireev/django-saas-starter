@@ -215,6 +215,18 @@ def test_use_s3_toggles_minio_in_docker_compose(tmp_path: Path) -> None:
     assert "minio" not in disabled_compose.lower()
 
 
+def test_local_compose_waits_for_frontend_ready_and_uses_supported_node(tmp_path: Path) -> None:
+    project_dir = _generate(tmp_path)
+
+    compose = _read_text(project_dir / "docker-compose-local.yml")
+    styles = _read_text(project_dir / "frontend" / "src" / "styles" / "index.css")
+
+    assert "image: node:24" in compose
+    assert 'condition: service_healthy' in compose
+    assert 'test -f /app/frontend/build/manifest.json' in compose
+    assert styles.index('@import "tailwindcss";') < styles.index('@import "./pygments.css";') < styles.index('@config "../../../tailwind.config.js";')
+
+
 def test_use_posthog_toggles_posthog_snippet(tmp_path: Path) -> None:
     enabled = _generate(tmp_path, use_posthog="y")
     disabled = _generate(tmp_path, use_posthog="n")
