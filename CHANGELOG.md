@@ -17,6 +17,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 ## [Unreleased]
 
 - Fix pricing page dark mode styles.
+- Make `use_stripe = n` generation remove subscription-only states, API fields, pricing leftovers, and Stripe-specific legal copy.
 ### Added
 - Passkey authentication (WebAuthn) in generated projects: sign in + sign up flows via `django-allauth` MFA.
 - Ability for users to permanently delete their account (Danger Zone modal in settings)

@@ -43,7 +43,9 @@
       <li>Name and email address</li>
       <li>Account credentials</li>
       <li>Project information and content</li>
+      {% if cookiecutter.use_stripe == 'y' %}
       <li>Payment information (processed securely through Stripe)</li>
+      {% endif %}
       <li>Communication preferences</li>
     </ul>
 
@@ -51,7 +53,9 @@
     <p>We use the information we collect to: </p>
     <ul>
       <li>Provide, maintain, and improve our services</li>
+      {% if cookiecutter.use_stripe == 'y' %}
       <li>Process transactions and send related information</li>
+      {% endif %}
       <li>Send technical notices, updates, and support messages</li>
       <li>Respond to your comments and questions</li>
       <li>Monitor and analyze usage and trends</li>
@@ -81,7 +85,9 @@
       <li>Encryption of sensitive data at rest</li>
       <li>Regular security audits and updates</li>
       <li>Access controls and authentication requirements</li>
+      {% if cookiecutter.use_stripe == 'y' %}
       <li>Secure payment processing through PCI-compliant providers (Stripe)</li>
+      {% endif %}
     </ul>
     <p>
       However, no method of transmission over the internet is 100% secure. While we
@@ -99,7 +105,9 @@
       Third-party services that may set cookies include:
     </p>
     <ul>
+      {% if cookiecutter.use_stripe == 'y' %}
       <li>Stripe (payment processing)</li>
+      {% endif %}
       <li>Google Analytics (usage analytics)</li>
       <li>[Any other third-party services you use]</li>
     </ul>
@@ -180,7 +188,9 @@
     <ul>
       <li>Account information: Retained while your account is active</li>
       <li>Content and projects: Retained until you delete them or close your account</li>
+      {% if cookiecutter.use_stripe == 'y' %}
       <li>Payment records: Retained for 7 years for tax and accounting purposes</li>
+      {% endif %}
       <li>Marketing data: Retained until you unsubscribe or request deletion</li>
     </ul>
     <p>

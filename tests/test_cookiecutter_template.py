@@ -159,11 +159,40 @@ def test_generate_without_stripe_removes_stripe_files(tmp_path: Path) -> None:
 
     assert not (project_dir / "apps" / "core" / "stripe_webhooks.py").exists()
     assert not (project_dir / "apps" / "core" / "tests" / "test_stripe_webhooks.py").exists()
+    assert not (project_dir / "frontend" / "templates" / "pages" / "pricing.html").exists()
 
     # pricing route should be removed when stripe is off
     urls_py = project_dir / "apps" / "pages" / "urls.py"
     assert urls_py.exists()
     _assert_not_contains(urls_py, "pricing")
+
+    # no subscription-only helpers or API fields should leak into the generated project
+    _assert_not_contains(project_dir / "apps" / "core" / "models.py", "has_active_subscription")
+    _assert_not_contains(project_dir / "apps" / "api" / "schemas.py", "has_pro_subscription")
+    _assert_not_contains(project_dir / "apps" / "api" / "views.py", "has_pro_subscription")
+
+    choices_py = project_dir / "apps" / "core" / "choices.py"
+    _assert_not_contains(choices_py, "TRIAL_STARTED")
+    _assert_not_contains(choices_py, "TRIAL_ENDED")
+    _assert_not_contains(choices_py, "SUBSCRIBED")
+    _assert_not_contains(choices_py, "CANCELLED")
+    _assert_not_contains(choices_py, "CHURNED")
+
+    landing_page = project_dir / "frontend" / "templates" / "pages" / "landing-page.html"
+    _assert_not_contains(landing_page, "How does pricing work?")
+    _assert_not_contains(landing_page, "premium plans")
+
+    privacy_policy = project_dir / "frontend" / "templates" / "pages" / "privacy-policy.html"
+    _assert_not_contains(privacy_policy, "processed securely through Stripe")
+    _assert_not_contains(privacy_policy, "Process transactions and send related information")
+    _assert_not_contains(privacy_policy, "Secure payment processing through PCI-compliant providers (Stripe)")
+    _assert_not_contains(privacy_policy, "Stripe (payment processing)")
+    _assert_not_contains(privacy_policy, "Payment records: Retained for 7 years for tax and accounting purposes")
+
+    terms_of_service = project_dir / "frontend" / "templates" / "pages" / "terms-of-service.html"
+    _assert_not_contains(terms_of_service, "Paid subscriptions are billed in advance on a recurring basis.")
+    _assert_not_contains(terms_of_service, "subscription tier")
+    _assert_contains(terms_of_service, "The default starter does not include recurring paid subscriptions.")
 
 
 def test_generate_with_stripe_keeps_stripe_files_and_pricing(tmp_path: Path) -> None:
@@ -171,9 +200,12 @@ def test_generate_with_stripe_keeps_stripe_files_and_pricing(tmp_path: Path) -> 
 
     assert (project_dir / "apps" / "core" / "stripe_webhooks.py").exists()
     assert (project_dir / "apps" / "core" / "tests" / "test_stripe_webhooks.py").exists()
+    assert (project_dir / "frontend" / "templates" / "pages" / "pricing.html").exists()
     urls_py = project_dir / "apps" / "pages" / "urls.py"
     assert urls_py.exists()
     _assert_contains(urls_py, "pricing")
+    _assert_contains(project_dir / "apps" / "api" / "schemas.py", "has_pro_subscription")
+    _assert_contains(project_dir / "apps" / "core" / "models.py", "has_active_subscription")
 
 
 def test_generate_without_ci_removes_ci_workflow(tmp_path: Path) -> None:
