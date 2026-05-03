@@ -19,6 +19,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - Fix pricing page dark mode styles.
 - Make `use_stripe = n` generation remove subscription-only states, API fields, pricing leftovers, and Stripe-specific legal copy.
 ### Added
+- Generated projects with `generate_blog = y` now include a superuser-only admin blog API for creating, listing, reading, updating, patching, deleting, reviewing, and publishing blog posts.
 - Passkey authentication (WebAuthn) in generated projects: sign in + sign up flows via `django-allauth` MFA.
 - Ability for users to permanently delete their account (Danger Zone modal in settings)
 - Dark/light mode toggle in navbar (generated projects)
@@ -56,6 +57,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
   - No need for requirements.txt file
 
 ### Fixed
+- Generated projects with `use_stripe = n` now keep `ProfileSettingsOut` syntactically valid when importing API schemas.
 - Fresh local boot now uses Node 24 for the frontend dev container, waits for the frontend manifest healthcheck before starting the backend, and keeps Tailwind imports ordered so default builds avoid the PostCSS import warning.
 - DEBUG-mode settings now allow tunnel-based local development (localhost, backend, ngrok/trycloudflare/loca.lt CSRF origins) while keeping non-DEBUG host/CSRF restrictions scoped to `SITE_URL`.
 - Added a regression test that scans generated projects for maintainer-specific hard-coded literals (e.g., `rasulkireev.com`, `Rasul`) to keep template output generic and reusable.
