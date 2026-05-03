@@ -15,4 +15,6 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 
 
 ## [Unreleased]
-...
+
+### Added
+- Superuser-only admin blog API for creating, listing, reading, updating, patching, deleting, reviewing, and publishing blog posts when the blog app is generated.

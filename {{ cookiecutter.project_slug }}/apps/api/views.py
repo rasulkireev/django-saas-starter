@@ -132,7 +132,7 @@ def _serialize_blog_post(blog_post: BlogPost) -> BlogPostItemOut:
 
 @api.post(
     "/blog-posts/submit",
-    response=BlogPostOut,
+    response={200: BlogPostOut, 403: BlogPostOut},
     auth=[superuser_api_auth],
     include_in_schema=False,
     tags=["admin"],
@@ -141,7 +141,7 @@ def submit_blog_post(request: HttpRequest, data: BlogPostIn):
     profile = request.auth
 
     if not profile or not getattr(profile.user, "is_superuser", False):
-        return BlogPostOut(status="error", message="Forbidden: superuser access required."), 403
+        return 403, {"status": "error", "message": "Forbidden: superuser access required."}
 
     try:
         BlogPost.objects.create(

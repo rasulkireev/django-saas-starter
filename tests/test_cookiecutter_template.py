@@ -157,6 +157,43 @@ def test_generate_without_blog_removes_blog_app_and_templates(tmp_path: Path) ->
     assert not (project_dir / "frontend" / "templates" / "blog").exists()
 
 
+def test_generate_with_blog_includes_admin_blog_crud_api(tmp_path):
+    project_dir = _generate(tmp_path, generate_blog="y")
+
+    api_views = project_dir / "apps" / "api" / "views.py"
+    api_schemas = project_dir / "apps" / "api" / "schemas.py"
+    api_tests = project_dir / "apps" / "api" / "tests.py"
+
+    for endpoint in [
+        '"/blog-posts/submit"',
+        '"/internal/blog-posts"',
+        '"/internal/blog-posts/{blog_post_id}"',
+        '"/internal/blog-posts/{blog_post_id}/review"',
+        '"/internal/blog-posts/{blog_post_id}/publish"',
+    ]:
+        _assert_contains(api_views, endpoint)
+
+    for method in ["@api.post", "@api.get", "@api.put", "@api.patch", "@api.delete"]:
+        _assert_contains(api_views, method)
+
+    _assert_contains(api_views, "auth=[superuser_api_auth]")
+    _assert_contains(api_schemas, "class BlogPostIn")
+    _assert_contains(api_schemas, "class BlogPostUpdateIn")
+    _assert_contains(api_tests, "class BlogPostApiTests")
+    _assert_contains(api_tests, "test_delete_internal_blog_post_deletes_existing_post")
+
+
+def test_generate_without_blog_removes_admin_blog_crud_api(tmp_path):
+    project_dir = _generate(tmp_path, generate_blog="n")
+
+    api_views = project_dir / "apps" / "api" / "views.py"
+    api_schemas = project_dir / "apps" / "api" / "schemas.py"
+
+    _assert_not_contains(api_views, "BlogPost")
+    _assert_not_contains(api_views, "/internal/blog-posts")
+    _assert_not_contains(api_schemas, "BlogPostIn")
+
+
 def test_generate_without_docs_removes_docs_app_and_templates(tmp_path: Path) -> None:
     project_dir = _generate(tmp_path, generate_docs="n")
 
