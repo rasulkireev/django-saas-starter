@@ -108,7 +108,7 @@ class BlogPostApiTests(SimpleTestCase):
 
         assert response["status"] == "success"
         assert post.status == BlogPostStatus.PUBLISHED
-        post.save.assert_called_once()
+        post.save.assert_called_once_with(update_fields=["status", "updated_at"])
 
     def test_update_internal_blog_post_replaces_all_editable_fields(self):
         request = self._request()

@@ -132,7 +132,7 @@ def _serialize_blog_post(blog_post: BlogPost) -> BlogPostItemOut:
 
 @api.post(
     "/blog-posts/submit",
-    response=BlogPostOut,
+    response={200: BlogPostOut, 403: BlogPostOut},
     auth=[superuser_api_auth],
     include_in_schema=False,
     tags=["admin"],
