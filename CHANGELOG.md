@@ -19,6 +19,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - Fix pricing page dark mode styles.
 - Make `use_stripe = n` generation remove subscription-only states, API fields, pricing leftovers, and Stripe-specific legal copy.
 ### Added
+- Generated projects now include an `ALLOW_SIGNUPS` environment flag (default `True`) to pause new email/social registrations while keeping existing user logins available.
 - Generated projects with `generate_blog = y` now include a superuser-only admin blog API for creating, listing, reading, updating, patching, deleting, reviewing, and publishing blog posts.
 - Passkey authentication (WebAuthn) in generated projects: sign in + sign up flows via `django-allauth` MFA.
 - Ability for users to permanently delete their account (Danger Zone modal in settings)

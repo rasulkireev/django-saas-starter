@@ -131,6 +131,21 @@ def test_default_generation_includes_passkey_auth(tmp_path: Path) -> None:
     _assert_contains(settings_py, "MFA_PASSKEY_LOGIN_ENABLED = True")
     _assert_contains(settings_py, "MFA_PASSKEY_SIGNUP_ENABLED = True")
     _assert_contains(settings_py, "MFA_WEBAUTHN_ALLOW_INSECURE_ORIGIN = DEBUG")
+    _assert_contains(settings_py, 'ALLOW_SIGNUPS = env.bool("ALLOW_SIGNUPS", default=True)')
+
+    _assert_contains(project_dir / ".env.example", "ALLOW_SIGNUPS=True")
+    _assert_contains(
+        project_dir / "apps" / "docs" / "content" / "deployment" / "environment-variables.md",
+        "**ALLOW_SIGNUPS**",
+    )
+    _assert_contains(
+        project_dir / "frontend" / "templates" / "account" / "signup_closed.html",
+        "Signups paused",
+    )
+    _assert_contains(
+        project_dir / "apps" / "core" / "tests" / "test_signup_gating.py",
+        "test_account_signup_adapter_can_pause_new_signups",
+    )
 
     _assert_contains(urls_py, "accounts/signup/passkey/")
     _assert_contains(urls_py, "account_signup_by_passkey")

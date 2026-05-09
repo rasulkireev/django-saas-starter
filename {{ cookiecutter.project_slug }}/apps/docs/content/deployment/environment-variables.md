@@ -34,6 +34,11 @@ These variables are essential for {{ cookiecutter.project_name }} to function:
 - Example: `https://yourdomain.com`
 - Used for generating absolute URLs in emails and notifications
 
+**ALLOW_SIGNUPS**
+- Set to `False` to pause new account creation
+- Defaults to `True`
+- Existing users can still log in while signups are paused
+
 **ALLOWED_HOSTS**
 - Comma-separated list of domains that can access your application
 - Example: `yourdomain.com,www.yourdomain.com`

@@ -3,6 +3,7 @@ import uuid
 
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from apps.core.choices import EmailType
@@ -18,6 +19,10 @@ class CustomAccountAdapter(DefaultAccountAdapter):
     """
     Custom adapter to track email confirmations and welcome emails.
     """
+
+    def is_open_for_signup(self, request):
+        """Allow operators to pause new registrations without affecting existing users."""
+        return settings.ALLOW_SIGNUPS and super().is_open_for_signup(request)
 
     def send_confirmation_mail(self, request, emailconfirmation, signup):
         """
@@ -77,6 +82,10 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     Custom adapter to automatically generate usernames from email addresses
     during social authentication signup, bypassing the username selection page.
     """
+
+    def is_open_for_signup(self, request, sociallogin):
+        """Mirror email signup gating for social-account auto-signups."""
+        return settings.ALLOW_SIGNUPS and super().is_open_for_signup(request, sociallogin)
 
     def populate_user(self, request, sociallogin, data):
         """

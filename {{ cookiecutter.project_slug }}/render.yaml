@@ -125,6 +125,10 @@ envVarGroups:
       - key: SITE_URL
         value: $RENDER_EXTERNAL_URL
 
+      # Set to False to pause new account creation while keeping existing logins working.
+      - key: ALLOW_SIGNUPS
+        value: "True"
+
       {% if cookiecutter.use_s3 == 'y' %}
       # Optional. If not specified, local FileSystemStorage is used for media files.
       - key: AWS_S3_ENDPOINT_URL
