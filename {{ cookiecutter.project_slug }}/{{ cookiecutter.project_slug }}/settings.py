@@ -299,6 +299,7 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
 ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True
+ALLOW_SIGNUPS = env.bool("ALLOW_SIGNUPS", default=True)
 ACCOUNT_FORMS = {
     "signup": "apps.core.forms.CustomSignUpForm",
     "login": "apps.core.forms.CustomLoginForm",
