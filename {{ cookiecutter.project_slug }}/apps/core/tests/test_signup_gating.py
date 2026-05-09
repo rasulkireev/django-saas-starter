@@ -39,6 +39,13 @@ def test_account_signup_adapter_can_pause_new_signups():
     assert _account_adapter().is_open_for_signup(request) is False
 
 
+def test_account_signup_adapter_defaults_open_when_setting_is_absent(monkeypatch):
+    request = RequestFactory().get("/accounts/signup/")
+    monkeypatch.delattr(settings, "ALLOW_SIGNUPS", raising=False)
+
+    assert _account_adapter().is_open_for_signup(request) is True
+
+
 @override_settings(ALLOW_SIGNUPS=True)
 def test_social_signup_adapter_defaults_open_for_signups():
     request = RequestFactory().get("/accounts/github/login/callback/")
@@ -51,6 +58,13 @@ def test_social_signup_adapter_uses_same_signup_gate():
     request = RequestFactory().get("/accounts/github/login/callback/")
 
     assert _social_account_adapter().is_open_for_signup(request, sociallogin=None) is False
+
+
+def test_social_signup_adapter_defaults_open_when_setting_is_absent(monkeypatch):
+    request = RequestFactory().get("/accounts/github/login/callback/")
+    monkeypatch.delattr(settings, "ALLOW_SIGNUPS", raising=False)
+
+    assert _social_account_adapter().is_open_for_signup(request, sociallogin=None) is True
 
 
 @override_settings(ROOT_URLCONF=__name__)
