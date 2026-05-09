@@ -113,7 +113,7 @@ def test_default_generation_includes_passkey_auth(tmp_path: Path) -> None:
     urls_py = project_dir / "test_project" / "urls.py"
     views_py = project_dir / "apps" / "pages" / "views.py"
 
-    _assert_contains(project_dir / "pyproject.toml", "fido2>=1.1.2,<3")
+    _assert_contains(project_dir / "pyproject.toml", "fido2>=2.2.0,<3")
     _assert_contains(settings_py, '"allauth.mfa"')
     _assert_contains(settings_py, 'ACCOUNT_EMAIL_VERIFICATION = "mandatory"')
     _assert_contains(settings_py, "ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True")

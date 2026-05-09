@@ -6,8 +6,8 @@ requires-python = ">=3.12"
 
 [dependency-groups]
 test = [
-  "pytest>=8.0.0",
-  "cookiecutter>=2.6.0",
+  "pytest>=9.0.3",
+  "cookiecutter>=2.7.1",
 ]
 
 [tool.pytest.ini_options]

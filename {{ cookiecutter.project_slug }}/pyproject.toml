@@ -5,62 +5,62 @@ description = "{{ cookiecutter.project_description }}"
 authors = [{ name = "{{ cookiecutter.author_name }}", email = "{{ cookiecutter.author_email }}" }]
 requires-python = ">=3.14,<4.0"
 dependencies = [
-    "django>=6.0.2",
-    "django-allauth>=65.14.0",
-    "django-anymail>=14.0",
-    "django-environ>=0.12.0",
+    "django>=6.0.5",
+    "django-allauth>=65.16.1",
+    "django-anymail>=15.0",
+    "django-environ>=0.13.0",
     "django-extensions>=4.1",
-    "django-ninja>=1.5.3",
-    "django-q2>=1.9.0",
+    "django-ninja>=1.6.2",
+    "django-q2>=1.10.0",
     "django-storages>=1.14.6",
     "django-structlog>=10.0.0",
     "django-widget-tweaks>=1.5.1",
-    "fido2>=1.1.2,<3",
-    "gunicorn>=25.0.1",
-    "ipython>=9.10.0",
-    "markdown>=3.10.1",
-    "pillow>=12.1.0",
-    "psycopg[binary]>=3.3.2",
-    "pytest>=9.0.2",
-    "pytest-django>=4.11.1",
+    "fido2>=2.2.0,<3",
+    "gunicorn>=26.0.0",
+    "ipython>=9.13.0",
+    "markdown>=3.10.2",
+    "pillow>=12.2.0",
+    "psycopg[binary]>=3.3.4",
+    "pytest>=9.0.3",
+    "pytest-django>=4.12.0",
     "python-webpack-boilerplate>=1.0.4",
-    "redis>=7.1.0",
+    "redis>=7.4.0",
     "structlog>=25.5.0",
     "tqdm>=4.67.3",
-    "whitenoise>=6.11.0",
+    "whitenoise>=6.12.0",
     {% if cookiecutter.use_sentry == 'y' -%}
-    "sentry-sdk>=2.52.0",
+    "sentry-sdk>=2.59.0",
     "structlog-sentry>=2.2.1",
     {% endif %}
     {% if cookiecutter.use_posthog == 'y' -%}
-    "posthog>=7.8.2",
+    "posthog>=7.14.0",
     {% endif %}
     {% if cookiecutter.use_stripe == 'y' -%}
-    "stripe>=14.3.0",
+    "stripe>=15.1.0",
     {% endif %}
     {% if cookiecutter.use_mjml == 'y' -%}
     "django-mjml>=1.5",
     {% endif %}
     {% if cookiecutter.use_ai == 'y' -%}
-    "pydantic-ai>=1.55.0",
+    "pydantic-ai>=1.93.0",
     "pgvector>=0.4.2",
     {% endif %}
     {% if cookiecutter.use_logfire == 'y' -%}
-    "logfire>=4.22.0",
+    "logfire>=4.32.1",
     {% endif %}
     {% if cookiecutter.generate_docs == 'y' -%}
     "python-frontmatter>=1.1.0",
     "pyyaml>=6.0.3",
-    "pygments>=2.19.2",
+    "pygments>=2.20.0",
     {% endif %}
 ]
 
 [dependency-groups]
 dev = [
     "djlint>=1.36.4",
-    "pre-commit>=4.5.1",
-    "ruff>=0.15.0",
-    "ty>=0.0.15",
+    "pre-commit>=4.6.0",
+    "ruff>=0.15.12",
+    "ty>=0.0.34",
 ]
 
 [tool.ruff]
