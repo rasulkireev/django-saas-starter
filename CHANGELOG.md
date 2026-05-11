@@ -40,6 +40,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - npm lint command
 
 ### Changed
+- Generated Sentry configuration now enables richer observability defaults: release metadata, configurable tracing/profiling/log settings, logging breadcrumbs/events, and the existing `before_send` hook.
 - Updated root test tooling and generated project Python dependency minimums to current PyPI releases.
 - Transactional email delivery in generated projects now retries transient failures, emits structured observability fields/counters, and avoids bubbling email send errors into user-facing 500s for confirmation + feedback flows.
 - Upgraded generated frontend stack from Tailwind CSS v3 to v4 using `@tailwindcss/postcss` and v4 CSS directives.
