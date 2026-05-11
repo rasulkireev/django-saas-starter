@@ -332,6 +332,38 @@ def test_use_posthog_toggles_posthog_snippet(tmp_path: Path) -> None:
     _assert_not_contains(disabled_base, "posthog.init")
 
 
+def test_use_sentry_includes_observability_defaults(tmp_path: Path) -> None:
+    project_dir = _generate(tmp_path, use_sentry="y")
+
+    settings_py = project_dir / "test_project" / "settings.py"
+    env_example = project_dir / ".env.example"
+    docs = project_dir / "apps" / "docs" / "content" / "deployment" / "environment-variables.md"
+
+    _assert_contains(settings_py, "SENTRY_RELEASE = env(")
+    _assert_contains(settings_py, "SENTRY_TRACES_SAMPLE_RATE = env.float(")
+    _assert_contains(settings_py, "SENTRY_PROFILE_SESSION_SAMPLE_RATE = env.float(")
+    _assert_contains(settings_py, "SENTRY_ENABLE_LOGS = env.bool(")
+    _assert_contains(settings_py, "SENTRY_SEND_DEFAULT_PII = env.bool(")
+    _assert_contains(settings_py, "SENTRY_INCLUDE_LOCAL_VARIABLES = env.bool(")
+    _assert_contains(settings_py, "SENTRY_MAX_BREADCRUMBS = env.int(")
+    _assert_contains(settings_py, "release=SENTRY_RELEASE or None")
+    _assert_contains(settings_py, "enable_logs=SENTRY_ENABLE_LOGS")
+    _assert_contains(settings_py, "CustomLoggingIntegration(level=logging.INFO, event_level=logging.ERROR)")
+    _assert_contains(settings_py, "before_send=before_send")
+
+    for key in [
+        "SENTRY_RELEASE=",
+        "SENTRY_TRACES_SAMPLE_RATE=1.0",
+        "SENTRY_PROFILE_SESSION_SAMPLE_RATE=1.0",
+        "SENTRY_ENABLE_LOGS=True",
+        "SENTRY_SEND_DEFAULT_PII=False",
+        "SENTRY_INCLUDE_LOCAL_VARIABLES=False",
+        "SENTRY_MAX_BREADCRUMBS=100",
+    ]:
+        _assert_contains(env_example, key)
+        _assert_contains(docs, key.split("=")[0])
+
+
 def test_generated_project_does_not_contain_unrendered_cookiecutter_vars(tmp_path: Path) -> None:
     project_dir = _generate(tmp_path)
 

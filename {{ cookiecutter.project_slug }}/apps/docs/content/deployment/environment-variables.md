@@ -108,8 +108,36 @@ These variables enhance functionality but aren't required:
 **SENTRY_DSN**
 - DSN for Sentry error tracking
 - Get your DSN from [Sentry](https://sentry.io/)
-- Used for error monitoring and reporting
+- Used for error monitoring, tracing, profiling, and logs
 - Leave empty to disable Sentry
+
+**SENTRY_RELEASE**
+- Optional release identifier, usually your deployed commit SHA or app version
+- Enables Sentry release/regression tracking and links issues to deploys
+
+**SENTRY_TRACES_SAMPLE_RATE**
+- Performance trace sample rate from `0.0` to `1.0`
+- Defaults to `1.0` so low-volume/open-source projects get complete traces
+
+**SENTRY_PROFILE_SESSION_SAMPLE_RATE**
+- Profiling sample rate for sampled traces from `0.0` to `1.0`
+- Defaults to `1.0`; reduce for high-traffic projects if needed
+
+**SENTRY_ENABLE_LOGS**
+- Set to `True` to enable Sentry structured logs support
+- Defaults to `True`
+
+**SENTRY_SEND_DEFAULT_PII**
+- Set to `True` to attach authenticated user/request PII to Sentry events
+- Defaults to `False`; only enable when your privacy policy and data handling allow it
+
+**SENTRY_INCLUDE_LOCAL_VARIABLES**
+- Set to `True` to include stack-frame local variables in Sentry events
+- Defaults to `False` to avoid accidentally capturing secrets or sensitive form data
+
+**SENTRY_MAX_BREADCRUMBS**
+- Number of breadcrumbs kept with each event
+- Defaults to `100`
 
 {% endif -%}
 {% if cookiecutter.use_posthog == 'y' -%}
