@@ -19,6 +19,8 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - Fix pricing page dark mode styles.
 - Make `use_stripe = n` generation remove subscription-only states, API fields, pricing leftovers, and Stripe-specific legal copy.
 ### Added
+- Post-generation hook now creates fresh initial migrations after cookiecutter option cleanup, avoiding static template migrations while keeping generated projects deploy-ready.
+- Generated projects now include styled django-allauth email/passkey/MFA account templates, post-registration passkey setup links, and hardened WebAuthn login JavaScript.
 - Generated projects now include an `ALLOW_SIGNUPS` environment flag (default `True`) to pause new email/social registrations while keeping existing user logins available.
 - Generated projects with `generate_blog = y` now include a superuser-only admin blog API for creating, listing, reading, updating, patching, deleting, reviewing, and publishing blog posts.
 - Passkey authentication (WebAuthn) in generated projects: sign in + sign up flows via `django-allauth` MFA.
@@ -40,6 +42,9 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - npm lint command
 
 ### Changed
+- Generated signup/login now defaults to email + password, non-blocking email-link verification, and passkey setup after registration instead of passkey signup.
+- Generated transactional email sender defaults can now be configured with `MAILGUN_SENDER_DOMAIN`, `DEFAULT_FROM_EMAIL`, and `SERVER_EMAIL` environment variables.
+- Generated deployment entrypoints now wait for the database, run commands with `exec`, and Dockerfiles explicitly make the entrypoint executable.
 - Generated Sentry configuration now enables richer observability defaults: release metadata, configurable tracing/profiling/log settings, logging breadcrumbs/events, and the existing `before_send` hook.
 - Updated root test tooling and generated project Python dependency minimums to current PyPI releases.
 - Transactional email delivery in generated projects now retries transient failures, emits structured observability fields/counters, and avoids bubbling email send errors into user-facing 500s for confirmation + feedback flows.
@@ -60,6 +65,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
   - No need for requirements.txt file
 
 ### Fixed
+- Generated settings-page confirmation resends now use django-allauth's canonical email verification flow, avoiding invalid confirmation links and duplicate success notifications.
 - Generated projects with `use_stripe = n` now keep `ProfileSettingsOut` syntactically valid when importing API schemas.
 - Fresh local boot now uses Node 24 for the frontend dev container, waits for the frontend manifest healthcheck before starting the backend, and keeps Tailwind imports ordered so default builds avoid the PostCSS import warning.
 - DEBUG-mode settings now allow tunnel-based local development (localhost, backend, ngrok/trycloudflare/loca.lt CSRF origins) while keeping non-DEBUG host/CSRF restrictions scoped to `SITE_URL`.

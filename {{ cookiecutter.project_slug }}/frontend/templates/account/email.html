@@ -1,0 +1,76 @@
+{% raw %}
+{% extends 'base_app.html' %}
+{% load widget_tweaks %}
+
+{% block meta %}
+<title>Email addresses · the app</title>
+{% endblock meta %}
+
+{% block content %}
+<div class="px-4 py-12 mx-auto max-w-3xl sm:px-6 lg:px-8">
+  <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900 sm:p-8">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Email addresses</h1>
+        <p class="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">Manage the email addresses associated with your your account.</p>
+      </div>
+      <a href="{% url 'settings' %}" class="text-sm font-medium text-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-600 hover:text-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-700 dark:text-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-400 dark:hover:text-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-300">Back to settings</a>
+    </div>
+
+    {% if emailaddresses %}
+      <form class="mt-8 space-y-5" method="post" action="{% url 'account_email' %}">
+        {% csrf_token %}
+        <fieldset class="space-y-3">
+          <legend class="sr-only">Email addresses</legend>
+          {% for radio in emailaddress_radios %}
+            {% with emailaddress=radio.emailaddress %}
+              <label for="{{ radio.id }}" class="flex items-start gap-3 rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/50">
+                <input id="{{ radio.id }}" type="radio" name="email" value="{{ emailaddress.email }}" {% if radio.checked %}checked{% endif %} class="mt-1 h-4 w-4 border-gray-300 text-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-600 focus:ring-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-500">
+                <span class="min-w-0 flex-1">
+                  <span class="block break-all font-medium text-gray-900 dark:text-gray-100">{{ emailaddress.email }}</span>
+                  <span class="mt-2 flex flex-wrap gap-2">
+                    {% if emailaddress.verified %}
+                      <span class="inline-flex rounded-full bg-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-100 px-2.5 py-0.5 text-xs font-medium text-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-800 dark:bg-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-900/40 dark:text-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-200">Verified</span>
+                    {% else %}
+                      <span class="inline-flex rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200">Unverified</span>
+                    {% endif %}
+                    {% if emailaddress.primary %}
+                      <span class="inline-flex rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-200">Primary</span>
+                    {% endif %}
+                  </span>
+                </span>
+              </label>
+            {% endwith %}
+          {% endfor %}
+        </fieldset>
+
+        <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          <button type="submit" name="action_primary" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-800">Make primary</button>
+          <button type="submit" name="action_send" class="inline-flex justify-center rounded-md bg-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-700 focus:outline-none focus:ring-2 focus:ring-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">Re-send verification</button>
+          <button type="submit" name="action_remove" class="inline-flex justify-center rounded-md border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-700 shadow-sm hover:bg-red-50 dark:border-red-900/70 dark:bg-gray-900 dark:text-red-300 dark:hover:bg-red-950/40">Remove</button>
+        </div>
+      </form>
+    {% else %}
+      <p class="mt-8 rounded-xl border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-800 dark:border-yellow-900/60 dark:bg-yellow-950/30 dark:text-yellow-200">No email address is currently associated with your account.</p>
+    {% endif %}
+
+    {% if can_add_email %}
+      <div class="mt-10 border-t border-gray-200 pt-8 dark:border-gray-800">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Add email address</h2>
+        <form class="mt-4 space-y-4" method="post" action="{% url 'account_email' %}">
+          {% csrf_token %}
+          {{ form.non_field_errors|safe }}
+          <div>
+            {{ form.email.errors|safe }}
+            <label for="{{ form.email.id_for_label }}" class="sr-only">Email address</label>
+            {% render_field form.email placeholder="Email address" type="email" autocomplete="email" class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 shadow-sm focus:border-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-500 focus:outline-none focus:ring-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-500 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 sm:text-sm" %}
+          </div>
+          <button type="submit" name="action_add" class="inline-flex justify-center rounded-md bg-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-700 focus:outline-none focus:ring-2 focus:ring-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">Add email</button>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}
+
+{% endraw %}

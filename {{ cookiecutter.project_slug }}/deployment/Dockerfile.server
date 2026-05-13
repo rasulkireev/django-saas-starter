@@ -21,8 +21,9 @@ RUN pip install --no-cache-dir uv
 RUN uv sync --no-dev --no-install-project
 
 COPY . .
+RUN chmod +x deployment/entrypoint.sh
 COPY --from=build /app/frontend/build/ ./frontend/build/
 
 EXPOSE 80
 
-CMD ["deployment/entrypoint.sh", "-s"]
+CMD ["sh", "deployment/entrypoint.sh", "-s"]

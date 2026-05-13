@@ -1,0 +1,56 @@
+{% raw %}
+{% include "mfa/webauthn/snippets/scripts.html" %}
+<form id="mfa_login" action="{% url 'mfa_login_webauthn' %}" method="post">
+    {% csrf_token %}
+    {{ redirect_field }}
+    <input type="hidden" name="credential" id="mfa_credential">
+</form>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var loginBtn = document.getElementById('{{ button_id|default:"passkey_login" }}');
+    var form = document.getElementById('mfa_login');
+    var credentialInput = document.getElementById('mfa_credential');
+
+    if (!loginBtn || !form || !credentialInput || !window.webauthnJSON) {
+      return;
+    }
+
+    loginBtn.addEventListener('click', async function (event) {
+      event.preventDefault();
+      try {
+        var response = await fetch(form.action, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          credentials: 'same-origin'
+        });
+        if (!response.ok) {
+          throw new Error('Unable to fetch passkey data from server.');
+        }
+
+        var data = await response.json();
+        var requestOptions = data.request_options || (data.data && data.data.request_options);
+        if (!requestOptions || !requestOptions.publicKey) {
+          throw new Error('Passkey login did not receive valid browser options from the server.');
+        }
+
+        var credential = await window.webauthnJSON.get(requestOptions);
+        credentialInput.value = JSON.stringify(credential);
+        form.submit();
+      } catch (exception) {
+        var errorEvent = new CustomEvent('allauth.error', {
+          detail: { tags: ['mfa', 'webauthn', 'login'], exception: exception },
+          cancelable: true
+        });
+        document.dispatchEvent(errorEvent);
+        if (!errorEvent.defaultPrevented) {
+          console.error(exception);
+        }
+      }
+    });
+  });
+</script>
+
+{% endraw %}

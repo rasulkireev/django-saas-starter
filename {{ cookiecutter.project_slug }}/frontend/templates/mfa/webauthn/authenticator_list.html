@@ -1,0 +1,42 @@
+{% raw %}
+{% extends "mfa/webauthn/base.html" %}
+{% load humanize %}
+
+{% block mfa_content %}
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div>
+      <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Manage passkeys</h1>
+      <p class="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">Review, rename, or remove passkeys for your your account.</p>
+    </div>
+    <a href="{% url 'mfa_index' %}" class="text-sm font-medium text-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-600 hover:text-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-700 dark:text-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-400 dark:hover:text-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-300">Back to passkeys</a>
+  </div>
+
+  {% if authenticators %}
+    <div class="mt-8 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
+      <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+        {% for authenticator in authenticators %}
+          <li class="flex flex-col gap-4 bg-white p-4 dark:bg-gray-900 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p class="font-medium text-gray-900 dark:text-gray-100">{{ authenticator }}</p>
+              <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                Added {{ authenticator.created_at|date:"SHORT_DATE_FORMAT" }}{% if authenticator.last_used_at %}; last used {{ authenticator.last_used_at|naturaltime }}{% else %}; not used yet{% endif %}.
+              </p>
+            </div>
+            <div class="flex gap-2">
+              <a href="{% url 'mfa_edit_webauthn' pk=authenticator.pk %}" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-800">Edit</a>
+              <a href="{% url 'mfa_remove_webauthn' pk=authenticator.pk %}" class="inline-flex justify-center rounded-md border border-red-300 bg-white px-3 py-2 text-sm font-medium text-red-700 shadow-sm hover:bg-red-50 dark:border-red-900/70 dark:bg-gray-900 dark:text-red-300 dark:hover:bg-red-950/40">Remove</a>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% else %}
+    <p class="mt-8 rounded-xl border border-gray-200 bg-gray-50 p-5 text-sm text-gray-600 dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-300">No passkeys have been added yet.</p>
+  {% endif %}
+
+  <div class="mt-6">
+    <a href="{% url 'mfa_add_webauthn' %}" class="inline-flex justify-center rounded-md bg-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-700 focus:outline-none focus:ring-2 focus:ring-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">Add passkey</a>
+  </div>
+{% endblock mfa_content %}
+
+{% endraw %}

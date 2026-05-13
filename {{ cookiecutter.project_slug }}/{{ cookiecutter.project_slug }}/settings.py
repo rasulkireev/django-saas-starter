@@ -297,15 +297,14 @@ LOGIN_REDIRECT_URL = "home"
 ACCOUNT_LOGOUT_REDIRECT_URL = "landing"
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = "username"
-ACCOUNT_LOGIN_METHODS = {'username'}
-ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
-ACCOUNT_LOGIN_METHODS = {"username"}
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*"]
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
 ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = False
 ALLOW_SIGNUPS = env.bool("ALLOW_SIGNUPS", default=True)
 ACCOUNT_FORMS = {
     "signup": "apps.core.forms.CustomSignUpForm",
@@ -318,7 +317,7 @@ if ENVIRONMENT != "dev":
 # Passkey (WebAuthn) auth support via django-allauth MFA.
 MFA_SUPPORTED_TYPES = ["webauthn"]
 MFA_PASSKEY_LOGIN_ENABLED = True
-MFA_PASSKEY_SIGNUP_ENABLED = True
+MFA_PASSKEY_SIGNUP_ENABLED = False
 # Local dev uses http://localhost, so allow insecure origin only in debug.
 MFA_WEBAUTHN_ALLOW_INSECURE_ORIGIN = DEBUG
 
@@ -341,10 +340,16 @@ if GITHUB_CLIENT_ID != "":
 MAILGUN_API_KEY = env("MAILGUN_API_KEY", default="")
 ANYMAIL = {
     "MAILGUN_API_KEY": MAILGUN_API_KEY,
-    "MAILGUN_SENDER_DOMAIN": "mg.{{ cookiecutter.project_slug }}.app",
+    "MAILGUN_SENDER_DOMAIN": env("MAILGUN_SENDER_DOMAIN", default="mg.{{ cookiecutter.project_slug }}.app"),
 }
-DEFAULT_FROM_EMAIL = "{{ cookiecutter.author_name }} from {{ cookiecutter.project_name }} <hello@{{ cookiecutter.project_slug }}.app>"
-SERVER_EMAIL = "{{ cookiecutter.project_name }} Errors <error@{{ cookiecutter.project_slug }}.app>"
+DEFAULT_FROM_EMAIL = env(
+    "DEFAULT_FROM_EMAIL",
+    default="{{ cookiecutter.author_name }} from {{ cookiecutter.project_name }} <hello@{{ cookiecutter.project_slug }}.app>",
+)
+SERVER_EMAIL = env(
+    "SERVER_EMAIL",
+    default="{{ cookiecutter.project_name }} Errors <error@{{ cookiecutter.project_slug }}.app>",
+)
 
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

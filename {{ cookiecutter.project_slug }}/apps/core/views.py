@@ -3,7 +3,11 @@ from urllib.parse import urlencode
 {% if cookiecutter.use_stripe == 'y' -%}
 import stripe
 {% endif %}
-from allauth.account.models import EmailAddress, EmailConfirmation
+from allauth.account.internal.flows.email_verification import (
+    send_verification_email_to_address,
+)
+from allauth.account.models import EmailAddress
+from allauth.mfa.models import Authenticator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.cache import cache
@@ -69,9 +73,13 @@ class UserSettingsView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
 
-        email_address = EmailAddress.objects.get_for_user(user, user.email)
-        context["email_verified"] = email_address.verified
+        email_address = EmailAddress.objects.filter(user=user, email__iexact=user.email).first()
+        context["email_verified"] = bool(email_address and email_address.verified)
         context["resend_confirmation_url"] = reverse("resend_confirmation")
+        context["passkey_count"] = Authenticator.objects.filter(
+            user=user,
+            type=Authenticator.Type.WEBAUTHN,
+        ).count()
         {% if cookiecutter.use_stripe == 'y' -%}
         context["has_subscription"] = user.profile.has_active_subscription
         {% endif %}
@@ -81,11 +89,12 @@ class UserSettingsView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return context
 
 @login_required
+@require_POST
 def resend_confirmation_email(request):
     user = request.user
 
     try:
-        email_address = EmailAddress.objects.get_for_user(user, user.email)
+        email_address = EmailAddress.objects.filter(user=user, email__iexact=user.email).first()
 
         if not email_address:
             messages.error(request, "No email address found for your account.")
@@ -105,11 +114,13 @@ def resend_confirmation_email(request):
             )
             return redirect("settings")
 
-        # Create or get existing email confirmation
-        email_confirmation = EmailConfirmation.create(email_address)
-        email_confirmation.send(request, signup=False)
-
-        messages.success(request, "Confirmation email has been sent. Please check your inbox.")
+        sent = send_verification_email_to_address(request, email_address, signup=False)
+        if not sent:
+            messages.error(
+                request,
+                "Please wait before requesting another confirmation email.",
+            )
+            return redirect("settings")
         logger.info(
             "[Resend Confirmation] Email sent successfully",
             user_id=user.id,
