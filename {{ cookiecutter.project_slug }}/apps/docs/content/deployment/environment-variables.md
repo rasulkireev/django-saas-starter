@@ -192,6 +192,19 @@ Configure these to send emails from {{ cookiecutter.project_name }} (for notific
 - Used for sending transactional emails
 - Leave empty to use console email backend (emails printed to console)
 
+**MAILGUN_SENDER_DOMAIN**
+- Mailgun sender domain for transactional email
+- Defaults to `mg.{{ cookiecutter.project_slug }}.app`
+- Override this when the project sends from another verified Mailgun domain
+
+**DEFAULT_FROM_EMAIL**
+- Default visible sender for transactional email
+- Defaults to `{{ cookiecutter.author_name }} from {{ cookiecutter.project_name }} <hello@{{ cookiecutter.project_slug }}.app>`
+
+**SERVER_EMAIL**
+- Sender used for server/admin error emails
+- Defaults to `{{ cookiecutter.project_name }} Errors <error@{{ cookiecutter.project_slug }}.app>`
+
 ### OAuth/Social Authentication
 
 **GITHUB_CLIENT_ID**

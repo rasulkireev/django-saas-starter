@@ -98,6 +98,26 @@ def test_generate_default_structure(tmp_path: Path) -> None:
     # optional apps on by default in this test helper
     assert (project_dir / "apps" / "blog").exists()
     assert (project_dir / "apps" / "docs").exists()
+    assert not (
+        Path(__file__).resolve().parents[1]
+        / "{{ cookiecutter.project_slug }}"
+        / "apps"
+        / "core"
+        / "migrations"
+        / "0002_initial.py"
+    ).exists()
+    assert (project_dir / "apps" / "core" / "migrations" / "0002_initial.py").exists()
+    assert (project_dir / "apps" / "pages" / "migrations" / "0001_initial.py").exists()
+    assert (project_dir / "apps" / "blog" / "migrations" / "0001_initial.py").exists()
+
+    _assert_contains(project_dir / "deployment" / "entrypoint.sh", "wait_for_database")
+    _assert_contains(project_dir / "deployment" / "entrypoint.sh", "exec gunicorn")
+    _assert_contains(project_dir / "deployment" / "Dockerfile.server", "chmod +x deployment/entrypoint.sh")
+    _assert_contains(project_dir / "deployment" / "Dockerfile.server", '["sh", "deployment/entrypoint.sh", "-s"]')
+    _assert_contains(
+        Path(__file__).resolve().parents[1] / "hooks" / "post_gen_project.py",
+        "Generating fresh initial migrations",
+    )
 
     # optional CI on by default
     assert (project_dir / ".github" / "workflows" / "ci.yml").exists()
@@ -115,8 +135,10 @@ def test_default_generation_includes_passkey_auth(tmp_path: Path) -> None:
 
     _assert_contains(project_dir / "pyproject.toml", "fido2>=2.2.0,<3")
     _assert_contains(settings_py, '"allauth.mfa"')
-    _assert_contains(settings_py, 'ACCOUNT_EMAIL_VERIFICATION = "mandatory"')
-    _assert_contains(settings_py, "ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True")
+    _assert_contains(settings_py, 'ACCOUNT_LOGIN_METHODS = {"email"}')
+    _assert_contains(settings_py, 'ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*"]')
+    _assert_contains(settings_py, 'ACCOUNT_EMAIL_VERIFICATION = "optional"')
+    _assert_contains(settings_py, "ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = False")
     _assert_contains(settings_py, "EMAIL_DELIVERY_RETRY_BACKOFF_SECONDS = (0.0, 1.0, 3.0)")
     _assert_contains(settings_py, 'SITE_HOST = SITE_URL.replace("http://", "").replace("https://", "").split("/")[0].split(":")[0]')
     _assert_contains(settings_py, 'ALLOWED_HOSTS = [SITE_HOST]')
@@ -129,11 +151,13 @@ def test_default_generation_includes_passkey_auth(tmp_path: Path) -> None:
     _assert_contains(settings_py, '"https://*.trycloudflare.com"')
     _assert_contains(settings_py, '"https://*.loca.lt"')
     _assert_contains(settings_py, "MFA_PASSKEY_LOGIN_ENABLED = True")
-    _assert_contains(settings_py, "MFA_PASSKEY_SIGNUP_ENABLED = True")
+    _assert_contains(settings_py, "MFA_PASSKEY_SIGNUP_ENABLED = False")
     _assert_contains(settings_py, "MFA_WEBAUTHN_ALLOW_INSECURE_ORIGIN = DEBUG")
     _assert_contains(settings_py, 'ALLOW_SIGNUPS = env.bool("ALLOW_SIGNUPS", default=True)')
 
     _assert_contains(project_dir / ".env.example", "ALLOW_SIGNUPS=True")
+    _assert_contains(project_dir / ".env.example", "MAILGUN_SENDER_DOMAIN=mg.test_project.app")
+    _assert_contains(settings_py, 'env("MAILGUN_SENDER_DOMAIN", default="mg.test_project.app")')
     _assert_contains(
         project_dir / "apps" / "docs" / "content" / "deployment" / "environment-variables.md",
         "**ALLOW_SIGNUPS**",
@@ -156,12 +180,47 @@ def test_default_generation_includes_passkey_auth(tmp_path: Path) -> None:
         "Sign in with a passkey",
     )
     _assert_contains(
+        project_dir
+        / "frontend"
+        / "templates"
+        / "mfa"
+        / "webauthn"
+        / "snippets"
+        / "login_script.html",
+        "window.webauthnJSON.get(requestOptions)",
+    )
+    _assert_not_contains(
         project_dir / "frontend" / "templates" / "account" / "signup.html",
         "Sign up using a passkey",
     )
     _assert_contains(
-        project_dir / "frontend" / "templates" / "account" / "signup_by_passkey.html",
-        "Continue with passkey",
+        project_dir / "frontend" / "templates" / "pages" / "user-settings.html",
+        "Add passkey",
+    )
+    _assert_contains(
+        project_dir / "frontend" / "templates" / "mfa" / "index.html",
+        "Passkeys",
+    )
+    _assert_contains(
+        project_dir / "frontend" / "templates" / "account" / "email.html",
+        "Email addresses",
+    )
+
+
+def test_generated_mfa_templates_use_configured_project_colour(tmp_path: Path) -> None:
+    project_dir = _generate(tmp_path, project_main_color="purple")
+
+    _assert_contains(
+        project_dir / "frontend" / "templates" / "mfa" / "webauthn" / "add_form.html",
+        "bg-purple-600",
+    )
+    _assert_contains(
+        project_dir / "frontend" / "templates" / "account" / "email.html",
+        "focus:ring-purple-500",
+    )
+    _assert_not_contains(
+        project_dir / "frontend" / "templates" / "mfa" / "webauthn" / "add_form.html",
+        "green-",
     )
 
 
@@ -391,6 +450,8 @@ def test_generated_project_does_not_contain_unrendered_cookiecutter_vars(tmp_pat
             continue
 
         rel = path.relative_to(project_dir)
+        if rel.parts[0] == ".venv":
+            continue
         if rel in allowlist:
             continue
 
@@ -416,6 +477,8 @@ def test_generated_project_does_not_contain_template_author_leaks(tmp_path: Path
 
     for path in project_dir.rglob("*"):
         if not path.is_file():
+            continue
+        if path.relative_to(project_dir).parts[0] == ".venv":
             continue
         if path.suffix in {".png", ".jpg", ".jpeg", ".gif", ".ico", ".woff", ".woff2"}:
             continue

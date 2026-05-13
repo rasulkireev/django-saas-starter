@@ -23,24 +23,14 @@
         <input type="hidden" name="remember" value="true" />
         <div class="-space-y-px rounded-md shadow-sm">
           <div>
-            {{ "{{ form.username.errors | safe }}" }}
-            <label for="username" class="sr-only">Username</label>
-            {% raw %}{% render_field form.username placeholder="Username" id="username" name="username" type="text" autocomplete="username" required=True class="block relative px-3 py-2 w-full placeholder-gray-500 text-gray-900 bg-white dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-400 rounded-none rounded-t-md border border-gray-300 dark:border-gray-700 appearance-none focus:outline-none focus:ring-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:border-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:z-10 sm:text-sm" %}{%- endraw %}
-          </div>
-          <div>
             {{ "{{ form.email.errors | safe }}" }}
-            <label for="email" class="sr-only">Username</label>
-            {% raw %}{% render_field form.email id="email" name="email" placeholder="Email" type="email" autocomplete="email" required="True" class="block relative px-3 py-2 w-full placeholder-gray-500 text-gray-900 bg-white dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-400 rounded-none border border-gray-300 dark:border-gray-700 appearance-none focus:outline-none focus:ring-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:border-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:z-10 sm:text-sm" %}{%- endraw %}
+            <label for="email" class="sr-only">Email</label>
+            {% raw %}{% render_field form.email id="email" name="email" placeholder="Email" type="email" autocomplete="email" required="True" class="block relative px-3 py-2 w-full placeholder-gray-500 text-gray-900 bg-white dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-400 rounded-none rounded-t-md border border-gray-300 dark:border-gray-700 appearance-none focus:outline-none focus:ring-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:border-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:z-10 sm:text-sm" %}{%- endraw %}
           </div>
           <div>
             {{ "{{ form.password1.errors | safe }}" }}
             <label for="password1" class="sr-only">Password</label>
-            {% raw %}{% render_field form.password1 id="password1" name="password1" placeholder="Password" type="password" autocomplete="current-password" required="True" class="block relative px-3 py-2 w-full placeholder-gray-500 text-gray-900 bg-white dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-400 rounded-none border border-gray-300 dark:border-gray-700 appearance-none focus:outline-none focus:ring-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:border-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:z-10 sm:text-sm" %}{%- endraw %}
-          </div>
-          <div>
-            {{ "{{ form.password2.errors | safe }}" }}
-            <label for="password2" class="sr-only">Password</label>
-            {% raw %}{% render_field form.password2 id="password2" name="password2" type="password" autocomplete="current-password" required="True" class="block relative px-3 py-2 w-full placeholder-gray-500 text-gray-900 bg-white dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-400 rounded-none rounded-b-md border border-gray-300 dark:border-gray-700 appearance-none focus:outline-none focus:ring-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:border-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:z-10 sm:text-sm" placeholder="Cofirm Password" %}{%- endraw %}
+            {% raw %}{% render_field form.password1 id="password1" name="password1" placeholder="Password" type="password" autocomplete="current-password" required="True" class="block relative px-3 py-2 w-full placeholder-gray-500 text-gray-900 bg-white dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-400 rounded-none rounded-b-md border border-gray-300 dark:border-gray-700 appearance-none focus:outline-none focus:ring-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:border-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:z-10 sm:text-sm" %}{%- endraw %}
           </div>
         </div>
 
@@ -67,26 +57,6 @@
             </button>
         </div>
       </form>
-
-      {{ "{% if PASSKEY_SIGNUP_ENABLED %}" }}
-      <div>
-        <div class="relative mt-10">
-          <div class="flex absolute inset-0 items-center" aria-hidden="true">
-            <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
-          </div>
-          <div class="flex relative justify-center text-sm font-medium leading-6">
-            <span class="px-6 text-gray-900 bg-white dark:text-gray-100 dark:bg-gray-900">Passkey</span>
-          </div>
-        </div>
-
-        <div class="mt-6">
-          <a href="{% raw %}{{ signup_by_passkey_url }}{%- endraw %}"
-             class="flex justify-center px-4 py-2 w-full text-sm font-medium text-gray-900 bg-white rounded-md border border-gray-300 border-solid hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-{{cookiecutter.project_main_color}}-500 dark:text-gray-100 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800">
-            Sign up using a passkey
-          </a>
-        </div>
-      </div>
-      {{ "{% endif %}" }}
 
       {{ "{% if has_social_providers %}" }}
       <div>
