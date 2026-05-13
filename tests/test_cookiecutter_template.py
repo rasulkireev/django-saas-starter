@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 import uuid
 from pathlib import Path
 
@@ -62,6 +64,62 @@ def _assert_contains(path: Path, needle: str) -> None:
 def _assert_not_contains(path: Path, needle: str) -> None:
     content = _read_text(path)
     assert needle not in content, f"Expected not to find {needle!r} in {path}"
+
+
+def test_cookiecutter_cli_generates_project_successfully(tmp_path: Path) -> None:
+    """Smoke-test the real Cookiecutter CLI so CI catches end-to-end generation failures."""
+    template_dir = Path(__file__).resolve().parents[1]
+    output_dir = tmp_path / "cookiecutter-cli-output"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "cookiecutter",
+            "--no-input",
+            "--output-dir",
+            str(output_dir),
+            str(template_dir),
+            "project_name=CLI Smoke Project",
+            "repo_url=https://example.com/test/cli-smoke-project",
+            "project_description=CLI smoke generation",
+            "author_name=Ada Lovelace",
+            "author_email=ada@example.com",
+            "author_url=",
+            "project_main_color=green",
+            "use_posthog=n",
+            "use_chatwoot=n",
+            "use_buttondown=n",
+            "use_s3=n",
+            "use_stripe=n",
+            "use_sentry=n",
+            "generate_blog=y",
+            "generate_docs=y",
+            "use_mjml=n",
+            "use_ai=n",
+            "use_logfire=n",
+            "use_healthchecks=n",
+            "use_ci=y",
+        ],
+        cwd=template_dir,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=300,
+    )
+
+    assert result.returncode == 0, (
+        "Cookiecutter CLI generation failed\n"
+        f"exit code: {result.returncode}\n"
+        f"stdout:\n{result.stdout}\n"
+        f"stderr:\n{result.stderr}"
+    )
+
+    project_dir = output_dir / "cli_smoke_project"
+    assert project_dir.exists()
+    assert (project_dir / "manage.py").exists()
+    assert (project_dir / "pyproject.toml").exists()
 
 
 def test_generate_default_structure(tmp_path: Path) -> None:

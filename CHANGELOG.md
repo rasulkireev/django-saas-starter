@@ -19,6 +19,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - Fix pricing page dark mode styles.
 - Make `use_stripe = n` generation remove subscription-only states, API fields, pricing leftovers, and Stripe-specific legal copy.
 ### Added
+- CI now includes a real Cookiecutter CLI smoke test that renders a project end-to-end and fails on non-zero generation exits.
 - Optional `use_chatwoot` generator flag for Chatwoot support chat, including self-hosted/cloud setup docs, HMAC identity validation support, and runtime-off defaults.
 - Post-generation hook now creates fresh initial migrations after cookiecutter option cleanup, avoiding static template migrations while keeping generated projects deploy-ready.
 - Generated projects now include styled django-allauth email/passkey/MFA account templates, post-registration passkey setup links, and hardened WebAuthn login JavaScript.
