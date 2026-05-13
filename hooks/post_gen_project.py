@@ -57,6 +57,24 @@ def remove_stripe_files():
         print("Removed pricing template")
 
 
+def remove_chatwoot_files():
+    """Remove Chatwoot-related files if use_chatwoot is 'n'."""
+    chatwoot_template_path = Path("frontend/templates/components/chatwoot.html")
+    if chatwoot_template_path.exists():
+        chatwoot_template_path.unlink()
+        print("Removed Chatwoot template")
+
+    chatwoot_tests_path = Path("apps/core/tests/test_chatwoot_context.py")
+    if chatwoot_tests_path.exists():
+        chatwoot_tests_path.unlink()
+        print("Removed Chatwoot context tests")
+
+    chatwoot_docs_path = Path("apps/docs/content/deployment/chatwoot.md")
+    if chatwoot_docs_path.exists():
+        chatwoot_docs_path.unlink()
+        print("Removed Chatwoot deployment guide")
+
+
 def remove_ci_workflow():
     """Remove CI workflow if use_ci is 'n'."""
     ci_workflow_path = Path(".github/workflows/ci.yml")
@@ -124,6 +142,7 @@ def main():
     generate_blog = "{{ cookiecutter.generate_blog }}"
     generate_docs = "{{ cookiecutter.generate_docs }}"
     use_stripe = "{{ cookiecutter.use_stripe }}"
+    use_chatwoot = "{{ cookiecutter.use_chatwoot }}"
     use_ci = "{{ cookiecutter.use_ci }}"
 
     if generate_blog != "y":
@@ -142,6 +161,11 @@ def main():
         print("Stripe disabled, removing Stripe-related files...")
         remove_stripe_files()
         print("Stripe cleanup complete!")
+
+    if use_chatwoot != "y":
+        print("Chatwoot disabled, removing Chatwoot-related files...")
+        remove_chatwoot_files()
+        print("Chatwoot cleanup complete!")
 
     if use_ci != "y":
         print("CI disabled, removing CI workflow...")
