@@ -21,6 +21,7 @@ def _generate(tmp_path: Path, **extra_context: str) -> Path:
         "project_main_color": "green",
         # defaults (can be overridden per test)
         "use_posthog": "n",
+        "use_chatwoot": "n",
         "use_buttondown": "n",
         "use_s3": "n",
         "use_stripe": "n",
@@ -389,6 +390,42 @@ def test_use_posthog_toggles_posthog_snippet(tmp_path: Path) -> None:
 
     _assert_contains(enabled_base, "posthog.init")
     _assert_not_contains(disabled_base, "posthog.init")
+
+
+def test_use_chatwoot_toggles_support_chat(tmp_path: Path) -> None:
+    enabled = _generate(tmp_path, use_chatwoot="y", generate_docs="y")
+    disabled = _generate(tmp_path, use_chatwoot="n", generate_docs="y")
+
+    enabled_settings = enabled / "test_project" / "settings.py"
+    enabled_context = enabled / "apps" / "core" / "context_processors.py"
+    enabled_app_base = enabled / "frontend" / "templates" / "base_app.html"
+    enabled_landing_base = enabled / "frontend" / "templates" / "base_landing.html"
+    enabled_env = enabled / ".env.example"
+    enabled_docs = enabled / "apps" / "docs" / "content" / "deployment" / "chatwoot.md"
+    enabled_navigation = enabled / "apps" / "docs" / "navigation.yaml"
+
+    _assert_contains(enabled_settings, "CHATWOOT_BASE_URL = env(")
+    _assert_contains(enabled_settings, "apps.core.context_processors.chatwoot_config")
+    _assert_contains(enabled_context, "def chatwoot_config")
+    _assert_contains(enabled_app_base, "components/chatwoot.html")
+    _assert_contains(enabled_landing_base, "components/chatwoot.html")
+    _assert_not_contains(enabled_app_base, "components/feedback.html")
+    _assert_not_contains(enabled_landing_base, "components/feedback.html")
+    _assert_contains(enabled_env, "CHATWOOT_BASE_URL=")
+    _assert_contains(enabled_env, "CHATWOOT_WEBSITE_TOKEN=")
+    _assert_contains(enabled_env, "CHATWOOT_HMAC_SECRET=")
+    _assert_contains(enabled_docs, "Self-hosted Chatwoot setup")
+    _assert_contains(enabled_navigation, "- chatwoot")
+    assert (enabled / "apps" / "core" / "tests" / "test_chatwoot_context.py").exists()
+
+    _assert_not_contains(disabled / "test_project" / "settings.py", "CHATWOOT_BASE_URL")
+    _assert_not_contains(disabled / "apps" / "core" / "context_processors.py", "chatwoot_config")
+    _assert_not_contains(disabled / "frontend" / "templates" / "base_app.html", "components/chatwoot.html")
+    _assert_contains(disabled / "frontend" / "templates" / "base_app.html", "components/feedback.html")
+    _assert_not_contains(disabled / ".env.example", "CHATWOOT_WEBSITE_TOKEN")
+    assert not (disabled / "frontend" / "templates" / "components" / "chatwoot.html").exists()
+    assert not (disabled / "apps" / "core" / "tests" / "test_chatwoot_context.py").exists()
+    assert not (disabled / "apps" / "docs" / "content" / "deployment" / "chatwoot.md").exists()
 
 
 def test_use_sentry_includes_observability_defaults(tmp_path: Path) -> None:

@@ -78,10 +78,12 @@
     {{ "{% include 'components/messages.html' with messages=messages %}" }}
   {{ "{% endblock default_messages %}" }}
 
+  {% if cookiecutter.use_chatwoot != 'y' -%}
   <!-- Include the feedback component -->
   {{ "{% if user.is_authenticated %}" }}
     {{ "{% include 'components/feedback.html' %}" }}
   {{ "{% endif %}" }}
+  {% endif %}
 
   <div class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
     <header class="sticky left-0 top-3 z-10">
@@ -263,6 +265,10 @@
     }
     </script>
   {{ "{% endblock schema %}" }}
+
+  {% if cookiecutter.use_chatwoot == 'y' -%}
+  {{ "{% include 'components/chatwoot.html' %}" }}
+  {% endif %}
 
 </body>
 

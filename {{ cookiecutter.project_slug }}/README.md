@@ -147,6 +147,29 @@ You'd still need to make sure .env has correct values.
    - The frontend dev container now uses Node 24 and the backend waits for `frontend/build/manifest.json` before booting, so the first page load should not race the asset pipeline.
 5. Run `make restart-worker` just in case, it sometimes has troubles connecting to REDIS on first deployment.
 
+{% if cookiecutter.use_chatwoot == 'y' -%}
+## Chatwoot Support Chat
+
+This project includes optional Chatwoot support chat. It is disabled until both runtime env vars are set on the Django web app:
+
+```env
+CHATWOOT_BASE_URL=
+CHATWOOT_WEBSITE_TOKEN=
+```
+
+For self-hosted Chatwoot, use your own base URL, for example `https://chatwoot.yourdomain.com`. For Chatwoot Cloud, use the base URL from Chatwoot's snippet, commonly `https://app.chatwoot.com`.
+
+To get the token: in Chatwoot go to **Settings → Inboxes → Add Inbox → Website**, finish setup, then copy `websiteToken` from the install snippet.
+
+Recommended for authenticated apps: enable **Identity Validation** for that Website inbox and set:
+
+```env
+CHATWOOT_HMAC_SECRET=
+```
+
+Gotchas: add these env vars to the Django web app, not only workers; restart/redeploy after env changes; paste the full token, not a shortened `abc…xyz` display value. See `apps/docs/content/deployment/chatwoot.md` for the full checklist.
+
+{% endif -%}
 ### CI (optional)
 
 If you generated the project with `use_ci = y`, it includes a GitHub Actions workflow at `.github/workflows/ci.yml` that runs on pull requests.

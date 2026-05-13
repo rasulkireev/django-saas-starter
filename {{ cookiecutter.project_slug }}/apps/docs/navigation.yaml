@@ -37,5 +37,9 @@ navigation:
   deployment:
     - render-deployment
     - docker-compose-deployment
+    - environment-variables
+    {% if cookiecutter.use_chatwoot == 'y' -%}
+    - chatwoot
+    {% endif %}
 
   # Any categories not listed here will appear after these, in alphabetical order

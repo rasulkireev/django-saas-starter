@@ -162,6 +162,9 @@ TEMPLATES = [
                 {% if cookiecutter.use_posthog == 'y' -%}
                 "apps.core.context_processors.posthog_api_key",
                 {% endif %}
+                {% if cookiecutter.use_chatwoot == 'y' -%}
+                "apps.core.context_processors.chatwoot_config",
+                {% endif %}
                 {% if cookiecutter.use_mjml == 'y' -%}
                 "apps.core.context_processors.mjml_url",
                 {% endif %}
@@ -550,6 +553,12 @@ if SENTRY_DSN and ENVIRONMENT == "prod":
 
 {% if cookiecutter.use_posthog == 'y' -%}
 POSTHOG_API_KEY = env("POSTHOG_API_KEY", default="")
+{% endif %}
+
+{% if cookiecutter.use_chatwoot == 'y' -%}
+CHATWOOT_BASE_URL = env("CHATWOOT_BASE_URL", default="")
+CHATWOOT_WEBSITE_TOKEN = env("CHATWOOT_WEBSITE_TOKEN", default="")
+CHATWOOT_HMAC_SECRET = env("CHATWOOT_HMAC_SECRET", default="")
 {% endif %}
 
 {% if cookiecutter.use_buttondown == 'y' -%}

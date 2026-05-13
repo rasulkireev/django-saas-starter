@@ -1,3 +1,8 @@
+{% if cookiecutter.use_chatwoot == 'y' -%}
+import hashlib
+import hmac
+{% endif %}
+
 from allauth.socialaccount.models import SocialApp
 from django.conf import settings
 
@@ -32,6 +37,49 @@ def posthog_api_key(request):
 {% if cookiecutter.use_mjml == 'y' -%}
 def mjml_url(request):
     return {"mjml_url": settings.MJML_URL}
+{% endif %}
+
+{% if cookiecutter.use_chatwoot == 'y' -%}
+def _chatwoot_identifier_hash(identifier):
+    if not settings.CHATWOOT_HMAC_SECRET:
+        return ""
+
+    return hmac.new(
+        settings.CHATWOOT_HMAC_SECRET.encode("utf-8"),
+        str(identifier).encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+
+
+def chatwoot_config(request):
+    base_url = settings.CHATWOOT_BASE_URL.rstrip("/")
+    website_token = settings.CHATWOOT_WEBSITE_TOKEN
+    if not base_url or not website_token:
+        return {"chatwoot": {"enabled": False}}
+
+    config = {
+        "enabled": True,
+        "base_url": base_url,
+        "website_token": website_token,
+        "user": None,
+    }
+
+    user = request.user
+    if user.is_authenticated:
+        identifier = str(user.pk)
+        user_config = {
+            "identifier": identifier,
+            "email": user.email,
+            "name": user.get_full_name() or user.email,
+        }
+
+        identifier_hash = _chatwoot_identifier_hash(identifier)
+        if identifier_hash:
+            user_config["identifier_hash"] = identifier_hash
+
+        config["user"] = user_config
+
+    return {"chatwoot": config}
 {% endif %}
 
 def available_social_providers(request):

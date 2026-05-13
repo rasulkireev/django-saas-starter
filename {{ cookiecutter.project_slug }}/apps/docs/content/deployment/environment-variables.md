@@ -150,6 +150,34 @@ These variables enhance functionality but aren't required:
 - Leave empty to disable PostHog
 
 {% endif -%}
+{% if cookiecutter.use_chatwoot == 'y' -%}
+### Chatwoot (Support Chat)
+
+**CHATWOOT_BASE_URL**
+- Base URL for your Chatwoot instance.
+- Self-hosted example: `https://chatwoot.yourdomain.com`.
+- Chatwoot Cloud example: `https://app.chatwoot.com`.
+- Leave empty to disable the support chat widget.
+- Do not include a trailing slash; the app also strips it defensively.
+
+**CHATWOOT_WEBSITE_TOKEN**
+- Website inbox token from Chatwoot.
+- In Chatwoot: **Settings → Inboxes → Add Inbox → Website**, finish setup, then copy the `websiteToken` from the install snippet or inbox configuration.
+- Leave empty to disable the support chat widget.
+
+**CHATWOOT_HMAC_SECRET**
+- Optional but recommended for authenticated SaaS apps.
+- In Chatwoot: **Settings → Inboxes → your Website inbox → Settings → Configuration → Identity Validation** and copy the HMAC token.
+- Used to sign the authenticated user's identifier before calling `window.$chatwoot.setUser(...)`, which helps prevent customer impersonation.
+- Leave empty if Identity Validation is disabled in Chatwoot.
+
+Gotchas:
+- Add these variables to the web app/container that serves Django pages. Worker-only apps will not make the browser widget appear.
+- Restart/redeploy the web app after changing environment variables so Django reloads settings.
+- If Chatwoot Identity Validation is enabled but `CHATWOOT_HMAC_SECRET` is missing or wrong, the widget can load but user identity can fail.
+- If the bubble does not appear, confirm both `CHATWOOT_BASE_URL` and `CHATWOOT_WEBSITE_TOKEN` are non-empty in the running web process and check the browser console/network tab for blocked `sdk.js` requests.
+
+{% endif -%}
 {% if cookiecutter.use_buttondown == 'y' -%}
 ### Buttondown (Email Newsletter)
 
