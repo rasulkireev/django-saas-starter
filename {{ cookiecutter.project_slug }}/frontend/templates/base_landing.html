@@ -103,13 +103,6 @@
             <!-- Desktop Navigation -->
             <nav class="hidden lg:block">
               <ul class="flex gap-4 items-center">
-                {% if cookiecutter.generate_docs == 'y' -%}
-                <li>
-                  <a href="{% raw %}{% url 'docs_home' %}{%- endraw %}" class="rounded-full px-6 py-3 text-base font-semibold leading-[1.7] tracking-[-0.09px] text-gray-900 transition-colors hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800">
-                      Docs
-                    </a>
-                  </li>
-                {% endif %}
                 {% if cookiecutter.generate_blog == 'y' -%}
                 <li>
                   <a href="{% raw %}{% url 'blog_posts' %}{%- endraw %}" class="rounded-full px-6 py-3 text-base font-semibold leading-[1.7] tracking-[-0.09px] text-gray-900 transition-colors hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800">
@@ -181,13 +174,6 @@
             <div data-dropdown-target="menu" class="hidden absolute right-4 left-4 top-full z-10 mt-2 bg-white rounded-2xl border border-gray-200 shadow-lg dark:bg-gray-900 dark:border-gray-800">
               <nav class="flex-1 justify-center items-center">
                 <ul class="flex flex-col px-4">
-                  {% if cookiecutter.generate_docs == 'y' -%}
-                  <li class="py-5 text-center border-b border-gray-200 dark:border-gray-800">
-                    <a href="{% raw %}{% url 'docs_home' %}{%- endraw %}" class="text-sm font-semibold text-gray-900 hover:text-{{ cookiecutter.project_main_color }}-600 dark:text-gray-100 dark:hover:text-{{ cookiecutter.project_main_color }}-400">
-                      Docs
-                    </a>
-                  </li>
-                  {% endif %}
                   {% if cookiecutter.generate_blog == 'y' -%}
                   <li class="py-5 text-center border-b border-gray-200 dark:border-gray-800">
                     <a href="{% raw %}{% url 'blog_posts' %}{%- endraw %}" class="text-sm font-semibold text-gray-900 hover:text-{{ cookiecutter.project_main_color }}-600 dark:text-gray-100 dark:hover:text-{{ cookiecutter.project_main_color }}-400">

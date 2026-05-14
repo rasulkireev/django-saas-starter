@@ -3,3 +3,72 @@
 @config "../../../tailwind.config.js";
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
+
+@layer components {
+  .app-focus {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-{{ cookiecutter.project_main_color }}-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-950;
+  }
+
+  .app-card {
+    @apply rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900;
+  }
+
+  .app-panel {
+    @apply rounded-2xl border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-950/70;
+  }
+
+  .app-button-primary {
+    @apply inline-flex min-h-11 items-center justify-center rounded-xl bg-{{ cookiecutter.project_main_color }}-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-{{ cookiecutter.project_main_color }}-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-{{ cookiecutter.project_main_color }}-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-60 dark:bg-{{ cookiecutter.project_main_color }}-500 dark:text-gray-950 dark:hover:bg-{{ cookiecutter.project_main_color }}-400 dark:focus-visible:ring-offset-gray-950;
+  }
+
+  .app-button-secondary {
+    @apply inline-flex min-h-11 items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-{{ cookiecutter.project_main_color }}-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-800 dark:focus-visible:ring-offset-gray-950;
+  }
+
+  .app-button-danger {
+    @apply inline-flex min-h-11 items-center justify-center rounded-xl bg-red-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-offset-gray-950;
+  }
+
+  .app-input {
+    @apply rounded-xl border-gray-300 bg-white text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-{{ cookiecutter.project_main_color }}-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus-visible:ring-offset-gray-950;
+  }
+
+  .app-text-muted {
+    @apply text-gray-600 dark:text-gray-300;
+  }
+
+  .app-label-caps {
+    @apply text-xs font-black uppercase tracking-[0.24em];
+  }
+
+  .app-code-panel {
+    @apply rounded-xl border border-white/10 bg-gray-950 p-3 text-sm text-gray-50;
+  }
+
+  .docs-code-blocks pre {
+    @apply border border-gray-800 bg-gray-950 text-gray-50 shadow-sm;
+  }
+
+  .docs-code-blocks pre code {
+    @apply bg-transparent p-0 text-gray-50;
+  }
+}
+
+/* Force fenced docs blocks to stay readable over Tailwind Typography and Pygments defaults. */
+.docs-code-blocks pre,
+.docs-code-blocks pre code,
+.docs-code-blocks pre code * {
+  color: #f8fafc !important;
+  opacity: 1 !important;
+}
+
+.docs-code-blocks pre,
+.docs-code-blocks pre code {
+  background-color: #020617 !important;
+}
+
+.docs-code-blocks pre code {
+  padding: 0 !important;
+  border-radius: 0 !important;
+  font-weight: 500 !important;
+}

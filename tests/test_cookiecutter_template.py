@@ -167,6 +167,15 @@ def test_generate_default_structure(tmp_path: Path) -> None:
     assert (project_dir / "apps" / "docs").exists()
     assert (project_dir / "apps" / "docs" / "content" / "getting-started" / "design-system.md").exists()
     _assert_contains(project_dir / "apps" / "docs" / "navigation.yaml", "- design-system")
+    _assert_contains(project_dir / "apps" / "docs" / "navigation.yaml", "api-reference")
+    _assert_contains(project_dir / "apps" / "docs" / "views.py", "@login_required")
+    _assert_contains(project_dir / "apps" / "docs" / "views.py", "Template(post.content).render")
+    _assert_contains(project_dir / "apps" / "docs" / "content" / "api-reference" / "introduction.md", "{{ api_key_full }}")
+    _assert_contains(project_dir / "frontend" / "templates" / "docs" / "base_docs.html", "data-controller=\"toc docs-code\"")
+    _assert_contains(project_dir / "frontend" / "templates" / "docs" / "docs_page.html", "noindex, nofollow")
+    _assert_contains(project_dir / "frontend" / "src" / "controllers" / "docs_code_controller.js", "Copy failed")
+    _assert_contains(project_dir / "frontend" / "src" / "styles" / "index.css", ".docs-code-blocks pre code *")
+    _assert_contains(project_dir / "frontend" / "src" / "styles" / "index.css", "font-weight: 500 !important")
     assert not (
         Path(__file__).resolve().parents[1]
         / "{{ cookiecutter.project_slug }}"
@@ -334,8 +343,13 @@ def test_use_mcp_includes_hosted_server_skill_and_docs(tmp_path: Path) -> None:
     _assert_contains(project_dir / "render.yaml", "uvicorn_worker.UvicornWorker")
     _assert_contains(project_dir / "apps" / "core" / "urls.py", "SKILL.md")
     _assert_contains(project_dir / "apps" / "core" / "views.py", "def skill_markdown")
+    _assert_contains(project_dir / "apps" / "core" / "views.py", "def build_agent_setup_prompt")
+    _assert_contains(project_dir / "frontend" / "templates" / "pages" / "home.html", "Copy/paste prompt")
+    _assert_contains(project_dir / "frontend" / "src" / "controllers" / "copy_controller.js", "Copy failed")
     _assert_contains(project_dir / "apps" / "docs" / "content" / "features" / "mcp.md", "get_user_info")
+    _assert_contains(project_dir / "apps" / "docs" / "content" / "features" / "mcp.md", "{{ agent_setup_prompt }}")
     _assert_contains(project_dir / "README.md", "Hosted MCP server")
+
 
 def test_generate_without_blog_removes_blog_app_and_templates(tmp_path: Path) -> None:
     project_dir = _generate(tmp_path, generate_blog="n")

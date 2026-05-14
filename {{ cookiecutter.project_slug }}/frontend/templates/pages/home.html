@@ -1,28 +1,62 @@
 {{ '{% extends "base_app.html" %}' }}
 
 {{ "{% block content %}" }}
-<div class="isolate relative px-6 mt-16 sm:mt-24 lg:px-8">
-  <div class="mx-auto max-w-7xl">
-    <div class="mx-auto text-center">
-        <h1 class="mx-auto mb-6 max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-          Welcome to {{ cookiecutter.project_name }}
-        </h1>
-        <p class="mt-6 text-lg leading-8 text-gray-600">
-          This is your main app dashboard. Start building your application here.
-        </p>
+<div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+  <div class="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <p class="app-label-caps text-{{ cookiecutter.project_main_color }}-600 dark:text-{{ cookiecutter.project_main_color }}-400">Dashboard</p>
+      <h1 class="mt-2 text-4xl font-black tracking-tight text-gray-900 dark:text-gray-100">Welcome to {{ cookiecutter.project_name }}</h1>
+      <p class="app-text-muted mt-4 max-w-2xl text-lg leading-8">
+        This is your main app dashboard. Start with a clear primary workflow, expose the next useful action, and keep project-specific setup close to where users need it.
+      </p>
     </div>
+    {% if cookiecutter.generate_docs == 'y' -%}
+    <a href="{% raw %}{% url 'docs_home' %}{%- endraw %}" class="app-button-secondary">View docs</a>
+    {% endif %}
   </div>
+
+  {% if cookiecutter.use_mcp == 'y' -%}
+  <section class="mb-10 rounded-3xl border border-{{ cookiecutter.project_main_color }}-200 bg-{{ cookiecutter.project_main_color }}-50 p-6 shadow-sm dark:border-{{ cookiecutter.project_main_color }}-900/60 dark:bg-{{ cookiecutter.project_main_color }}-950/30" aria-labelledby="agent-setup-heading">
+    <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+      <div class="max-w-2xl">
+        <p class="app-label-caps text-{{ cookiecutter.project_main_color }}-700 dark:text-{{ cookiecutter.project_main_color }}-300">Agent setup</p>
+        <h2 id="agent-setup-heading" class="mt-2 text-2xl font-black text-gray-900 dark:text-gray-100">Teach your AI agent to use {{ cookiecutter.project_name }}</h2>
+        <p class="mt-3 text-sm leading-6 text-gray-700 dark:text-gray-300">
+          Copy this prompt into your coding agent. It includes the hosted MCP URL, REST user endpoint, API key, and a skill file the agent can read for setup instructions.
+        </p>
+        <p class="mt-2 rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-5 text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-100">
+          Treat this prompt like a password: it includes your API key. Use it only with agents you trust.
+        </p>
+      </div>
+      <a href="{{ '{{ agent_instructions_url }}' }}" class="app-button-secondary border-{{ cookiecutter.project_main_color }}-300 text-{{ cookiecutter.project_main_color }}-800 hover:bg-{{ cookiecutter.project_main_color }}-100 dark:border-{{ cookiecutter.project_main_color }}-800 dark:text-{{ cookiecutter.project_main_color }}-200 dark:hover:bg-{{ cookiecutter.project_main_color }}-950">
+        View agent skill
+      </a>
+    </div>
+
+    <div class="mt-6" data-controller="copy">
+      <label for="agent-setup-prompt" class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-100">Copy/paste prompt</label>
+      <textarea id="agent-setup-prompt" data-copy-target="source" readonly rows="10" aria-describedby="agent-setup-help" class="app-input block w-full border-{{ cookiecutter.project_main_color }}-200 p-4 font-mono text-xs leading-5 dark:border-{{ cookiecutter.project_main_color }}-900">{{ '{{ agent_setup_prompt }}' }}</textarea>
+      <div class="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p id="agent-setup-help" class="text-xs leading-5 text-gray-600 dark:text-gray-400">Best path: remote MCP over HTTPS with the API key in an auth header. Query-string auth is only a fallback for clients that cannot send headers.</p>
+        <button type="button" data-action="copy#copy" class="app-button-primary">
+          <span data-copy-target="label">Copy prompt</span>
+        </button>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <section class="app-card p-6" aria-labelledby="next-steps-heading">
+    <h2 id="next-steps-heading" class="text-xl font-bold text-gray-900 dark:text-gray-100">Next steps</h2>
+    <p class="app-text-muted mt-2 text-sm leading-6">Replace this card with the first high-value action in your product. Keep examples, API URLs, and implementation details in docs instead of crowding the dashboard.</p>
+  </section>
 </div>
 
 {% if cookiecutter.use_stripe == 'y' -%}
 {{ "{% if show_confetti %}" }}
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 <script>
-  confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { y: 0.6 }
-  });
+  confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
 </script>
 {{ "{% endif %}" }}
 {% endif %}
