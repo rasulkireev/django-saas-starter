@@ -87,6 +87,7 @@ rounded:
 spacing:
   xs: 4px
   sm: 8px
+  control: 12px
   md: 16px
   lg: 24px
   xl: 32px
@@ -101,7 +102,7 @@ components:
     textColor: "{colors.text-inverse}"
     typography: "{typography.label-md}"
     rounded: "{rounded.full}"
-    padding: 12px
+    padding: "{spacing.control}"
   button-primary-hover:
     backgroundColor: "{colors.primary-hover}"
     textColor: "{colors.text-inverse}"
@@ -110,13 +111,13 @@ components:
     textColor: "{colors.secondary}"
     typography: "{typography.label-md}"
     rounded: "{rounded.full}"
-    padding: 12px
+    padding: "{spacing.control}"
   button-danger:
     backgroundColor: "{colors.danger}"
     textColor: "{colors.text-inverse}"
     typography: "{typography.label-md}"
     rounded: "{rounded.full}"
-    padding: 12px
+    padding: "{spacing.control}"
   card:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.text}"
@@ -138,7 +139,7 @@ components:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.text}"
     rounded: "{rounded.md}"
-    padding: 12px
+    padding: "{spacing.control}"
   badge-success:
     backgroundColor: "{colors.primary-soft}"
     textColor: "{colors.success}"
