@@ -34,6 +34,7 @@ def _generate(tmp_path: Path, **extra_context: str) -> Path:
         "use_ai": "n",
         "use_logfire": "n",
         "use_healthchecks": "n",
+        "use_mcp": "n",
         "use_ci": "y",
     }
     context.update(extra_context)
@@ -100,6 +101,7 @@ def test_cookiecutter_cli_generates_project_successfully(tmp_path: Path) -> None
             "use_ai=n",
             "use_logfire=n",
             "use_healthchecks=n",
+            "use_mcp=n",
             "use_ci=y",
         ],
         cwd=template_dir,
@@ -291,6 +293,50 @@ def test_generated_mfa_templates_use_configured_project_colour(tmp_path: Path) -
     )
 
 
+
+def test_generated_project_includes_user_info_api_endpoint(tmp_path: Path) -> None:
+    project_dir = _generate(tmp_path, use_mcp="n")
+
+    api_views = project_dir / "apps" / "api" / "views.py"
+    api_schemas = project_dir / "apps" / "api" / "schemas.py"
+    api_services = project_dir / "apps" / "api" / "services.py"
+    api_tests = project_dir / "apps" / "api" / "tests.py"
+
+    _assert_contains(api_views, '"/user"')
+    _assert_contains(api_views, "auth=api_key_auth")
+    _assert_contains(api_views, "serialize_user_info(request.auth)")
+    _assert_not_contains(api_schemas, "is_superuser")
+    _assert_contains(api_schemas, "class UserInfoOut")
+    _assert_contains(api_services, "def serialize_user_info")
+    _assert_contains(api_tests, "test_get_user_info_returns_safe_profile_data")
+
+
+def test_use_mcp_default_removes_mcp_server_but_keeps_user_api(tmp_path: Path) -> None:
+    project_dir = _generate(tmp_path)
+
+    assert not (project_dir / "apps" / "mcp_server").exists()
+    assert not (project_dir / "apps" / "docs" / "content" / "features" / "mcp.md").exists()
+    _assert_not_contains(project_dir / "pyproject.toml", "fastmcp")
+    _assert_not_contains(project_dir / "deployment" / "entrypoint.sh", "uvicorn_worker")
+    _assert_contains(project_dir / "apps" / "api" / "views.py", '"/user"')
+
+
+def test_use_mcp_includes_hosted_server_skill_and_docs(tmp_path: Path) -> None:
+    project_dir = _generate(tmp_path, use_mcp="y")
+
+    assert (project_dir / "apps" / "mcp_server" / "server.py").exists()
+    assert (project_dir / "apps" / "mcp_server" / "tests" / "test_server.py").exists()
+    _assert_contains(project_dir / "pyproject.toml", "fastmcp")
+    _assert_contains(project_dir / "pyproject.toml", "uvicorn-worker")
+    _assert_contains(project_dir / "test_project" / "asgi.py", 'Mount("/mcp"')
+    _assert_contains(project_dir / "test_project" / "settings.py", "apps.mcp_server.apps.McpServerConfig")
+    _assert_contains(project_dir / "deployment" / "entrypoint.sh", "uvicorn_worker.UvicornWorker")
+    _assert_contains(project_dir / "render.yaml", "uvicorn_worker.UvicornWorker")
+    _assert_contains(project_dir / "apps" / "core" / "urls.py", "SKILL.md")
+    _assert_contains(project_dir / "apps" / "core" / "views.py", "def skill_markdown")
+    _assert_contains(project_dir / "apps" / "docs" / "content" / "features" / "mcp.md", "get_user_info")
+    _assert_contains(project_dir / "README.md", "Hosted MCP server")
+
 def test_generate_without_blog_removes_blog_app_and_templates(tmp_path: Path) -> None:
     project_dir = _generate(tmp_path, generate_blog="n")
 
@@ -411,6 +457,8 @@ def test_generate_without_ci_removes_ci_workflow(tmp_path: Path) -> None:
         ("use_ai", "pydantic-ai"),
         ("use_ai", "pgvector"),
         ("use_logfire", "logfire"),
+        ("use_mcp", "fastmcp"),
+        ("use_mcp", "uvicorn-worker"),
         ("use_posthog", "posthog"),
         ("use_sentry", "sentry-sdk"),
     ],

@@ -19,5 +19,6 @@
   "use_ai": "y",
   "use_logfire": "y",
   "use_healthchecks": "y",
+  "use_mcp": "n",
   "use_ci": "y"
 }

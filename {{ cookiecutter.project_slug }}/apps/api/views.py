@@ -4,7 +4,8 @@ from django.core.cache import cache
 from ninja import NinjaAPI
 from ninja.errors import HttpError
 
-from apps.api.auth import session_auth, superuser_api_auth
+from apps.api.auth import api_key_auth, session_auth, superuser_api_auth
+from apps.api.services import serialize_user_info
 from apps.core.models import Feedback
 {% if cookiecutter.generate_blog == 'y' -%}
 from apps.blog.models import BlogPost
@@ -22,6 +23,7 @@ from apps.api.schemas import (
     BlogPostDetailOut,
     {% endif -%}
     ProfileSettingsOut,
+    UserInfoOut,
     UserSettingsOut,
 )
 
@@ -306,6 +308,16 @@ def publish_internal_blog_post(request: HttpRequest, blog_post_id: int):
         "blog_post": _serialize_blog_post(blog_post),
     }
 {% endif %}
+
+@api.get(
+    "/user",
+    response=UserInfoOut,
+    auth=api_key_auth,
+    tags=["user"],
+)
+def get_user_info(request: HttpRequest):
+    """Return safe profile and account details for the authenticated API key."""
+    return serialize_user_info(request.auth)
 
 @api.get(
     "/user/settings",

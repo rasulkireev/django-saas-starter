@@ -121,6 +121,9 @@ THIRD_PARTY_APPS = [
 CUSTOM_APPS = [
     "apps.core.CoreConfig",
     "apps.api.ApiConfig",
+    {% if cookiecutter.use_mcp == 'y' -%}
+    "apps.mcp_server.apps.McpServerConfig",
+    {% endif %}
     "apps.pages.PagesConfig",
     {% if cookiecutter.generate_blog == 'y' -%}
     "apps.blog.BlogConfig",

@@ -7,7 +7,7 @@ services:
       npm ci &&
       npm run build &&
       python manage.py collectstatic --noinput
-    startCommand: python manage.py migrate && gunicorn {{ cookiecutter.project_slug }}.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 2 --timeout 120
+    startCommand: python manage.py migrate && {% if cookiecutter.use_mcp == 'y' -%}gunicorn {{ cookiecutter.project_slug }}.asgi:application --bind 0.0.0.0:$PORT --workers 2 --worker-class uvicorn_worker.UvicornWorker --timeout 120{% else -%}gunicorn {{ cookiecutter.project_slug }}.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 2 --timeout 120{% endif %}
     plan: free
     healthCheckPath: /
 

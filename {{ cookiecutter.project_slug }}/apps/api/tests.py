@@ -185,3 +185,88 @@ class PlaceholderApiTests(SimpleTestCase):
     def test_placeholder(self):
         assert True
 {% endif %}
+
+class UserInfoApiUnitTests(SimpleTestCase):
+    def test_get_user_info_returns_safe_profile_data(self):
+        from apps.api.views import get_user_info
+
+        user = SimpleNamespace(
+            id=7,
+            email="ada@example.com",
+            username="ada",
+            first_name="Ada",
+            last_name="Lovelace",
+            date_joined="2026-05-14T00:00:00Z",
+            get_full_name=lambda: "Ada Lovelace",
+        )
+        profile = SimpleNamespace(
+            id=11,
+            user=user,
+            state="signed_up",
+            {% if cookiecutter.use_stripe == 'y' -%}
+            has_active_subscription=False,
+            {% endif %}
+        )
+        request = HttpRequest()
+        request.auth = profile
+
+        response = get_user_info(request)
+
+        assert response["email"] == "ada@example.com"
+        assert response["full_name"] == "Ada Lovelace"
+        assert response["profile"] == {
+            "id": 11,
+            "state": "signed_up",
+            "has_active_subscription": False,
+        }
+        assert "key" not in response
+
+
+def test_api_key_auth_returns_profile_for_valid_key():
+    from apps.api.auth import APIKeyAuth, APIKeyHeaderAuth, BearerAPIKeyAuth
+    from apps.core.models import Profile
+
+    profile = SimpleNamespace(id=11)
+
+    for auth_class in [APIKeyAuth, APIKeyHeaderAuth, BearerAPIKeyAuth]:
+        with patch("apps.api.auth.Profile.objects") as objects:
+            objects.select_related.return_value.get.return_value = profile
+            response = auth_class().authenticate(HttpRequest(), "secret-key")
+
+        assert response is profile
+        objects.select_related.assert_called_once_with("user")
+        objects.select_related.return_value.get.assert_called_once_with(key="secret-key")
+
+    with patch("apps.api.auth.Profile.objects") as objects:
+        objects.select_related.return_value.get.side_effect = Profile.DoesNotExist
+        response = APIKeyAuth().authenticate(HttpRequest(), "bad-key")
+
+    assert response is None
+
+
+def test_superuser_api_key_auth_eager_loads_user_and_requires_superuser():
+    from apps.api.auth import SuperuserAPIKeyAuth
+    from apps.core.models import Profile
+
+    superuser_profile = SimpleNamespace(id=11, user=SimpleNamespace(id=21, is_superuser=True))
+    regular_profile = SimpleNamespace(id=12, user=SimpleNamespace(id=22, is_superuser=False))
+
+    with patch("apps.api.auth.Profile.objects") as objects:
+        objects.select_related.return_value.get.return_value = superuser_profile
+        response = SuperuserAPIKeyAuth().authenticate(HttpRequest(), "secret-key")
+
+    assert response is superuser_profile
+    objects.select_related.assert_called_once_with("user")
+    objects.select_related.return_value.get.assert_called_once_with(key="secret-key")
+
+    with patch("apps.api.auth.Profile.objects") as objects:
+        objects.select_related.return_value.get.return_value = regular_profile
+        response = SuperuserAPIKeyAuth().authenticate(HttpRequest(), "regular-key")
+
+    assert response is None
+
+    with patch("apps.api.auth.Profile.objects") as objects:
+        objects.select_related.return_value.get.side_effect = Profile.DoesNotExist
+        response = SuperuserAPIKeyAuth().authenticate(HttpRequest(), "bad-key")
+
+    assert response is None
