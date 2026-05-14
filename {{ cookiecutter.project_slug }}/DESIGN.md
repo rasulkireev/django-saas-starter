@@ -37,7 +37,7 @@ typography:
   headline-md:
     fontFamily: Inter, ui-sans-serif, system-ui, sans-serif
     fontSize: 30px
-    fontWeight: 750
+    fontWeight: 700
     lineHeight: 1.15
     letterSpacing: -0.025em
   headline-sm:
@@ -64,7 +64,7 @@ typography:
   label-md:
     fontFamily: Inter, ui-sans-serif, system-ui, sans-serif
     fontSize: 14px
-    fontWeight: 650
+    fontWeight: 600
     lineHeight: 1.3
   label-caps:
     fontFamily: Inter, ui-sans-serif, system-ui, sans-serif
@@ -122,12 +122,12 @@ components:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.text}"
     rounded: "{rounded.xl}"
-    padding: 24px
+    padding: "{spacing.lg}"
   card-muted:
     backgroundColor: "{colors.surface-muted}"
     textColor: "{colors.text}"
     rounded: "{rounded.xl}"
-    padding: 24px
+    padding: "{spacing.lg}"
   app-shell:
     backgroundColor: "{colors.neutral}"
     textColor: "{colors.text}"
@@ -145,19 +145,19 @@ components:
     textColor: "{colors.success}"
     typography: "{typography.label-caps}"
     rounded: "{rounded.full}"
-    padding: 8px
+    padding: "{spacing.sm}"
   badge-warning:
     backgroundColor: "{colors.warning}"
     textColor: "{colors.surface-dark}"
     typography: "{typography.label-caps}"
     rounded: "{rounded.full}"
-    padding: 8px
+    padding: "{spacing.sm}"
   badge-neutral:
     backgroundColor: "{colors.secondary-soft}"
     textColor: "{colors.secondary}"
     typography: "{typography.label-caps}"
     rounded: "{rounded.full}"
-    padding: 8px
+    padding: "{spacing.sm}"
   link:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.accent}"
