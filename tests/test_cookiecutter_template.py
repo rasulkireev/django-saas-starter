@@ -131,6 +131,7 @@ def test_generate_default_structure(tmp_path: Path) -> None:
     # sanity: core entrypoints exist
     assert (project_dir / "manage.py").exists()
     assert (project_dir / "pyproject.toml").exists()
+    assert (project_dir / "DESIGN.md").exists()
     assert (project_dir / "frontend" / "templates").exists()
 
     # new feature: account deletion flow
@@ -154,9 +155,16 @@ def test_generate_default_structure(tmp_path: Path) -> None:
         'def send_transactional_email(',
     )
 
+    # generated design-system docs should be present and agent/tool neutral
+    _assert_contains(project_dir / "DESIGN.md", "Google Labs Code")
+    _assert_contains(project_dir / "DESIGN.md", "agent-neutral")
+    _assert_contains(project_dir / "README.md", "npx @google/design.md lint DESIGN.md")
+
     # optional apps on by default in this test helper
     assert (project_dir / "apps" / "blog").exists()
     assert (project_dir / "apps" / "docs").exists()
+    assert (project_dir / "apps" / "docs" / "content" / "getting-started" / "design-system.md").exists()
+    _assert_contains(project_dir / "apps" / "docs" / "navigation.yaml", "- design-system")
     assert not (
         Path(__file__).resolve().parents[1]
         / "{{ cookiecutter.project_slug }}"
@@ -332,6 +340,8 @@ def test_generate_without_docs_removes_docs_app_and_templates(tmp_path: Path) ->
 
     assert not (project_dir / "apps" / "docs").exists()
     assert not (project_dir / "frontend" / "templates" / "docs").exists()
+    assert (project_dir / "DESIGN.md").exists()
+    _assert_contains(project_dir / "README.md", "DESIGN.md")
 
 
 def test_generate_without_stripe_removes_stripe_files(tmp_path: Path) -> None:

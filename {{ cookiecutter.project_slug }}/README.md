@@ -14,9 +14,17 @@
 
 - Add info about your project here
 
-### Theme
+### Theme and design system
 
 This template includes a dark/light mode toggle in the navbar. The preference is stored in `localStorage` and applied early to avoid a flash of incorrect theme.
+
+This project also includes a root-level `DESIGN.md` file based on the public Google Labs Code [`DESIGN.md`](https://github.com/google-labs-code/design.md) alpha format. It gives humans and AI coding agents a shared, tool-neutral design source of truth: colors, typography, spacing, radii, component guidance, and practical do/don't rules.
+
+Treat the generated `DESIGN.md` as a generic SaaS baseline. Update it when your brand or UI direction changes, then keep templates/components aligned with it. You can validate it with:
+
+```bash
+npx @google/design.md lint DESIGN.md
+```
 
 ### Project structure: `/apps`
 
@@ -51,6 +59,7 @@ These endpoints use superuser API auth by default and are intended as a starter 
 
 - [Overview](#overview)
 - [TOC](#toc)
+- [Theme and design system](#theme-and-design-system)
 - [Deployment](#deployment)
   - [Render](#render)
   - [Docker Compose](#docker-compose)

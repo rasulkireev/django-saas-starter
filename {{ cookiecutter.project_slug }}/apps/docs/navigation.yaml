@@ -29,6 +29,7 @@
 navigation:
   getting-started:
     - introduction
+    - design-system
     # Any pages not listed here will appear after these, in alphabetical order
 
   features:
