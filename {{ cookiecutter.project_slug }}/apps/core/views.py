@@ -1,4 +1,4 @@
-from urllib.parse import urlencode
+from urllib.parse import urlsplit, urlunsplit, urlencode
 
 {% if cookiecutter.use_stripe == 'y' -%}
 import stripe
@@ -38,6 +38,67 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
+{% if cookiecutter.use_mcp == 'y' -%}
+def build_absolute_public_url(path: str) -> str:
+    """Build a public URL from SITE_URL and upgrade non-local HTTP origins to HTTPS."""
+    base_url = settings.SITE_URL.rstrip("/")
+    parsed = urlsplit(base_url)
+    hostname = parsed.hostname or ""
+    is_local = hostname in {"localhost", "127.0.0.1", "0.0.0.0"} or hostname.endswith(".localhost")
+
+    if parsed.scheme == "http" and not is_local:
+        parsed = parsed._replace(scheme="https")
+        base_url = urlunsplit(parsed).rstrip("/")
+
+    return f"{base_url}/{path.lstrip('/')}"
+
+
+def skill_markdown(request):
+    """Return a copy/paste AgentSkill for this project's MCP server."""
+    mcp_url = build_absolute_public_url("/mcp/")
+    api_url = build_absolute_public_url("/api/user")
+    project_name = "{{ cookiecutter.project_name }}"
+    body = f"""---
+name: {{ cookiecutter.project_slug }}-mcp
+description: Use the hosted {project_name} MCP server and account API from coding agents.
+---
+
+# {project_name} MCP
+
+Use this skill when an agent needs to inspect the current authenticated {project_name} account/profile or connect to the project's MCP server.
+
+## Endpoints
+
+- MCP URL: `{mcp_url}`
+- User API: `{api_url}`
+
+## Authentication
+
+Use the user's API key from the app settings page. Do not commit or print the key.
+
+Supported MCP authentication methods:
+
+- `Authorization: Bearer <api_key>`
+- `X-API-Key: <api_key>`
+- `?api_key=<api_key>` on the MCP URL
+- `api_key` tool argument when a client cannot send headers
+
+The REST user endpoint supports the Bearer token, `X-API-Key`, and `?api_key=` methods.
+
+## Starter prompt for a coding agent
+
+```text
+Add {project_name} MCP support to this repo.
+
+Use MCP URL: {mcp_url}
+Use the user's {project_name} API key from environment variable {project_name.upper().replace(' ', '_')}_API_KEY.
+Do not hardcode, log, or commit the key.
+First verify the connection by calling the get_user_info MCP tool or GET {api_url} with the API key, then add the smallest useful integration for this codebase.
+Document how future agents should configure the MCP server locally.
+```
+"""
+    return HttpResponse(body, content_type="text/markdown; charset=utf-8")
+{% endif %}
 
 class HomeView(LoginRequiredMixin, TemplateView):
     login_url = "account_login"

@@ -33,8 +33,42 @@ This project keeps Django apps inside the `/apps` directory. This is both for hu
 - `apps/core`: main app functionality (shared domain logic, base models, services, etc.)
 - `apps/docs`: user-facing documentation
 - `apps/api`: all API needs (Django Ninja routers, schemas, API-specific logic)
+{% if cookiecutter.use_mcp == 'y' -%}
+- `apps/mcp_server`: hosted MCP tools for agent integrations
+{% endif %}
 - `apps/pages`: landing/marketing pages (pricing, TOS, privacy policy, etc.)
 - `apps/blog`: user-facing blog
+
+
+### Agent API endpoint
+
+All generated projects include `GET /api/user`, which returns safe account/profile details for the authenticated API key. This is intentionally small but useful as the first "agent can authenticate and know who it is acting for" endpoint.
+
+{% if cookiecutter.use_mcp == 'y' -%}
+### Hosted MCP server
+
+This project includes a hosted MCP server at `/mcp/`, plus a ready-to-copy agent skill at `/SKILL.md`. The first tool is `get_user_info`, backed by the same serializer as `GET /api/user`.
+
+Supported MCP auth methods:
+
+- `Authorization: Bearer <api_key>`
+- `X-API-Key: <api_key>`
+- `?api_key=<api_key>` on the MCP URL
+- `api_key` tool argument
+
+The REST user endpoint supports the Bearer token, `X-API-Key`, and `?api_key=` methods.
+
+Give an agent this starter prompt:
+
+```text
+Add {{ cookiecutter.project_name }} MCP support to this repo.
+
+Use MCP URL: <production-url>/mcp/
+Use the user's {{ cookiecutter.project_name }} API key from an environment variable. Do not hardcode, log, or commit the key.
+First verify the connection by calling the get_user_info MCP tool or GET <production-url>/api/user with the API key, then add the smallest useful integration for this codebase.
+Document how future agents should configure the MCP server locally.
+```
+{% endif %}
 
 {% if cookiecutter.generate_blog == 'y' -%}
 ### Blog management API endpoints (admin)
@@ -113,7 +147,11 @@ How you are going to expose the backend container is up to you. I usually do it 
 Not recommended due to not being too safe for production and not being tested by me.
 
 If you are not into Docker or Render and just wanto to run this via regular commands you will need to have 5 processes running:
+{% if cookiecutter.use_mcp == 'y' -%}
+- `python manage.py collectstatic --noinput && python manage.py migrate && gunicorn ${PROJECT_NAME}.asgi:application --bind 0.0.0.0:80 --workers 3 --worker-class uvicorn_worker.UvicornWorker`
+{% else -%}
 - `python manage.py collectstatic --noinput && python manage.py migrate && gunicorn ${PROJECT_NAME}.wsgi:application --bind 0.0.0.0:80 --workers 3 --threads 2`
+{% endif %}
 - `python manage.py qcluster`
 - `npm install && npm run start`
 - `postgres`

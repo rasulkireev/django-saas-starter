@@ -17,6 +17,11 @@ dependencies = [
     "django-widget-tweaks>=1.5.1",
     "fido2>=2.2.0,<3",
     "gunicorn>=26.0.0",
+    {% if cookiecutter.use_mcp == 'y' -%}
+    "fastmcp>=2.14.0",
+    "starlette>=0.50.0",
+    "uvicorn-worker>=0.4.0",
+    {% endif %}
     "ipython>=9.13.0",
     "markdown>=3.10.2",
     "pillow>=12.2.0",

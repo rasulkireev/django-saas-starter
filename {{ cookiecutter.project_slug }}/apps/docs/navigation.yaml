@@ -34,6 +34,9 @@ navigation:
 
   features:
     - example-feature
+    {% if cookiecutter.use_mcp == 'y' -%}
+    - mcp
+    {% endif %}
 
   deployment:
     - render-deployment

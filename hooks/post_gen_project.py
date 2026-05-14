@@ -75,6 +75,19 @@ def remove_chatwoot_files():
         print("Removed Chatwoot deployment guide")
 
 
+def remove_mcp_files():
+    """Remove MCP-related files if use_mcp is 'n'."""
+    mcp_app_path = Path("apps/mcp_server")
+    if mcp_app_path.exists():
+        shutil.rmtree(mcp_app_path)
+        print("Removed MCP server app")
+
+    mcp_docs_path = Path("apps/docs/content/features/mcp.md")
+    if mcp_docs_path.exists():
+        mcp_docs_path.unlink()
+        print("Removed MCP feature docs")
+
+
 def remove_ci_workflow():
     """Remove CI workflow if use_ci is 'n'."""
     ci_workflow_path = Path(".github/workflows/ci.yml")
@@ -143,6 +156,7 @@ def main():
     generate_docs = "{{ cookiecutter.generate_docs }}"
     use_stripe = "{{ cookiecutter.use_stripe }}"
     use_chatwoot = "{{ cookiecutter.use_chatwoot }}"
+    use_mcp = "{{ cookiecutter.use_mcp }}"
     use_ci = "{{ cookiecutter.use_ci }}"
 
     if generate_blog != "y":
@@ -166,6 +180,11 @@ def main():
         print("Chatwoot disabled, removing Chatwoot-related files...")
         remove_chatwoot_files()
         print("Chatwoot cleanup complete!")
+
+    if use_mcp != "y":
+        print("MCP disabled, removing MCP-related files...")
+        remove_mcp_files()
+        print("MCP cleanup complete!")
 
     if use_ci != "y":
         print("CI disabled, removing CI workflow...")

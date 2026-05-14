@@ -56,7 +56,11 @@ if [ "$server" = true ]; then
     echo "Starting {{ cookiecutter.project_name }} server..."
     python manage.py collectstatic --noinput
     python manage.py migrate --noinput
+    {% if cookiecutter.use_mcp == 'y' -%}
+    exec gunicorn ${PROJECT_NAME}.asgi:application --bind 0.0.0.0:80 --workers 3 --worker-class uvicorn_worker.UvicornWorker
+    {% else -%}
     exec gunicorn ${PROJECT_NAME}.wsgi:application --bind 0.0.0.0:80 --workers 3 --threads 2
+    {% endif %}
 else
     echo "Starting {{ cookiecutter.project_name }} workers..."
     exec python manage.py qcluster
