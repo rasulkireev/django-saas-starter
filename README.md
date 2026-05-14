@@ -34,6 +34,7 @@ Important: in generated projects, run `python manage.py makemigrations` (without
 - ✅ **StimulusJS** for interactivity
 - ✅ **Webpack** setup (assets pipeline)
 - ✅ SEO-friendly templates (meta tags, JSON-LD schema, OG images)
+- ✅ Root `DESIGN.md` based on Google Labs Code's DESIGN.md format for tool-neutral human/AI design guidance
 
 ### Pages & content
 - ✅ Landing + pricing + auth pages + sitemap
@@ -73,6 +74,7 @@ Important: in generated projects, run `python manage.py makemigrations` (without
 - ❓ Posthog
 
 ### AI
+- ✅ Tool-neutral `DESIGN.md` design source of truth for humans and AI coding agents
 - ✅ Cursor Rules
 - ❓ `pydanticai` for agents in-app
 
