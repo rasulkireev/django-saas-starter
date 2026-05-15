@@ -56,7 +56,8 @@ def build_absolute_public_url(path: str) -> str:
 {% if cookiecutter.use_mcp == 'y' -%}
 def build_agent_setup_prompt(request):
     """Build the dashboard copy/paste prompt for connecting a coding agent."""
-    api_key = request.user.profile.key
+    profile, _created = Profile.objects.get_or_create(user=request.user)
+    api_key = profile.key
     project_name = "{{ cookiecutter.project_name }}"
     env_var = "{{ cookiecutter.project_slug.upper() }}_API_KEY"
     mcp_url = build_absolute_public_url("/mcp/")

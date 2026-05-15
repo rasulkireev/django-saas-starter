@@ -4,6 +4,8 @@ description: Use the {{ cookiecutter.project_name }} user endpoint to verify API
 keywords: {{ cookiecutter.project_name }} API, user API, profile API
 ---
 
+# User API
+
 Use the user endpoint to verify an API key and fetch safe account/profile details for the authenticated user.
 
 ## Authentication

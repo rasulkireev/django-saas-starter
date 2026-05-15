@@ -4,6 +4,8 @@ description: Learn how {{ cookiecutter.project_name }} API authentication works 
 keywords: {{ cookiecutter.project_name }} API, API authentication, OpenAPI docs
 ---
 
+# Introduction
+
 {{ cookiecutter.project_name }} exposes authenticated REST endpoints for account checks and product-specific integrations.
 
 ## Base URL

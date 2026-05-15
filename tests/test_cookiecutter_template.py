@@ -174,6 +174,7 @@ def test_generate_default_structure(tmp_path: Path) -> None:
     _assert_contains(project_dir / "frontend" / "templates" / "docs" / "base_docs.html", "data-controller=\"toc docs-code\"")
     _assert_contains(project_dir / "frontend" / "templates" / "docs" / "docs_page.html", "noindex, nofollow")
     _assert_contains(project_dir / "frontend" / "src" / "controllers" / "docs_code_controller.js", "Copy failed")
+    _assert_contains(project_dir / "frontend" / "src" / "utils" / "clipboard.js", "document.execCommand")
     _assert_contains(project_dir / "frontend" / "src" / "styles" / "index.css", ".docs-code-blocks pre code *")
     _assert_contains(project_dir / "frontend" / "src" / "styles" / "index.css", "font-weight: 500 !important")
     assert not (

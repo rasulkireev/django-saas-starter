@@ -1,5 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
+import { copyText } from "../utils/clipboard";
+
 export default class extends Controller {
   connect() {
     this.addCopyButtons();
@@ -34,7 +36,7 @@ export default class extends Controller {
   }
 
   async copyCode(text, button) {
-    const copied = await this.copyText(text);
+    const copied = await copyText(text);
     const original = button.dataset.originalLabel || button.textContent;
     button.dataset.originalLabel = original;
     button.textContent = copied ? "Copied" : "Copy failed";
@@ -42,32 +44,5 @@ export default class extends Controller {
     button.dataset.resetTimer = window.setTimeout(() => {
       button.textContent = original;
     }, 1600);
-  }
-
-  async copyText(text) {
-    if (navigator.clipboard?.writeText) {
-      try {
-        await navigator.clipboard.writeText(text);
-        return true;
-      } catch (error) {
-        // Fall back for restricted clipboard contexts.
-      }
-    }
-
-    const textarea = document.createElement("textarea");
-    textarea.value = text;
-    textarea.setAttribute("readonly", "");
-    textarea.style.position = "fixed";
-    textarea.style.top = "-9999px";
-    document.body.appendChild(textarea);
-    textarea.select();
-
-    try {
-      return document.execCommand("copy");
-    } catch (error) {
-      return false;
-    } finally {
-      textarea.remove();
-    }
   }
 }

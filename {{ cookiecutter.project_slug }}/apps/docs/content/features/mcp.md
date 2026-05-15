@@ -2,6 +2,8 @@
 title: MCP access
 ---
 
+# MCP access
+
 {% if cookiecutter.use_mcp == 'y' -%}
 This project includes a hosted MCP server at `/mcp/`, a ready-to-copy agent skill at `/SKILL.md`, and a dashboard prompt that includes the exact URLs and API key for the current user.
 
