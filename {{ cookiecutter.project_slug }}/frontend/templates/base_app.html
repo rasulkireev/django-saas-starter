@@ -105,6 +105,13 @@
                     Dashboard
                   </a>
                 </li>
+                {% if cookiecutter.generate_docs == 'y' -%}
+                <li>
+                  <a href="{% raw %}{% url 'docs_home' %}{%- endraw %}" class="rounded-full px-6 py-3 text-base font-semibold leading-[1.7] tracking-[-0.09px] text-gray-900 transition-colors hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800">
+                    Docs
+                  </a>
+                </li>
+                {% endif %}
                 <li>
                   <a href="{% raw %}{% url 'settings' %}{%- endraw %}" class="rounded-full px-6 py-3 text-base font-semibold leading-[1.7] tracking-[-0.09px] text-gray-900 transition-colors hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800">
                     Settings
@@ -190,6 +197,13 @@
                     </a>
                   </li>
                   {{ "{% if user.is_authenticated %}" }}
+                  {% if cookiecutter.generate_docs == 'y' -%}
+                  <li class="py-5 text-center border-b border-gray-200 dark:border-gray-800">
+                    <a href="{% raw %}{% url 'docs_home' %}{%- endraw %}" class="text-sm font-semibold text-gray-900 hover:text-{{ cookiecutter.project_main_color }}-600 dark:text-gray-100 dark:hover:text-{{ cookiecutter.project_main_color }}-400">
+                      Docs
+                    </a>
+                  </li>
+                  {% endif %}
                   <li class="py-5 text-center border-b border-gray-200 dark:border-gray-800">
                     <a href="{% raw %}{% url 'settings' %}{%- endraw %}" class="text-sm font-semibold text-gray-900 hover:text-{{ cookiecutter.project_main_color }}-600 dark:text-gray-100 dark:hover:text-{{ cookiecutter.project_main_color }}-400">
                       Settings

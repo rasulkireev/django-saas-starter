@@ -38,13 +38,13 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
-{% if cookiecutter.use_mcp == 'y' -%}
+
 def build_absolute_public_url(path: str) -> str:
     """Build a public URL from SITE_URL and upgrade non-local HTTP origins to HTTPS."""
     base_url = settings.SITE_URL.rstrip("/")
     parsed = urlsplit(base_url)
     hostname = parsed.hostname or ""
-    is_local = hostname in {"localhost", "127.0.0.1", "0.0.0.0"} or hostname.endswith(".localhost")
+    is_local = hostname in {"localhost", "127.0.0.1", "0.0.0.0", "::1"} or hostname.endswith(".localhost")
 
     if parsed.scheme == "http" and not is_local:
         parsed = parsed._replace(scheme="https")
@@ -53,11 +53,35 @@ def build_absolute_public_url(path: str) -> str:
     return f"{base_url}/{path.lstrip('/')}"
 
 
+{% if cookiecutter.use_mcp == 'y' -%}
+def build_agent_setup_prompt(request):
+    """Build the dashboard copy/paste prompt for connecting a coding agent."""
+    profile, _created = Profile.objects.get_or_create(user=request.user)
+    api_key = profile.key
+    project_name = "{{ cookiecutter.project_name }}"
+    env_var = "{{ cookiecutter.project_slug.upper() }}_API_KEY"
+    mcp_url = build_absolute_public_url("/mcp/")
+    api_url = build_absolute_public_url("/api/user")
+    skill_url = build_absolute_public_url("/SKILL.md")
+    return f"""Add {project_name} MCP support to this repo.
+
+Use MCP URL: {mcp_url}
+Use REST User API URL: {api_url}
+Use Agent Skill URL: {skill_url}
+Use this API key only as a local secret: {api_key}
+
+Store the key in environment variable {env_var}. Do not hardcode, log, print, or commit it.
+First verify the connection by calling the get_user_info MCP tool or GET {api_url} with the API key.
+Then add the smallest useful integration for this codebase and document how future agents should configure the MCP server locally.
+"""
+
+
 def skill_markdown(request):
     """Return a copy/paste AgentSkill for this project's MCP server."""
     mcp_url = build_absolute_public_url("/mcp/")
     api_url = build_absolute_public_url("/api/user")
     project_name = "{{ cookiecutter.project_name }}"
+    env_var = "{{ cookiecutter.project_slug.upper() }}_API_KEY"
     body = f"""---
 name: {{ cookiecutter.project_slug }}-mcp
 description: Use the hosted {project_name} MCP server and account API from coding agents.
@@ -91,7 +115,7 @@ The REST user endpoint supports the Bearer token, `X-API-Key`, and `?api_key=` m
 Add {project_name} MCP support to this repo.
 
 Use MCP URL: {mcp_url}
-Use the user's {project_name} API key from environment variable {project_name.upper().replace(' ', '_')}_API_KEY.
+Use the user's {project_name} API key from environment variable {env_var}.
 Do not hardcode, log, or commit the key.
 First verify the connection by calling the get_user_info MCP tool or GET {api_url} with the API key, then add the smallest useful integration for this codebase.
 Document how future agents should configure the MCP server locally.
@@ -114,6 +138,11 @@ class HomeView(LoginRequiredMixin, TemplateView):
             context["show_confetti"] = True
         elif payment_status == "failed":
             messages.error(self.request, "Something went wrong with the payment.")
+        {% endif %}
+
+        {% if cookiecutter.use_mcp == 'y' -%}
+        context["agent_setup_prompt"] = build_agent_setup_prompt(self.request)
+        context["agent_instructions_url"] = build_absolute_public_url("/SKILL.md")
         {% endif %}
 
         return context
