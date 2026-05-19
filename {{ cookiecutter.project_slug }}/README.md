@@ -159,11 +159,11 @@ Not recommended due to not being too safe for production and not being tested by
 
 If you are not into Docker or Render and just wanto to run this via regular commands you will need to have 5 processes running:
 {% if cookiecutter.use_mcp == 'y' -%}
-- `python manage.py collectstatic --noinput && python manage.py migrate && gunicorn ${PROJECT_NAME}.asgi:application --bind 0.0.0.0:80 --workers 3 --worker-class uvicorn_worker.UvicornWorker`
+- `uv sync --locked --no-dev --no-install-project && uv run --no-sync python manage.py collectstatic --noinput && uv run --no-sync python manage.py migrate && uv run --no-sync gunicorn ${PROJECT_NAME}.asgi:application --bind 0.0.0.0:80 --workers 3 --worker-class uvicorn_worker.UvicornWorker`
 {% else -%}
-- `python manage.py collectstatic --noinput && python manage.py migrate && gunicorn ${PROJECT_NAME}.wsgi:application --bind 0.0.0.0:80 --workers 3 --threads 2`
+- `uv sync --locked --no-dev --no-install-project && uv run --no-sync python manage.py collectstatic --noinput && uv run --no-sync python manage.py migrate && uv run --no-sync gunicorn ${PROJECT_NAME}.wsgi:application --bind 0.0.0.0:80 --workers 3 --threads 2`
 {% endif %}
-- `python manage.py qcluster`
+- `uv run --no-sync python manage.py qcluster`
 - `npm install && npm run start`
 - `postgres`
 - `redis`
@@ -195,6 +195,8 @@ You'd still need to make sure .env has correct values.
 6. Github Workflow in this repo should take care of the rest.
 
 ## Local Development
+
+`uv.lock` should be generated automatically when Cookiecutter creates this project. Commit it with the rest of the generated app. If it is missing, run `uv lock` once before deploying.
 
 1. Update the name of the `.env.example` to `.env` and update relevant variables.
 2. Run `uv sync`

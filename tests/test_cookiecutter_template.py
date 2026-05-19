@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib.util
 import json
 import subprocess
 import sys
@@ -65,6 +66,26 @@ def _assert_contains(path: Path, needle: str) -> None:
 def _assert_not_contains(path: Path, needle: str) -> None:
     content = _read_text(path)
     assert needle not in content, f"Expected not to find {needle!r} in {path}"
+
+
+def _post_gen_module():
+    hook_path = Path(__file__).resolve().parents[1] / "hooks" / "post_gen_project.py"
+    spec = importlib.util.spec_from_file_location("post_gen_project", hook_path)
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_post_gen_accepts_newer_uv_versions() -> None:
+    module = _post_gen_module()
+
+    assert module.is_supported_uv_version("0.11.15")
+    assert module.is_supported_uv_version("0.12.0")
+    assert module.is_supported_uv_version("1.0.0")
+    assert not module.is_supported_uv_version("0.11.14")
+    assert not module.is_supported_uv_version("not-a-version")
 
 
 def test_cookiecutter_cli_generates_project_successfully(tmp_path: Path) -> None:
@@ -133,6 +154,7 @@ def test_generate_default_structure(tmp_path: Path) -> None:
     # sanity: core entrypoints exist
     assert (project_dir / "manage.py").exists()
     assert (project_dir / "pyproject.toml").exists()
+    assert (project_dir / "uv.lock").exists()
     assert (project_dir / "DESIGN.md").exists()
     assert (project_dir / "frontend" / "templates").exists()
 
@@ -190,7 +212,7 @@ def test_generate_default_structure(tmp_path: Path) -> None:
     assert (project_dir / "apps" / "blog" / "migrations" / "0001_initial.py").exists()
 
     _assert_contains(project_dir / "deployment" / "entrypoint.sh", "wait_for_database")
-    _assert_contains(project_dir / "deployment" / "entrypoint.sh", "exec gunicorn")
+    _assert_contains(project_dir / "deployment" / "entrypoint.sh", "exec uv run --no-sync gunicorn")
     _assert_contains(project_dir / "deployment" / "Dockerfile.server", "chmod +x deployment/entrypoint.sh")
     _assert_contains(project_dir / "deployment" / "Dockerfile.server", '["sh", "deployment/entrypoint.sh", "-s"]')
     _assert_contains(

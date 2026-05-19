@@ -9,6 +9,8 @@ author: {{ cookiecutter.author_name }}
 
 ## Required configuration
 
+This project deploys to Render with uv. `uv.lock` should be generated automatically when Cookiecutter creates the project, and it must be committed because Render enables uv for Python services when `uv.lock` exists at the service root.
+
 Before deploying, you need to configure environment variables. See the [Environment Variables](/docs/deployment/environment-variables/) guide for detailed information about all configuration options.
 
 Refer to the [Environment Variables](/docs/deployment/environment-variables/) guide for the complete list of required and optional variables.
