@@ -2,6 +2,7 @@
 """Post-generation hook for cookiecutter-django-saas-starter."""
 
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -10,6 +11,7 @@ from pathlib import Path
 
 
 UV_VERSION = "0.11.15"
+UV_MIN_VERSION = tuple(int(part) for part in UV_VERSION.split("."))
 
 
 def remove_blog_app():
@@ -143,6 +145,7 @@ def generate_initial_migrations(uv_command):
             [
                 *uv_command,
                 "run",
+                "--locked",
                 "python",
                 "manage.py",
                 "makemigrations",
@@ -156,6 +159,24 @@ def generate_initial_migrations(uv_command):
     finally:
         settings_module_path.unlink(missing_ok=True)
         Path(".post_gen_migrations.sqlite3").unlink(missing_ok=True)
+
+
+def uv_version_tuple(version):
+    """Parse uv's numeric version prefix into a comparable tuple."""
+    match = re.match(r"^(\d+)\.(\d+)\.(\d+)", version)
+    if match is None:
+        return None
+
+    return tuple(int(part) for part in match.groups())
+
+
+def is_supported_uv_version(version):
+    """Return whether an installed uv can generate a compatible lock file."""
+    parsed_version = uv_version_tuple(version)
+    if parsed_version is None:
+        return False
+
+    return parsed_version >= UV_MIN_VERSION
 
 
 def valid_uv_command():
@@ -180,7 +201,7 @@ def valid_uv_command():
         return None
 
     installed_version = version_parts[1]
-    if installed_version != UV_VERSION:
+    if not is_supported_uv_version(installed_version):
         return None
 
     return [uv_path]
@@ -216,13 +237,13 @@ def install_uv(temp_dir):
 
 
 def ensure_uv_command():
-    """Return a pinned uv command, installing it temporarily if needed."""
+    """Return a compatible uv command, installing the minimum version if needed."""
     uv_command = valid_uv_command()
     if uv_command is not None:
         return uv_command, None
 
     print(
-        f"uv {UV_VERSION} not found; "
+        f"uv {UV_VERSION} or newer not found; "
         "installing it temporarily for post-generation tasks..."
     )
     temp_dir = tempfile.TemporaryDirectory()
@@ -247,9 +268,10 @@ def generate_uv_lock(uv_command):
             print("")
             print(exc.output)
         print(f"Original error: {exc}")
-        return
+        return False
 
     print("Generated uv.lock")
+    return True
 
 
 def main():
@@ -305,8 +327,11 @@ def main():
 
     try:
         if uv_command is not None:
-            generate_uv_lock(uv_command)
-            generate_initial_migrations(uv_command)
+            lock_generated = generate_uv_lock(uv_command)
+            if lock_generated:
+                generate_initial_migrations(uv_command)
+            else:
+                print("Skipping migration generation because uv.lock was not generated.")
     finally:
         if uv_temp_dir is not None:
             uv_temp_dir.cleanup()
