@@ -14,7 +14,7 @@ cookiecutter git@github.com:rasulkireev/django-saas-starter.git
 
 Then follow the generated project’s `README.md` for local development + deployment.
 
-Important: in generated projects, run `python manage.py makemigrations` (without app labels) before feature work so all app model changes are captured.
+Important: in generated projects, run `uv run python manage.py makemigrations` (without app labels) before feature work so all app model changes are captured.
 
 ## What you get (high level)
 
@@ -61,6 +61,7 @@ Important: in generated projects, run `python manage.py makemigrations` (without
 - ❓ Buttondown for newsletters
 
 ### Dev experience
+- ✅ Python dependency management with **uv** and a generated `uv.lock`
 - ✅ Docker Compose (local + prod)
 - ✅ Makefile helpers
 - ✅ pytest
