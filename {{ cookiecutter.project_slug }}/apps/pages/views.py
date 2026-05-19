@@ -23,7 +23,7 @@ class LandingPageView(TemplateView):
             profile = user.profile
 
             async_task(
-                "core.tasks.try_create_posthog_alias",
+                "apps.core.tasks.try_create_posthog_alias",
                 profile_id=profile.id,
                 cookies=self.request.COOKIES,
                 source_function="LandingPageView - get_context_data",
@@ -51,7 +51,7 @@ class SignupTrackingMixin:
 
         {% if cookiecutter.use_posthog == 'y' -%}
         async_task(
-            "core.tasks.try_create_posthog_alias",
+            "apps.core.tasks.try_create_posthog_alias",
             profile_id=profile.id,
             cookies=self.request.COOKIES,
             source_function=f"{self.tracking_source_name} - form_valid",
@@ -59,7 +59,7 @@ class SignupTrackingMixin:
         )
 
         async_task(
-            "core.tasks.track_event",
+            "apps.core.tasks.track_event",
             profile_id=profile.id,
             event_name="user_signed_up",
             properties={

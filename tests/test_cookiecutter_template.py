@@ -177,7 +177,7 @@ def test_generate_default_structure(tmp_path: Path) -> None:
     _assert_contains(project_dir / "frontend" / "src" / "utils" / "clipboard.js", "document.execCommand")
     _assert_contains(project_dir / "frontend" / "src" / "styles" / "index.css", ".docs-code-blocks pre code *")
     _assert_contains(project_dir / "frontend" / "src" / "styles" / "index.css", "font-weight: 500 !important")
-    assert not (
+    assert (
         Path(__file__).resolve().parents[1]
         / "{{ cookiecutter.project_slug }}"
         / "apps"
@@ -194,8 +194,8 @@ def test_generate_default_structure(tmp_path: Path) -> None:
     _assert_contains(project_dir / "deployment" / "Dockerfile.server", "chmod +x deployment/entrypoint.sh")
     _assert_contains(project_dir / "deployment" / "Dockerfile.server", '["sh", "deployment/entrypoint.sh", "-s"]')
     _assert_contains(
-        Path(__file__).resolve().parents[1] / "hooks" / "post_gen_project.py",
-        "Generating fresh initial migrations",
+        Path(__file__).resolve().parents[1] / ".github" / "scripts" / "template-smoke-test.sh",
+        "makemigrations --check --dry-run",
     )
 
     # optional CI on by default

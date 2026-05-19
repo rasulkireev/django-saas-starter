@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 """Post-generation hook for cookiecutter-django-saas-starter."""
 
-import os
 import shutil
-import subprocess
 from pathlib import Path
 
 
@@ -96,60 +94,6 @@ def remove_ci_workflow():
         print("Removed CI workflow")
 
 
-def generate_initial_migrations():
-    """Generate fresh initial migrations after cookiecutter option cleanup."""
-    if os.environ.get("SKIP_POST_GEN_MIGRATIONS") == "1":
-        print("Skipping migration generation because SKIP_POST_GEN_MIGRATIONS=1")
-        return
-
-    if shutil.which("uv") is None:
-        print("uv not found; run `uv run python manage.py makemigrations` after generation.")
-        return
-
-    env = os.environ.copy()
-    env.setdefault("ENVIRONMENT", "dev")
-    env.setdefault("SECRET_KEY", "post-generation-migrations")
-    env.setdefault("DEBUG", "True")
-    env.setdefault("SITE_URL", "http://localhost:8000")
-    env.setdefault("POSTGRES_DB", "postgres")
-    env.setdefault("POSTGRES_USER", "postgres")
-    env.setdefault("POSTGRES_PASSWORD", "postgres")
-    env.setdefault("POSTGRES_HOST", "localhost")
-    env.setdefault("POSTGRES_PORT", "5432")
-
-    settings_module_path = Path("{{ cookiecutter.project_slug }}") / "_post_gen_migration_settings.py"
-    settings_module_path.write_text(
-        "from .settings import *  # noqa\n"
-        "DATABASES = {\n"
-        "    'default': {\n"
-        "        'ENGINE': 'django.db.backends.sqlite3',\n"
-        "        'NAME': BASE_DIR / '.post_gen_migrations.sqlite3',\n"
-        "    }\n"
-        "}\n",
-        encoding="utf-8",
-    )
-
-    print("Generating fresh initial migrations...")
-    try:
-        subprocess.run(
-            [
-                "uv",
-                "run",
-                "python",
-                "manage.py",
-                "makemigrations",
-                "--settings",
-                "{{ cookiecutter.project_slug }}._post_gen_migration_settings",
-                "--noinput",
-            ],
-            check=True,
-            env=env,
-        )
-    finally:
-        settings_module_path.unlink(missing_ok=True)
-        Path(".post_gen_migrations.sqlite3").unlink(missing_ok=True)
-
-
 def main():
     """Run post-generation tasks."""
     generate_blog = "{{ cookiecutter.generate_blog }}"
@@ -190,8 +134,6 @@ def main():
         print("CI disabled, removing CI workflow...")
         remove_ci_workflow()
         print("CI cleanup complete!")
-
-    generate_initial_migrations()
 
 
 if __name__ == "__main__":

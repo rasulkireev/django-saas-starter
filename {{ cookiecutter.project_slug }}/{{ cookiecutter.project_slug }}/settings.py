@@ -376,7 +376,10 @@ REDIS_HOST = env("REDIS_HOST", default="localhost")
 REDIS_PORT = env("REDIS_PORT", default="6379")
 REDIS_PASSWORD = env("REDIS_PASSWORD", default="")
 REDIS_DB = env("REDIS_DB", default="0")
-REDIS_URL = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+if REDIS_PASSWORD:
+    REDIS_URL = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+else:
+    REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
 
 Q_CLUSTER = {
     "name": "{{ cookiecutter.project_slug }}-q",
