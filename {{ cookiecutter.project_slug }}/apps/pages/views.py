@@ -1,4 +1,4 @@
-from allauth.account.views import SignupView
+from allauth.account.views import SignupByPasskeyView, SignupView
 from django_q.tasks import async_task
 from django.conf import settings
 from django.contrib import messages
@@ -42,12 +42,10 @@ class LandingPageView(TemplateView):
         return context
 
 
-class AccountSignupView(SignupView):
-    template_name = "account/signup.html"
+class SignupTrackingMixin:
+    tracking_source_name = "signup"
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-
+    def _track_signup(self):
         user = self.user
         profile = user.profile
 
@@ -56,7 +54,7 @@ class AccountSignupView(SignupView):
             "core.tasks.try_create_posthog_alias",
             profile_id=profile.id,
             cookies=self.request.COOKIES,
-            source_function="AccountSignupView - form_valid",
+            source_function=f"{self.tracking_source_name} - form_valid",
             group="Create Posthog Alias",
         )
 
@@ -70,12 +68,25 @@ class AccountSignupView(SignupView):
                     "username": profile.user.username,
                 },
             },
-            source_function="AccountSignupView - form_valid",
+            source_function=f"{self.tracking_source_name} - form_valid",
             group="Track Event",
         )
         {% endif %}
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        self._track_signup()
         return response
+
+
+class AccountSignupView(SignupTrackingMixin, SignupView):
+    template_name = "account/signup.html"
+    tracking_source_name = "AccountSignupView"
+
+
+class AccountSignupByPasskeyView(SignupTrackingMixin, SignupByPasskeyView):
+    template_name = "account/signup_by_passkey.html"
+    tracking_source_name = "AccountSignupByPasskeyView"
 
 
 {% if cookiecutter.use_stripe == 'y' -%}

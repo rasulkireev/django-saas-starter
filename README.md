@@ -1,73 +1,100 @@
-## Usage
+# django-saas-starter
 
-Generate a project with Cookiecutter:
+A production-ready Cookiecutter template for building Django SaaS apps fast.
 
-`cookiecutter git@github.com:rasulkireev/django-saas-starter.git`
+- **Stack:** Django 6.0.5 + Python 3.14.5 + Tailwind + Stimulus
+- **Pragmatic defaults:** auth, payments (optional), email, API, landing pages, blog/docs (optional)
+- **Deployment-ready:** Docker Compose (local + prod) + GitHub Actions (CapRover)
 
-## Features
+## Quickstart
 
-Legend:
-- ✅ Non-optional
-- ❓ Optional
+```bash
+cookiecutter git@github.com:rasulkireev/django-saas-starter.git
+```
+
+Then follow the generated project’s `README.md` for local development + deployment.
+
+Important: in generated projects, run `python manage.py makemigrations` (without app labels) before feature work so all app model changes are captured.
+
+## What you get (high level)
 
 ### Core
-- ✅ Django 6.0.6
+- ✅ Django 6.0.5
 - ✅ Python 3.14.5
 - ✅ Environment variables via **django-environ**
 
 ### Auth
-- ✅ Regular User Auth via **django-allauth**
-- ❓ Socail Auth via **django-allauth**:
-  - ❓ **Google** pre configured
-  - ❓ **Github** pre configured
-
-### Communication
-- ✅ **Anymail** for email sending with **Mailgun** (Mailhog for local)
-- ✅ **Messages** handling with nice tempalte component pre-installed
-- ❓ **MJML** for email templating
-- ❓ **Buttondown** for newsletters
+- ✅ User auth via **django-allauth**
+- ❓ Social auth via **django-allauth**
+  - ❓ Google (preconfigured)
+  - ❓ GitHub (preconfigured)
 
 ### Frontend
 - ✅ **Node.js 24.15.0 LTS** for frontend builds
-- ✅ **Webpack** pre-configured
-- ✅ **TailwindCSS** for styling
-- ✅ **StimulusJS** for interactivity via Webpack
-- ✅ SEO optimized templates, pre-configured:
-  - metatags
-  - json-ld schema
-  - OG images
+- ✅ **Tailwind CSS** for styling
+- ✅ **StimulusJS** for interactivity
+- ✅ **Webpack** setup (assets pipeline)
+- ✅ SEO-friendly templates (meta tags, JSON-LD schema, OG images)
+- ✅ Root `DESIGN.md` based on Google Labs Code's DESIGN.md format for tool-neutral human/AI design guidance
 
-### Database & Storage
-- ✅ Any Django Supported db will work fine.
-- ✅ Custom **Postgres** 18 db pre-configured in env files and docker compose.
-- ✅ **Redis** 8.6.3 pre-configured in docker compose.
-- ✅ **pgvector** is installed both in Postgres and in the App
-- ✅ **pg_stat_statements** is pre-installed on postgres too.
-- ❓ Media storage with any **S3 compatible** service. Comes with **Minio** both locally and in prod.
-
-### Dev Tools
-- ✅ **Docker Compose** for **local dev** and **prod** pre-configured.
-- ✅ **Makefile** is preconfigured for necessary commands.
-- ✅ Automated Deployment to **Caprover** via **Github Actions** is pre-confuigured.
-- ✅ Testing with **pytest**
-- ✅ **Pre-commit** for code quality checks: **ruff**, **djlint**
-
-### Logging, Monitoring & Analytics
-- ✅ **Structlog** for logging setup both for local (console) and prod (json)
-- ❓ **Sentry** integration
-- ❓ **Logfire** for prod and dev logging dashboards
-- ❓ **Healthcheck** integration
-- ❓ **Posthog** integration
-
-### Pages
-- ✅ landing, pricing, signin/signup, sitemap, blog
-- ✅ Way to collect feedback pre-installed via a nice widget
-- ❓ Blog, models and pages taken care of.
+### Pages & content
+- ✅ Landing + pricing + auth pages + sitemap
+- ✅ Feedback widget
+- ❓ User-facing blog (app + templates)
+- ❓ User-facing docs (app + templates)
 
 ### API
-- ✅ API support with **django-ninja**
-- ✅ 3 auth modes pre-installed (session, token, superuser)
+- ✅ API foundation via **django-ninja**
+- ✅ Auth modes included (session, token, superuser)
 
-## AI
-- ❓ **pydanticai** for agents in the app
+### Database & storage
+- ✅ Postgres 18 Docker images preconfigured
+- ✅ Redis 8.6.3 Docker image preconfigured
+- ✅ `pgvector` enabled
+- ✅ `pg_stat_statements` enabled
+- ❓ S3-compatible media storage (includes Minio for local + prod)
+
+### Email & communication
+- ✅ Email via **Anymail** + **Mailgun** (Mailhog for local)
+- ✅ Styled UI message component
+- ❓ MJML for email templating
+- ❓ Buttondown for newsletters
+
+### Dev experience
+- ✅ Docker Compose (local + prod)
+- ✅ Makefile helpers
+- ✅ pytest
+- ✅ Pre-commit: ruff + djlint
+- ✅ Automated deploy to **CapRover** via **GitHub Actions**
+- ❓ Optional CI workflow (runs Django checks + pytest on PRs)
+
+### Observability & analytics
+- ✅ Structlog (console in dev, JSON in prod)
+- ❓ Sentry
+- ❓ Logfire
+- ❓ Healthcheck endpoint
+- ❓ Posthog
+
+### AI
+- ✅ Tool-neutral `DESIGN.md` design source of truth for humans and AI coding agents
 - ✅ Cursor Rules
+- ❓ `pydanticai` for agents in-app
+
+## Philosophy
+
+This template aims to be:
+- **Boring to maintain** (standard Django patterns, explicit config)
+- **Fast to ship** (common SaaS pieces already wired)
+- **Easy to extend** (clear app boundaries and sensible defaults)
+
+## Contributing
+
+Issues and PRs are welcome. If you’re proposing a bigger change, open an issue first so we can align on scope.
+
+### Running template tests
+
+This repo includes pytest-based tests that generate a project via Cookiecutter and assert the expected files are present/removed for various options.
+
+```bash
+uv run --group test pytest
+```

@@ -4,9 +4,17 @@ import frontmatter
 import markdown
 import yaml
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.template import Context, Template
+from django.urls import reverse
 
+from apps.core.models import Profile
+from apps.core.views import build_absolute_public_url
+{% if cookiecutter.use_mcp == 'y' -%}
+from apps.core.views import build_agent_setup_prompt
+{% endif -%}
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
@@ -28,6 +36,21 @@ def load_navigation_config():
             return config.get("navigation", {}) if config else {}
     except Exception:
         return {}
+
+
+def get_page_title(markdown_file, fallback):
+    try:
+        with open(markdown_file, encoding="utf-8") as file:
+            post = frontmatter.load(file)
+        return post.get("title", fallback)
+    except Exception:
+        return fallback
+
+
+def get_category_title(category_slug):
+    if category_slug == "api-reference":
+        return "API Reference"
+    return category_slug.replace("-", " ").title()
 
 
 def get_docs_navigation():  # noqa: C901
@@ -60,7 +83,7 @@ def get_docs_navigation():  # noqa: C901
 
     for category_slug in ordered_categories:
         category_dir = all_categories[category_slug]
-        category_name = category_slug.replace("-", " ").title()
+        category_name = get_category_title(category_slug)
 
         all_pages = {}
         for markdown_file in category_dir.glob("*.md"):
@@ -83,7 +106,7 @@ def get_docs_navigation():  # noqa: C901
             pages.append(
                 {
                     "slug": page_slug,
-                    "title": page_title,
+                    "title": get_page_title(all_pages[page_slug], page_title),
                     "url": f"/docs/{category_slug}/{page_slug}/",
                 }
             )
@@ -144,9 +167,15 @@ def get_previous_and_next_pages(navigation, current_category, current_page):
     return previous_page, next_page
 
 
+@login_required
+def docs_home_view(request):
+    return redirect(reverse("docs_page", kwargs={"category": "getting-started", "page": "introduction"}))
+
+
+@login_required
 def docs_page_view(request, category, page):
     """
-    Render a documentation page from markdown file with frontmatter support.
+    Render an authenticated documentation page from markdown with frontmatter and user context.
     """
     content_dir = Path(settings.BASE_DIR) / "apps" / "docs" / "content"
     markdown_file = content_dir / category / f"{page}.md"
@@ -158,15 +187,30 @@ def docs_page_view(request, category, page):
         with open(markdown_file, encoding="utf-8") as file:
             post = frontmatter.load(file)
 
-        markdown_html = markdown.markdown(
-            post.content, extensions=["fenced_code", "tables", "codehilite"]
-        )
+        profile, _created = Profile.objects.get_or_create(user=request.user)
+        api_key = profile.key
+        docs_template_context = {
+            "api_base_url": build_absolute_public_url("/api/").rstrip("/"),
+            "api_key": api_key,
+            "api_key_masked": f"{api_key[:8]}••••••••",
+            "api_key_full": api_key,
+            "api_docs_url": build_absolute_public_url("/api/docs"),
+            {% if cookiecutter.use_mcp == 'y' -%}
+            "agent_setup_prompt": build_agent_setup_prompt(request),
+            "mcp_url": build_absolute_public_url("/mcp/"),
+            "skill_url": build_absolute_public_url("/SKILL.md"),
+            {% endif -%}
+            "site_url": build_absolute_public_url("/").rstrip("/"),
+            "user_email": request.user.email,
+        }
+        rendered_markdown = Template(post.content).render(Context(docs_template_context))
+        markdown_html = markdown.markdown(rendered_markdown, extensions=["fenced_code", "tables"])
 
         navigation = get_docs_navigation()
         previous_page, next_page = get_previous_and_next_pages(navigation, category, page)
 
         default_page_title = page.replace("-", " ").title()
-        default_category_title = category.replace("-", " ").title()
+        default_category_title = get_category_title(category)
 
         context = {
             "content": markdown_html,

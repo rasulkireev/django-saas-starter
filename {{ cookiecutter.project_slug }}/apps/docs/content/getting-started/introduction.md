@@ -11,7 +11,7 @@ Welcome to {{ cookiecutter.project_name }}! This guide will help you get started
 
 {{ cookiecutter.project_name }} is built on a modern Django SaaS starter template that includes:
 
-- Python 3.14.5 and Django 6.0.6+
+- Python 3.14.5 and Django 6.0.5+
 - Node.js 24.15.0 LTS for frontend builds
 - PostgreSQL 18 and Redis 8.6.3 for Docker-based development and deployment
 - User authentication and profile management

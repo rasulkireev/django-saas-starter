@@ -25,7 +25,11 @@
         <h1>Tech I Use</h1>
         <p>
           I run
-          <a href="https://www.rasulkireev.com/projects">multiple projects</a>
+          {% if cookiecutter.author_url %}
+          <a href="{{ cookiecutter.author_url }}">multiple projects</a>
+          {% else %}
+          multiple projects
+          {% endif %}
           at the same time and using reliable and simple tech is the key to running everything smoothly. Here's what I use:
         </p>
         <ul>
@@ -33,7 +37,7 @@
             <li><strong><a href="https://hetzner.cloud/?ref=Ju1ttKSG0Fn7" target="_blank" rel="noopener noreferrer">Hetzner</a>:</strong> Our cloud infrastructure provider, hosting our servers and services.</li>
             <li><strong><a href="https://buttondown.email/refer/rasulkireev" target="_blank" rel="noopener noreferrer">Buttondown</a>:</strong> for the newsletter.</li>
             <li><strong><a href="https://www.python.org/" target="_blank" rel="noopener noreferrer">Python 3.14.5</a>:</strong> The backend runtime.</li>
-            <li><strong><a href="https://www.djangoproject.com/" target="_blank" rel="noopener noreferrer">Django 6.0.6</a>:</strong> Our primary web framework, providing a robust foundation for our backend.</li>
+            <li><strong><a href="https://www.djangoproject.com/" target="_blank" rel="noopener noreferrer">Django 6.0.5</a>:</strong> Our primary web framework, providing a robust foundation for our backend.</li>
             <li><strong><a href="https://django-q2.readthedocs.io/" target="_blank" rel="noopener noreferrer">Django-Q2</a>:</strong> A task queue and scheduler for Django, helping us manage background tasks efficiently.</li>
             <li><strong><a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer">Node.js 24.15.0 LTS</a>:</strong> The frontend build runtime.</li>
             <li><strong><a href="https://caprover.com/" target="_blank" rel="noopener noreferrer">CapRover</a>:</strong> Our deployment and server management tool, simplifying our DevOps processes.</li>

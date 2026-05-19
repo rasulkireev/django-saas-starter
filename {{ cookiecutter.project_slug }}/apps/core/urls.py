@@ -3,12 +3,16 @@ from django.urls import path
 from apps.core import views
 
 urlpatterns = [
+    {% if cookiecutter.use_mcp == 'y' -%}
+    path("SKILL.md", views.skill_markdown, name="agent_skill_markdown"),
+    {% endif %}
     # App pages
     path("home", views.HomeView.as_view(), name="home"),
     path("settings", views.UserSettingsView.as_view(), name="settings"),
     path("admin-panel", views.AdminPanelView.as_view(), name="admin_panel"),
     # Utils
     path("resend-confirmation/", views.resend_confirmation_email, name="resend_confirmation"),
+    path("delete-account/", views.delete_account, name="delete_account"),
     {% if cookiecutter.use_stripe == 'y' -%}
     # Payments
     path("stripe-webhook/", views.stripe_webhook, name="stripe_webhook"),
