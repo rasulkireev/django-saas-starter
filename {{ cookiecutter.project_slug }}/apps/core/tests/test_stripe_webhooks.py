@@ -1,13 +1,13 @@
 import pytest
 
-from core.choices import ProfileStates
-from core.models import Profile
-from core.stripe_webhooks import (
+from apps.core.choices import ProfileStates
+from apps.core.models import Profile
+from apps.core.stripe_webhooks import (
     handle_created_subscription,
     handle_deleted_subscription,
     handle_updated_subscription,
 )
-from core.tests.test_helpers import build_subscription_event
+from apps.core.tests.test_helpers import build_subscription_event
 
 
 @pytest.mark.django_db

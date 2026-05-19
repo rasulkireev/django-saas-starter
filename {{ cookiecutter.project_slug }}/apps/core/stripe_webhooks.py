@@ -2,8 +2,8 @@ import stripe
 from django.conf import settings
 
 from {{ cookiecutter.project_slug }}.utils import get_{{ cookiecutter.project_slug }}_logger
-from core.choices import ProfileStates
-from core.models import Profile
+from apps.core.choices import ProfileStates
+from apps.core.models import Profile
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 

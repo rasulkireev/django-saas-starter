@@ -1,4 +1,4 @@
-FROM node:16 AS build
+FROM node:22 AS build
 
 WORKDIR /app
 COPY . .
@@ -14,13 +14,16 @@ ENV UV_PROJECT_ENVIRONMENT=/opt/venv
 ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml ./
 RUN pip install --no-cache-dir uv
-RUN uv sync --frozen --no-dev --no-install-project
+# NOTE: We intentionally don't require uv.lock here so freshly-generated projects build out of the box.
+# If you want fully reproducible builds, generate and commit a uv.lock in your rendered project, then add --frozen.
+RUN uv sync --no-dev --no-install-project
 
 COPY . .
+RUN chmod +x deployment/entrypoint.sh
 COPY --from=build /app/frontend/build/ ./frontend/build/
 
 EXPOSE 80
 
-CMD ["deployment/entrypoint.sh", "-w"]
+CMD ["sh", "deployment/entrypoint.sh", "-w"]

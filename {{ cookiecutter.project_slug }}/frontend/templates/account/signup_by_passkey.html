@@ -1,0 +1,63 @@
+{{ '{% extends "base_landing.html" %}' }}
+{{ "{% load widget_tweaks %}" }}
+
+{{ "{% block content %}" }}
+<div class="flex justify-center items-center px-4 py-12 my-4 sm:px-6 lg:px-8">
+  <div class="space-y-8 w-full max-w-md">
+      <div>
+          <h2 class="mt-6 text-3xl font-extrabold text-center text-gray-900 dark:text-gray-100">
+              Create your account with a passkey
+          </h2>
+          <p class="mt-2 text-sm text-center text-gray-600 dark:text-gray-300">
+            Or
+            <a href="{% raw %}{% url 'account_login' %}{%- endraw %}" class="font-medium text-{{cookiecutter.project_main_color}}-600 hover:text-{{cookiecutter.project_main_color}}-500">
+                login if you have one already.
+            </a>
+          </p>
+      </div>
+      <form class="mt-8 space-y-6" id="signup_form" method="post" action="{% raw %}{% url 'account_signup_by_passkey' %}{%- endraw %}">
+        {{ "{% csrf_token %}" }}
+
+        {{ "{{ form.non_field_errors | safe }}" }}
+        <div class="-space-y-px rounded-md shadow-sm">
+          {{ "{% if form.username %}" }}
+          <div>
+            {{ "{{ form.username.errors | safe }}" }}
+            <label for="username" class="sr-only">Username</label>
+            {% raw %}{% render_field form.username placeholder="Username" id="username" name="username" type="text" autocomplete="username" required=True class="block relative px-3 py-2 w-full placeholder-gray-500 text-gray-900 bg-white dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-400 rounded-none rounded-t-md border border-gray-300 dark:border-gray-700 appearance-none focus:outline-none focus:ring-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:border-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:z-10 sm:text-sm" %}{%- endraw %}
+          </div>
+          {{ "{% endif %}" }}
+
+          {{ "{% if form.email %}" }}
+          <div>
+            {{ "{{ form.email.errors | safe }}" }}
+            <label for="email" class="sr-only">Email</label>
+            {{ "{% if form.username %}" }}
+            {% raw %}{% render_field form.email id="email" name="email" placeholder="Email" type="email" autocomplete="email" required="True" class="block relative px-3 py-2 w-full placeholder-gray-500 text-gray-900 bg-white dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-400 rounded-none rounded-b-md border border-gray-300 dark:border-gray-700 appearance-none focus:outline-none focus:ring-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:border-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:z-10 sm:text-sm" %}{%- endraw %}
+            {{ "{% else %}" }}
+            {% raw %}{% render_field form.email id="email" name="email" placeholder="Email" type="email" autocomplete="email" required="True" class="block relative px-3 py-2 w-full placeholder-gray-500 text-gray-900 bg-white dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-400 rounded-none rounded-md border border-gray-300 dark:border-gray-700 appearance-none focus:outline-none focus:ring-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:border-{%- endraw %}{{cookiecutter.project_main_color}}{% raw %}-500 focus:z-10 sm:text-sm" %}{%- endraw %}
+            {{ "{% endif %}" }}
+          </div>
+          {{ "{% endif %}" }}
+        </div>
+
+        {{ "{% if redirect_field_value %}" }}
+        <input type="hidden" name="{% raw %}{{ redirect_field_name }}{%- endraw %}" value="{% raw %}{{ redirect_field_value }}{%- endraw %}" />
+        {{ "{% endif %}" }}
+
+        <div>
+            <button type="submit"
+                    class="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-{{cookiecutter.project_main_color}}-600 border border-transparent border-solid rounded-md group hover:bg-{{cookiecutter.project_main_color}}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-{{cookiecutter.project_main_color}}-500">
+                Continue with passkey
+            </button>
+        </div>
+      </form>
+
+      <div>
+        <a href="{% raw %}{% url 'account_signup' %}{%- endraw %}" class="flex justify-center px-4 py-2 w-full text-sm font-medium text-gray-900 bg-white rounded-md border border-gray-300 border-solid hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-{{cookiecutter.project_main_color}}-500 dark:text-gray-100 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800">
+          Use password signup instead
+        </a>
+      </div>
+  </div>
+</div>
+{{ '{% endblock content %}' }}

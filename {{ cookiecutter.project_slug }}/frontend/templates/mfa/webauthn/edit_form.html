@@ -1,0 +1,24 @@
+{% raw %}
+{% extends "mfa/webauthn/base.html" %}
+{% load widget_tweaks %}
+
+{% block mfa_content %}
+  <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Rename passkey</h1>
+  <p class="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">Give this passkey a name you will recognize later.</p>
+
+  <form class="mt-8 space-y-6" method="post" action="{% url 'mfa_edit_webauthn' pk=object.pk %}">
+    {% csrf_token %}
+    {{ form.non_field_errors|safe }}
+    <div>
+      {{ form.name.errors|safe }}
+      <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-900 dark:text-gray-100">Passkey name</label>
+      {% render_field form.name class="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 shadow-sm focus:border-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-500 focus:outline-none focus:ring-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-500 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 sm:text-sm" %}
+    </div>
+    <div class="flex flex-col gap-3 sm:flex-row">
+      <button type="submit" class="inline-flex justify-center rounded-md bg-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-700 focus:outline-none focus:ring-2 focus:ring-{% endraw %}{{ cookiecutter.project_main_color }}{% raw %}-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">Save</button>
+      <a href="{% url 'mfa_list_webauthn' %}" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-800">Cancel</a>
+    </div>
+  </form>
+{% endblock mfa_content %}
+
+{% endraw %}

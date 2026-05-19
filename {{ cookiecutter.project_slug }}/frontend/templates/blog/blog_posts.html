@@ -61,9 +61,8 @@
     "url": "https://{% raw %}{{ request.get_host }}{% endraw %}{% raw %}{% url 'blog_posts' %}{% endraw %}",
     "author": {
       "@type": "Person",
-      "givenName": "Rasul",
-      "familyName": "Kireev",
-      "url": "https://rasulkireev.com/"
+      "name": "{{ cookiecutter.author_name }}"{% if cookiecutter.author_url %},
+      "url": "{{ cookiecutter.author_url }}"{% endif %}
     }
   }
   </script>

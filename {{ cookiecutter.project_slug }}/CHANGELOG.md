@@ -15,4 +15,10 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 
 
 ## [Unreleased]
-...
+
+### Changed
+- Sentry setup now includes release metadata, configurable tracing/profiling/log settings, logging breadcrumbs/events, and the `before_send` hook by default.
+
+### Added
+- `ALLOW_SIGNUPS` environment flag (default `True`) to pause new email/social registrations while keeping existing user logins available.
+- Superuser-only admin blog API for creating, listing, reading, updating, patching, deleting, reviewing, and publishing blog posts when the blog app is generated.

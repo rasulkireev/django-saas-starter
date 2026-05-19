@@ -18,9 +18,9 @@ import structlog
 import logging
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
 from structlog_sentry import SentryProcessor
+from {{ cookiecutter.project_slug }}.sentry_utils import CustomLoggingIntegration, before_send
 {% endif %}
 {% if cookiecutter.use_logfire == 'y' -%}
 import logfire
@@ -51,6 +51,13 @@ if LOGFIRE_TOKEN:
 
 {% if cookiecutter.use_sentry == 'y' -%}
 SENTRY_DSN = env("SENTRY_DSN", default="")
+SENTRY_RELEASE = env("SENTRY_RELEASE", default="")
+SENTRY_TRACES_SAMPLE_RATE = env.float("SENTRY_TRACES_SAMPLE_RATE", default=1.0)
+SENTRY_PROFILE_SESSION_SAMPLE_RATE = env.float("SENTRY_PROFILE_SESSION_SAMPLE_RATE", default=1.0)
+SENTRY_ENABLE_LOGS = env.bool("SENTRY_ENABLE_LOGS", default=True)
+SENTRY_SEND_DEFAULT_PII = env.bool("SENTRY_SEND_DEFAULT_PII", default=False)
+SENTRY_INCLUDE_LOCAL_VARIABLES = env.bool("SENTRY_INCLUDE_LOCAL_VARIABLES", default=False)
+SENTRY_MAX_BREADCRUMBS = env.int("SENTRY_MAX_BREADCRUMBS", default=100)
 {% endif %}
 
 # Quick-start development settings - unsuitable for production
@@ -63,14 +70,25 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = env('DEBUG')
 
 SITE_URL = env("SITE_URL")
+SITE_HOST = SITE_URL.replace("http://", "").replace("https://", "").split("/")[0].split(":")[0]
 
-# Remove the port from the SITE_URL and the https prefix (mostly for dev)
-ALLOWED_HOSTS = [SITE_URL.replace("http://", "").replace("https://", "").split(":")[0]]
-if DEBUG:
-    # This is for local webhook receiving
-    ALLOWED_HOSTS.append("backend")
-
+# Keep production locked to the configured site hostname.
+ALLOWED_HOSTS = [SITE_HOST]
 CSRF_TRUSTED_ORIGINS = [SITE_URL]
+
+if DEBUG:
+    # Local integration work often runs through ephemeral tunnel hostnames.
+    ALLOWED_HOSTS = ["*"]
+    CSRF_TRUSTED_ORIGINS = [
+        SITE_URL,
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "http://backend:8000",
+        "https://*.ngrok-free.app",
+        "https://*.ngrok.app",
+        "https://*.trycloudflare.com",
+        "https://*.loca.lt",
+    ]
 
 DEFAULT_APPS = [
     "django.contrib.admin",
@@ -91,6 +109,7 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.github",
+    "allauth.mfa",
     "django_q",
     "django_extensions",
     {% if cookiecutter.use_mjml == 'y' -%}
@@ -102,6 +121,9 @@ THIRD_PARTY_APPS = [
 CUSTOM_APPS = [
     "apps.core.CoreConfig",
     "apps.api.ApiConfig",
+    {% if cookiecutter.use_mcp == 'y' -%}
+    "apps.mcp_server.apps.McpServerConfig",
+    {% endif %}
     "apps.pages.PagesConfig",
     {% if cookiecutter.generate_blog == 'y' -%}
     "apps.blog.BlogConfig",
@@ -142,6 +164,9 @@ TEMPLATES = [
                 "apps.core.context_processors.current_state",
                 {% if cookiecutter.use_posthog == 'y' -%}
                 "apps.core.context_processors.posthog_api_key",
+                {% endif %}
+                {% if cookiecutter.use_chatwoot == 'y' -%}
+                "apps.core.context_processors.chatwoot_config",
                 {% endif %}
                 {% if cookiecutter.use_mjml == 'y' -%}
                 "apps.core.context_processors.mjml_url",
@@ -278,13 +303,15 @@ LOGIN_REDIRECT_URL = "home"
 ACCOUNT_LOGOUT_REDIRECT_URL = "landing"
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = "username"
-ACCOUNT_LOGIN_METHODS = {'username'}
-ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
-ACCOUNT_LOGIN_METHODS = {"username"}
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*"]
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
 ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = False
+ALLOW_SIGNUPS = env.bool("ALLOW_SIGNUPS", default=True)
 ACCOUNT_FORMS = {
     "signup": "apps.core.forms.CustomSignUpForm",
     "login": "apps.core.forms.CustomLoginForm",
@@ -292,6 +319,13 @@ ACCOUNT_FORMS = {
 ACCOUNT_ADAPTER = "{{cookiecutter.project_slug}}.adapters.CustomAccountAdapter"
 if ENVIRONMENT != "dev":
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+
+# Passkey (WebAuthn) auth support via django-allauth MFA.
+MFA_SUPPORTED_TYPES = ["webauthn"]
+MFA_PASSKEY_LOGIN_ENABLED = True
+MFA_PASSKEY_SIGNUP_ENABLED = False
+# Local dev uses http://localhost, so allow insecure origin only in debug.
+MFA_WEBAUTHN_ALLOW_INSECURE_ORIGIN = DEBUG
 
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_PROVIDERS = {}
@@ -312,10 +346,16 @@ if GITHUB_CLIENT_ID != "":
 MAILGUN_API_KEY = env("MAILGUN_API_KEY", default="")
 ANYMAIL = {
     "MAILGUN_API_KEY": MAILGUN_API_KEY,
-    "MAILGUN_SENDER_DOMAIN": "mg.{{ cookiecutter.project_slug }}.app",
+    "MAILGUN_SENDER_DOMAIN": env("MAILGUN_SENDER_DOMAIN", default="mg.{{ cookiecutter.project_slug }}.app"),
 }
-DEFAULT_FROM_EMAIL = "Rasul from {{ cookiecutter.project_name }} <hello@{{ cookiecutter.project_slug }}.app>"
-SERVER_EMAIL = "{{ cookiecutter.project_name }} Errors <error@{{ cookiecutter.project_slug }}.app>"
+DEFAULT_FROM_EMAIL = env(
+    "DEFAULT_FROM_EMAIL",
+    default="{{ cookiecutter.author_name }} from {{ cookiecutter.project_name }} <hello@{{ cookiecutter.project_slug }}.app>",
+)
+SERVER_EMAIL = env(
+    "SERVER_EMAIL",
+    default="{{ cookiecutter.project_name }} Errors <error@{{ cookiecutter.project_slug }}.app>",
+)
 
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -329,6 +369,8 @@ else:
         EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     else:
         EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+
+EMAIL_DELIVERY_RETRY_BACKOFF_SECONDS = (0.0, 1.0, 3.0)
 
 REDIS_HOST = env("REDIS_HOST", default="localhost")
 REDIS_PORT = env("REDIS_PORT", default="6379")
@@ -494,24 +536,32 @@ if SENTRY_DSN and ENVIRONMENT == "prod":
         debug=DEBUG,
         dsn=SENTRY_DSN,
         environment=ENVIRONMENT,
-        send_default_pii=False,
-        traces_sample_rate=1,
-        profile_session_sample_rate=1,
+        release=SENTRY_RELEASE or None,
+        send_default_pii=SENTRY_SEND_DEFAULT_PII,
+        traces_sample_rate=SENTRY_TRACES_SAMPLE_RATE,
+        profile_session_sample_rate=SENTRY_PROFILE_SESSION_SAMPLE_RATE,
         profile_lifecycle="trace",
+        enable_logs=SENTRY_ENABLE_LOGS,
+        max_breadcrumbs=SENTRY_MAX_BREADCRUMBS,
         integrations=[
             DjangoIntegration(),
             RedisIntegration(),
+            CustomLoggingIntegration(level=logging.INFO, event_level=logging.ERROR),
         ],
-        disabled_integrations=[
-            LoggingIntegration(),
-        ],
+        before_send=before_send,
         attach_stacktrace=True,
-        include_local_variables=True,
+        include_local_variables=SENTRY_INCLUDE_LOCAL_VARIABLES,
     )
 {% endif %}
 
 {% if cookiecutter.use_posthog == 'y' -%}
 POSTHOG_API_KEY = env("POSTHOG_API_KEY", default="")
+{% endif %}
+
+{% if cookiecutter.use_chatwoot == 'y' -%}
+CHATWOOT_BASE_URL = env("CHATWOOT_BASE_URL", default="")
+CHATWOOT_WEBSITE_TOKEN = env("CHATWOOT_WEBSITE_TOKEN", default="")
+CHATWOOT_HMAC_SECRET = env("CHATWOOT_HMAC_SECRET", default="")
 {% endif %}
 
 {% if cookiecutter.use_buttondown == 'y' -%}
@@ -543,7 +593,7 @@ MJML_HTTPSERVERS = [
 
 SHELL_PLUS_IMPORTS = [
     "from django_q.tasks import async_task",
-    "from core.tasks import *",
+    "from apps.core.tasks import *",
 ]
 
 

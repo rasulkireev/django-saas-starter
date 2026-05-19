@@ -14,12 +14,86 @@
 
 - Add info about your project here
 
+### Theme and design system
+
+This template includes a dark/light mode toggle in the navbar. The preference is stored in `localStorage` and applied early to avoid a flash of incorrect theme.
+
+This project also includes a root-level `DESIGN.md` file based on the public Google Labs Code [`DESIGN.md`](https://github.com/google-labs-code/design.md) alpha format. It gives humans and AI coding agents a shared, tool-neutral design source of truth: colors, typography, spacing, radii, component guidance, and practical do/don't rules.
+
+Treat the generated `DESIGN.md` as a generic SaaS baseline. Update it when your brand or UI direction changes, then keep templates/components aligned with it. You can validate it with:
+
+```bash
+npx @google/design.md lint DESIGN.md
+```
+
+### Project structure: `/apps`
+
+This project keeps Django apps inside the `/apps` directory. This is both for human clarity and to help AI/code assistants put code in the right place.
+
+- `apps/core`: main app functionality (shared domain logic, base models, services, etc.)
+- `apps/docs`: user-facing documentation
+- `apps/api`: all API needs (Django Ninja routers, schemas, API-specific logic)
+{% if cookiecutter.use_mcp == 'y' -%}
+- `apps/mcp_server`: hosted MCP tools for agent integrations
+{% endif %}
+- `apps/pages`: landing/marketing pages (pricing, TOS, privacy policy, etc.)
+- `apps/blog`: user-facing blog
+
+
+### Agent API endpoint
+
+All generated projects include `GET /api/user`, which returns safe account/profile details for the authenticated API key. This is intentionally small but useful as the first "agent can authenticate and know who it is acting for" endpoint.
+
+{% if cookiecutter.use_mcp == 'y' -%}
+### Hosted MCP server
+
+This project includes a hosted MCP server at `/mcp/`, plus a ready-to-copy agent skill at `/SKILL.md`. The first tool is `get_user_info`, backed by the same serializer as `GET /api/user`.
+
+Supported MCP auth methods:
+
+- `Authorization: Bearer <api_key>`
+- `X-API-Key: <api_key>`
+- `?api_key=<api_key>` on the MCP URL
+- `api_key` tool argument
+
+The REST user endpoint supports the Bearer token, `X-API-Key`, and `?api_key=` methods.
+
+Give an agent this starter prompt:
+
+```text
+Add {{ cookiecutter.project_name }} MCP support to this repo.
+
+Use MCP URL: <production-url>/mcp/
+Use the user's {{ cookiecutter.project_name }} API key from an environment variable. Do not hardcode, log, or commit the key.
+First verify the connection by calling the get_user_info MCP tool or GET <production-url>/api/user with the API key, then add the smallest useful integration for this codebase.
+Document how future agents should configure the MCP server locally.
+```
+{% endif %}
+
+{% if cookiecutter.generate_blog == 'y' -%}
+### Blog management API endpoints (admin)
+
+When blog generation is enabled, the template includes a ready-to-extend blog post management API in `apps/api/views.py`:
+
+- `POST /api/blog-posts/submit`
+- `GET /api/internal/blog-posts`
+- `GET /api/internal/blog-posts/{blog_post_id}`
+- `PUT /api/internal/blog-posts/{blog_post_id}`
+- `PATCH /api/internal/blog-posts/{blog_post_id}`
+- `DELETE /api/internal/blog-posts/{blog_post_id}`
+- `POST /api/internal/blog-posts/{blog_post_id}/review`
+- `POST /api/internal/blog-posts/{blog_post_id}/publish`
+
+These endpoints use superuser API auth by default and are intended as a starter baseline you can adapt for your product-specific content workflows.
+{% endif %}
+
 ***
 
 ## TOC
 
 - [Overview](#overview)
 - [TOC](#toc)
+- [Theme and design system](#theme-and-design-system)
 - [Deployment](#deployment)
   - [Render](#render)
   - [Docker Compose](#docker-compose)
@@ -73,7 +147,11 @@ How you are going to expose the backend container is up to you. I usually do it 
 Not recommended due to not being too safe for production and not being tested by me.
 
 If you are not into Docker or Render and just wanto to run this via regular commands you will need to have 5 processes running:
+{% if cookiecutter.use_mcp == 'y' -%}
+- `python manage.py collectstatic --noinput && python manage.py migrate && gunicorn ${PROJECT_NAME}.asgi:application --bind 0.0.0.0:80 --workers 3 --worker-class uvicorn_worker.UvicornWorker`
+{% else -%}
 - `python manage.py collectstatic --noinput && python manage.py migrate && gunicorn ${PROJECT_NAME}.wsgi:application --bind 0.0.0.0:80 --workers 3 --threads 2`
+{% endif %}
 - `python manage.py qcluster`
 - `npm install && npm run start`
 - `postgres`
@@ -110,8 +188,42 @@ You'd still need to make sure .env has correct values.
 1. Update the name of the `.env.example` to `.env` and update relevant variables.
 2. Run `uv sync`
 3. Run `uv run python manage.py makemigrations`
+   - Important: run this **without specifying app names** so Django detects changes across **all apps**.
+   - Do this before feature work and before first local run.
 4. Run `make serve`
+   - The frontend dev container now uses Node 24 and the backend waits for `frontend/build/manifest.json` before booting, so the first page load should not race the asset pipeline.
 5. Run `make restart-worker` just in case, it sometimes has troubles connecting to REDIS on first deployment.
+
+{% if cookiecutter.use_chatwoot == 'y' -%}
+## Chatwoot Support Chat
+
+This project includes optional Chatwoot support chat. It is disabled until both runtime env vars are set on the Django web app:
+
+```env
+CHATWOOT_BASE_URL=
+CHATWOOT_WEBSITE_TOKEN=
+```
+
+For self-hosted Chatwoot, use your own base URL, for example `https://chatwoot.yourdomain.com`. For Chatwoot Cloud, use the base URL from Chatwoot's snippet, commonly `https://app.chatwoot.com`.
+
+To get the token: in Chatwoot go to **Settings → Inboxes → Add Inbox → Website**, finish setup, then copy `websiteToken` from the install snippet.
+
+Recommended for authenticated apps: enable **Identity Validation** for that Website inbox and set:
+
+```env
+CHATWOOT_HMAC_SECRET=
+```
+
+Gotchas: add these env vars to the Django web app, not only workers; restart/redeploy after env changes; paste the full token, not a shortened `abc…xyz` display value. See `apps/docs/content/deployment/chatwoot.md` for the full checklist.
+
+{% endif -%}
+### CI (optional)
+
+If you generated the project with `use_ci = y`, it includes a GitHub Actions workflow at `.github/workflows/ci.yml` that runs on pull requests.
+
+It boots Postgres + Redis, runs `python manage.py makemigrations --check --dry-run`, then `python manage.py check`, and then runs `pytest`.
+
+If you don’t want CI, set `use_ci = n` during Cookiecutter generation and the workflow will be removed.
 
 
 {% if cookiecutter.use_stripe == 'y' -%}

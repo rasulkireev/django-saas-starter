@@ -1,9 +1,13 @@
-from urllib.parse import urlencode
+from urllib.parse import urlsplit, urlunsplit, urlencode
 
 {% if cookiecutter.use_stripe == 'y' -%}
 import stripe
 {% endif %}
-from allauth.account.models import EmailAddress, EmailConfirmation
+from allauth.account.internal.flows.email_verification import (
+    send_verification_email_to_address,
+)
+from allauth.account.models import EmailAddress
+from allauth.mfa.models import Authenticator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.cache import cache
@@ -14,11 +18,13 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import logout
+from django.db import transaction
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, UpdateView
 
 {% if cookiecutter.use_stripe == 'y' -%}
-from core.stripe_webhooks import EVENT_HANDLERS
+from apps.core.stripe_webhooks import EVENT_HANDLERS
 {% endif %}
 
 from apps.core.forms import ProfileUpdateForm
@@ -32,6 +38,91 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 logger = get_{{ cookiecutter.project_slug }}_logger(__name__)
 
+
+def build_absolute_public_url(path: str) -> str:
+    """Build a public URL from SITE_URL and upgrade non-local HTTP origins to HTTPS."""
+    base_url = settings.SITE_URL.rstrip("/")
+    parsed = urlsplit(base_url)
+    hostname = parsed.hostname or ""
+    is_local = hostname in {"localhost", "127.0.0.1", "0.0.0.0", "::1"} or hostname.endswith(".localhost")
+
+    if parsed.scheme == "http" and not is_local:
+        parsed = parsed._replace(scheme="https")
+        base_url = urlunsplit(parsed).rstrip("/")
+
+    return f"{base_url}/{path.lstrip('/')}"
+
+
+{% if cookiecutter.use_mcp == 'y' -%}
+def build_agent_setup_prompt(request):
+    """Build the dashboard copy/paste prompt for connecting a coding agent."""
+    profile, _created = Profile.objects.get_or_create(user=request.user)
+    api_key = profile.key
+    project_name = "{{ cookiecutter.project_name }}"
+    env_var = "{{ cookiecutter.project_slug.upper() }}_API_KEY"
+    mcp_url = build_absolute_public_url("/mcp/")
+    api_url = build_absolute_public_url("/api/user")
+    skill_url = build_absolute_public_url("/SKILL.md")
+    return f"""Add {project_name} MCP support to this repo.
+
+Use MCP URL: {mcp_url}
+Use REST User API URL: {api_url}
+Use Agent Skill URL: {skill_url}
+Use this API key only as a local secret: {api_key}
+
+Store the key in environment variable {env_var}. Do not hardcode, log, print, or commit it.
+First verify the connection by calling the get_user_info MCP tool or GET {api_url} with the API key.
+Then add the smallest useful integration for this codebase and document how future agents should configure the MCP server locally.
+"""
+
+
+def skill_markdown(request):
+    """Return a copy/paste AgentSkill for this project's MCP server."""
+    mcp_url = build_absolute_public_url("/mcp/")
+    api_url = build_absolute_public_url("/api/user")
+    project_name = "{{ cookiecutter.project_name }}"
+    env_var = "{{ cookiecutter.project_slug.upper() }}_API_KEY"
+    body = f"""---
+name: {{ cookiecutter.project_slug }}-mcp
+description: Use the hosted {project_name} MCP server and account API from coding agents.
+---
+
+# {project_name} MCP
+
+Use this skill when an agent needs to inspect the current authenticated {project_name} account/profile or connect to the project's MCP server.
+
+## Endpoints
+
+- MCP URL: `{mcp_url}`
+- User API: `{api_url}`
+
+## Authentication
+
+Use the user's API key from the app settings page. Do not commit or print the key.
+
+Supported MCP authentication methods:
+
+- `Authorization: Bearer <api_key>`
+- `X-API-Key: <api_key>`
+- `?api_key=<api_key>` on the MCP URL
+- `api_key` tool argument when a client cannot send headers
+
+The REST user endpoint supports the Bearer token, `X-API-Key`, and `?api_key=` methods.
+
+## Starter prompt for a coding agent
+
+```text
+Add {project_name} MCP support to this repo.
+
+Use MCP URL: {mcp_url}
+Use the user's {project_name} API key from environment variable {env_var}.
+Do not hardcode, log, or commit the key.
+First verify the connection by calling the get_user_info MCP tool or GET {api_url} with the API key, then add the smallest useful integration for this codebase.
+Document how future agents should configure the MCP server locally.
+```
+"""
+    return HttpResponse(body, content_type="text/markdown; charset=utf-8")
+{% endif %}
 
 class HomeView(LoginRequiredMixin, TemplateView):
     login_url = "account_login"
@@ -47,6 +138,11 @@ class HomeView(LoginRequiredMixin, TemplateView):
             context["show_confetti"] = True
         elif payment_status == "failed":
             messages.error(self.request, "Something went wrong with the payment.")
+        {% endif %}
+
+        {% if cookiecutter.use_mcp == 'y' -%}
+        context["agent_setup_prompt"] = build_agent_setup_prompt(self.request)
+        context["agent_instructions_url"] = build_absolute_public_url("/SKILL.md")
         {% endif %}
 
         return context
@@ -67,9 +163,13 @@ class UserSettingsView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
 
-        email_address = EmailAddress.objects.get_for_user(user, user.email)
-        context["email_verified"] = email_address.verified
+        email_address = EmailAddress.objects.filter(user=user, email__iexact=user.email).first()
+        context["email_verified"] = bool(email_address and email_address.verified)
         context["resend_confirmation_url"] = reverse("resend_confirmation")
+        context["passkey_count"] = Authenticator.objects.filter(
+            user=user,
+            type=Authenticator.Type.WEBAUTHN,
+        ).count()
         {% if cookiecutter.use_stripe == 'y' -%}
         context["has_subscription"] = user.profile.has_active_subscription
         {% endif %}
@@ -79,11 +179,12 @@ class UserSettingsView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return context
 
 @login_required
+@require_POST
 def resend_confirmation_email(request):
     user = request.user
 
     try:
-        email_address = EmailAddress.objects.get_for_user(user, user.email)
+        email_address = EmailAddress.objects.filter(user=user, email__iexact=user.email).first()
 
         if not email_address:
             messages.error(request, "No email address found for your account.")
@@ -103,11 +204,13 @@ def resend_confirmation_email(request):
             )
             return redirect("settings")
 
-        # Create or get existing email confirmation
-        email_confirmation = EmailConfirmation.create(email_address)
-        email_confirmation.send(request, signup=False)
-
-        messages.success(request, "Confirmation email has been sent. Please check your inbox.")
+        sent = send_verification_email_to_address(request, email_address, signup=False)
+        if not sent:
+            messages.error(
+                request,
+                "Please wait before requesting another confirmation email.",
+            )
+            return redirect("settings")
         logger.info(
             "[Resend Confirmation] Email sent successfully",
             user_id=user.id,
@@ -125,6 +228,32 @@ def resend_confirmation_email(request):
         )
 
     return redirect("settings")
+
+
+@login_required
+@require_POST
+def delete_account(request):
+    """Permanently delete the current user and all related data.
+
+    Safety: requires a confirmation text value.
+    """
+
+    confirmation = request.POST.get("confirmation", "")
+    if confirmation != "DELETE":
+        messages.error(request, "Type DELETE to confirm account deletion.")
+        return redirect("settings")
+
+    user_id = request.user.id
+
+    # Ensure we log the user out and remove data in a single flow.
+    with transaction.atomic():
+        user = request.user
+        logout(request)
+        user.delete()
+
+    logger.info("User account deleted", user_id=user_id)
+    return redirect(f"{reverse('landing')}?account_deleted=1")
+
 
 {% if cookiecutter.use_stripe == 'y' -%}
 @login_required
