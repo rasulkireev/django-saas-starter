@@ -20,7 +20,7 @@ jobs:
 
     services:
       postgres:
-        image: rasulkireev/custom-postgres:18
+        image: postgres:18
         env:
           POSTGRES_DB: ${{ matrix.variant == 'default' && 'smoke_default' || 'smoke_disabled' }}
           POSTGRES_USER: ${{ matrix.variant == 'default' && 'smoke_default' || 'smoke_disabled' }}
@@ -36,6 +36,11 @@ jobs:
         image: redis:7-alpine
         ports:
           - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
 
     steps:
       - name: Check out repository
@@ -53,6 +58,12 @@ jobs:
 
       - name: Install smoke-test tools
         run: python -m pip install --upgrade pip cookiecutter uv
+
+      - name: Install pgvector in Postgres service
+        if: matrix.variant == 'default'
+        run: |
+          docker exec -u root "${{ job.services.postgres.id }}" bash -lc \
+            "apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends postgresql-18-pgvector && rm -rf /var/lib/apt/lists/*"
 
       - name: Run template smoke test
         run: ./.github/scripts/template-smoke-test.sh "${{ matrix.variant }}"
