@@ -12,6 +12,7 @@ urlpatterns = [
     path("app/", TemplateView.as_view(), name="home"),
     path("blog/", TemplateView.as_view(), name="blog_posts"),
     path("docs/", TemplateView.as_view(), name="docs_home"),
+    path("pricing/", TemplateView.as_view(), name="pricing"),
     path("privacy/", TemplateView.as_view(), name="privacy_policy"),
     path("terms/", TemplateView.as_view(), name="terms_of_service"),
 ]

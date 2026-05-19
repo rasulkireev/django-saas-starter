@@ -1,0 +1,15 @@
+.git
+.github
+.venv
+__pycache__
+*.py[cod]
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.cache
+.env
+node_modules
+npm-debug.log*
+frontend/build
+media
+static

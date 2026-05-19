@@ -103,64 +103,6 @@ def remove_ci_workflow():
         print("Removed CI workflow")
 
 
-def generate_initial_migrations(uv_command):
-    """Generate fresh initial migrations after cookiecutter option cleanup."""
-    if os.environ.get("SKIP_POST_GEN_MIGRATIONS") == "1":
-        print("Skipping migration generation because SKIP_POST_GEN_MIGRATIONS=1")
-        return
-
-    if uv_command is None:
-        print(
-            f"uv {UV_VERSION} not available; "
-            "run `uv run python manage.py makemigrations` after generation."
-        )
-        return
-
-    env = os.environ.copy()
-    env.setdefault("ENVIRONMENT", "dev")
-    env.setdefault("SECRET_KEY", "post-generation-migrations")
-    env.setdefault("DEBUG", "True")
-    env.setdefault("SITE_URL", "http://localhost:8000")
-    env.setdefault("POSTGRES_DB", "postgres")
-    env.setdefault("POSTGRES_USER", "postgres")
-    env.setdefault("POSTGRES_PASSWORD", "postgres")
-    env.setdefault("POSTGRES_HOST", "localhost")
-    env.setdefault("POSTGRES_PORT", "5432")
-
-    settings_module_path = Path("{{ cookiecutter.project_slug }}") / "_post_gen_migration_settings.py"
-    settings_module_path.write_text(
-        "from .settings import *  # noqa\n"
-        "DATABASES = {\n"
-        "    'default': {\n"
-        "        'ENGINE': 'django.db.backends.sqlite3',\n"
-        "        'NAME': BASE_DIR / '.post_gen_migrations.sqlite3',\n"
-        "    }\n"
-        "}\n",
-        encoding="utf-8",
-    )
-
-    print("Generating fresh initial migrations...")
-    try:
-        subprocess.run(
-            [
-                *uv_command,
-                "run",
-                "--locked",
-                "python",
-                "manage.py",
-                "makemigrations",
-                "--settings",
-                "{{ cookiecutter.project_slug }}._post_gen_migration_settings",
-                "--noinput",
-            ],
-            check=True,
-            env=env,
-        )
-    finally:
-        settings_module_path.unlink(missing_ok=True)
-        Path(".post_gen_migrations.sqlite3").unlink(missing_ok=True)
-
-
 def uv_version_tuple(version):
     """Parse uv's numeric version prefix into a comparable tuple."""
     match = re.match(r"^(\d+)\.(\d+)\.(\d+)", version)
@@ -327,11 +269,7 @@ def main():
 
     try:
         if uv_command is not None:
-            lock_generated = generate_uv_lock(uv_command)
-            if lock_generated:
-                generate_initial_migrations(uv_command)
-            else:
-                print("Skipping migration generation because uv.lock was not generated.")
+            generate_uv_lock(uv_command)
     finally:
         if uv_temp_dir is not None:
             uv_temp_dir.cleanup()

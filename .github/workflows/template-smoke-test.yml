@@ -1,0 +1,69 @@
+name: Template Smoke Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  smoke-test:
+    name: ${{ matrix.variant }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        variant:
+          - default
+          - all-disabled
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: ${{ matrix.variant == 'default' && 'smoke_default' || 'smoke_disabled' }}
+          POSTGRES_USER: ${{ matrix.variant == 'default' && 'smoke_default' || 'smoke_disabled' }}
+          POSTGRES_PASSWORD: ${{ matrix.variant == 'default' && 'smoke_default' || 'smoke_disabled' }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ${{ matrix.variant == 'default' && 'smoke_default' || 'smoke_disabled' }}"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.15.0"
+
+      - name: Install smoke-test tools
+        run: python -m pip install --upgrade pip cookiecutter uv
+
+      - name: Install pgvector in Postgres service
+        if: matrix.variant == 'default'
+        run: |
+          docker exec -u root "${{ job.services.postgres.id }}" bash -lc \
+            "apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends postgresql-18-pgvector && rm -rf /var/lib/apt/lists/*"
+
+      - name: Run template smoke test
+        run: ./.github/scripts/template-smoke-test.sh "${{ matrix.variant }}"
