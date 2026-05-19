@@ -20,7 +20,7 @@
   "author": "{{ cookiecutter.author_name }}",
   "license": "MIT",
   "engines": {
-    "node": ">=24.15.0 <25"
+    "node": ">=24.15.0"
   },
   "bugs": {
     "url": "{{ cookiecutter.repo_url }}/issues"
