@@ -2,7 +2,7 @@
 
 services:
   db:
-    image: rasulkireev/custom-postgres:17
+    image: rasulkireev/custom-postgres:18
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -14,7 +14,7 @@ services:
       - .env
 
   redis:
-    image: redis:7-alpine
+    image: redis:8.6.3-alpine
     command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
       - redis_data:/data

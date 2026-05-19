@@ -15,6 +15,8 @@ Refer to the [Environment Variables](/docs/deployment/environment-variables/) gu
 
 All other variables beyond the required ones are optional but may enhance functionality.
 
+The Render blueprint pins Python to 3.14.5 and Node.js to 24.15.0 LTS so the hosted build uses the same runtime versions as local development and Docker deployment.
+
 **Note:** This should work out of the box with Render's free tier if you provide the required configuration. Here's what you need to know about the limitations:
 
 - **Worker Service Limitation**: The worker service is not a dedicated worker type (those are only available on paid plans). For the free tier, I had to use a web service through a small hack, but it works fine for most use cases.

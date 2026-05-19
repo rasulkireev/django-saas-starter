@@ -3,9 +3,9 @@ name = "{{ cookiecutter.project_slug }}"
 version = "0.1.0"
 description = "{{ cookiecutter.project_description }}"
 authors = [{ name = "{{ cookiecutter.author_name }}", email = "{{ cookiecutter.author_email }}" }]
-requires-python = ">=3.14,<4.0"
+requires-python = ">=3.14.5,<4.0"
 dependencies = [
-    "django>=6.0.2",
+    "django>=6.0.6",
     "django-allauth>=65.14.0",
     "django-anymail>=14.0",
     "django-environ>=0.12.0",

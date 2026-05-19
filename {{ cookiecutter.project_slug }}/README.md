@@ -20,6 +20,7 @@
 
 - [Overview](#overview)
 - [TOC](#toc)
+- [Runtime Versions](#runtime-versions)
 - [Deployment](#deployment)
   - [Render](#render)
   - [Docker Compose](#docker-compose)
@@ -29,6 +30,16 @@
 - [Stripe Setup](#stripe-setup)
   - [Configure Stripe](#configure-stripe)
   - [Test Webhooks Locally](#test-webhooks-locally)
+
+***
+
+## Runtime Versions
+
+- Python 3.14.5
+- Django 6.0.6 or newer
+- Node.js 24.15.0 LTS
+- PostgreSQL 18
+- Redis 8.6.3
 
 ***
 

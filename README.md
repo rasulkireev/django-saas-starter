@@ -11,8 +11,8 @@ Legend:
 - ❓ Optional
 
 ### Core
-- ✅ Django 5
-- ✅ Python 3.13
+- ✅ Django 6.0.6
+- ✅ Python 3.14.5
 - ✅ Environment variables via **django-environ**
 
 ### Auth
@@ -28,6 +28,7 @@ Legend:
 - ❓ **Buttondown** for newsletters
 
 ### Frontend
+- ✅ **Node.js 24.15.0 LTS** for frontend builds
 - ✅ **Webpack** pre-configured
 - ✅ **TailwindCSS** for styling
 - ✅ **StimulusJS** for interactivity via Webpack
@@ -39,6 +40,7 @@ Legend:
 ### Database & Storage
 - ✅ Any Django Supported db will work fine.
 - ✅ Custom **Postgres** 18 db pre-configured in env files and docker compose.
+- ✅ **Redis** 8.6.3 pre-configured in docker compose.
 - ✅ **pgvector** is installed both in Postgres and in the App
 - ✅ **pg_stat_statements** is pre-installed on postgres too.
 - ❓ Media storage with any **S3 compatible** service. Comes with **Minio** both locally and in prod.

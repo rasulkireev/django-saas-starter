@@ -7,6 +7,16 @@ author: {{ cookiecutter.author_name }}
 
 This guide covers all environment variables needed to configure {{ cookiecutter.project_name }}.
 
+## Runtime settings
+
+**PYTHON_VERSION**
+- Python runtime version for Render deployments
+- Default in `render.yaml`: `3.14.5`
+
+**NODE_VERSION**
+- Node.js runtime version for frontend builds on Render
+- Default in `render.yaml`: `24.15.0`
+
 ## Required variables
 
 These variables are essential for {{ cookiecutter.project_name }} to function:
