@@ -46,6 +46,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - npm lint command
 
 ### Changed
+- Align template runtimes on Python 3.14.5, Django 6.0.5, Node.js 24.15.0 LTS, PostgreSQL 18, and Redis 8.6.3.
 - Generated signup/login now defaults to email + password, non-blocking email-link verification, and passkey setup after registration instead of passkey signup.
 - Generated transactional email sender defaults can now be configured with `MAILGUN_SENDER_DOMAIN`, `DEFAULT_FROM_EMAIL`, and `SERVER_EMAIL` environment variables.
 - Generated deployment entrypoints now wait for the database, run commands with `exec`, and Dockerfiles explicitly make the entrypoint executable.
@@ -53,8 +54,8 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - Updated root test tooling and generated project Python dependency minimums to current PyPI releases.
 - Transactional email delivery in generated projects now retries transient failures, emits structured observability fields/counters, and avoids bubbling email send errors into user-facing 500s for confirmation + feedback flows.
 - Upgraded generated frontend stack from Tailwind CSS v3 to v4 using `@tailwindcss/postcss` and v4 CSS directives.
-- Updated generated deployment Dockerfiles to use Node 22 build stage (required for Tailwind v4 toolchain compatibility).
-- Root README now reflects Django 6 + Python 3.14
+- Updated generated deployment Dockerfiles to use Node 24.15.0 LTS build stage.
+- Root README now reflects Django 6.0.5 + Python 3.14.5
 - All landing pages are now in `pages` app
 - use simple text if mjml is not setup
 - updated dj-stripe and stripe versions

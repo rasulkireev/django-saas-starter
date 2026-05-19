@@ -113,7 +113,9 @@ envVarGroups:
   - name: app-env
     envVars:
       - key: PYTHON_VERSION
-        value: "3.11.6"
+        value: "3.14.5"
+      - key: NODE_VERSION
+        value: "24.15.0"
       - key: ENVIRONMENT
         value: prod
       - key: DEBUG

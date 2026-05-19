@@ -93,6 +93,7 @@ These endpoints use superuser API auth by default and are intended as a starter 
 
 - [Overview](#overview)
 - [TOC](#toc)
+- [Runtime Versions](#runtime-versions)
 - [Theme and design system](#theme-and-design-system)
 - [Deployment](#deployment)
   - [Render](#render)
@@ -103,6 +104,16 @@ These endpoints use superuser API auth by default and are intended as a starter 
 - [Stripe Setup](#stripe-setup)
   - [Configure Stripe](#configure-stripe)
   - [Test Webhooks Locally](#test-webhooks-locally)
+
+***
+
+## Runtime Versions
+
+- Python 3.14.5
+- Django 6.0.5 or newer
+- Node.js 24.15.0 LTS
+- PostgreSQL 18
+- Redis 8.6.3
 
 ***
 

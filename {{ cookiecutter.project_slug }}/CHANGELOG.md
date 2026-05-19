@@ -15,8 +15,8 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 
 
 ## [Unreleased]
-
 ### Changed
+- Align template runtimes on Python 3.14.5, Django 6.0.5, Node.js 24.15.0 LTS, PostgreSQL 18, and Redis 8.6.3.
 - Sentry setup now includes release metadata, configurable tracing/profiling/log settings, logging breadcrumbs/events, and the `before_send` hook by default.
 
 ### Added

@@ -20,6 +20,8 @@ Docker Compose provides a streamlined way to deploy {{ cookiecutter.project_name
 
 This approach works best if you have a VPS or dedicated server where you can run Docker.
 
+The production compose stack uses PostgreSQL 18, Redis 8.6.3, and application images built with Python 3.14.5 and Node.js 24.15.0 LTS.
+
 ## Prerequisites
 
 Before starting, make sure you have:

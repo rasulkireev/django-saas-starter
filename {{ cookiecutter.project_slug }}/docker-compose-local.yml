@@ -16,7 +16,7 @@ services:
       retries: 5
 
   redis:
-    image: redis:7-alpine
+    image: redis:8.6.3-alpine
     command: redis-server --requirepass {{ cookiecutter.project_slug }}
     ports:
       - "6379:6379"
@@ -62,7 +62,7 @@ services:
       - .env
 
   frontend:
-    image: node:24
+    image: node:24.15.0
     working_dir: /app
     command: sh -c "npm install && npm run start"
     volumes:
