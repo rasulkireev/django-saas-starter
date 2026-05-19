@@ -3,11 +3,11 @@ services:
     name: {{ cookiecutter.project_slug }}-web
     runtime: python
     buildCommand: |
-      pip install -r requirements.txt &&
-      npm ci &&
+      uv sync --locked --no-dev --no-install-project &&
+      npm install &&
       npm run build &&
-      python manage.py collectstatic --noinput
-    startCommand: python manage.py migrate && {% if cookiecutter.use_mcp == 'y' -%}gunicorn {{ cookiecutter.project_slug }}.asgi:application --bind 0.0.0.0:$PORT --workers 2 --worker-class uvicorn_worker.UvicornWorker --timeout 120{% else -%}gunicorn {{ cookiecutter.project_slug }}.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 2 --timeout 120{% endif %}
+      uv run --no-sync python manage.py collectstatic --noinput
+    startCommand: uv run --no-sync python manage.py migrate && {% if cookiecutter.use_mcp == 'y' -%}uv run --no-sync gunicorn {{ cookiecutter.project_slug }}.asgi:application --bind 0.0.0.0:$PORT --workers 2 --worker-class uvicorn_worker.UvicornWorker --timeout 120{% else -%}uv run --no-sync gunicorn {{ cookiecutter.project_slug }}.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 2 --timeout 120{% endif %}
     plan: free
     healthCheckPath: /
 
@@ -53,8 +53,8 @@ services:
     name: {{ cookiecutter.project_slug }}-workers
     runtime: python
     buildCommand: |
-      pip install -r requirements.txt
-    startCommand: python manage.py qcluster & python -m http.server $PORT
+      uv sync --locked --no-dev --no-install-project
+    startCommand: uv run --no-sync python manage.py qcluster & uv run --no-sync python -m http.server $PORT
     plan: free
     healthCheckPath: /
 
@@ -118,6 +118,8 @@ envVarGroups:
         value: "24.15.0"
       - key: ENVIRONMENT
         value: prod
+      - key: UV_VERSION
+        value: "0.11.15"
       - key: DEBUG
         value: "False"
       - key: SECRET_KEY

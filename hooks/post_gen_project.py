@@ -4,7 +4,12 @@
 import os
 import shutil
 import subprocess
+import sys
+import tempfile
 from pathlib import Path
+
+
+UV_VERSION = "0.11.15"
 
 
 def remove_blog_app():
@@ -96,14 +101,17 @@ def remove_ci_workflow():
         print("Removed CI workflow")
 
 
-def generate_initial_migrations():
+def generate_initial_migrations(uv_command):
     """Generate fresh initial migrations after cookiecutter option cleanup."""
     if os.environ.get("SKIP_POST_GEN_MIGRATIONS") == "1":
         print("Skipping migration generation because SKIP_POST_GEN_MIGRATIONS=1")
         return
 
-    if shutil.which("uv") is None:
-        print("uv not found; run `uv run python manage.py makemigrations` after generation.")
+    if uv_command is None:
+        print(
+            f"uv {UV_VERSION} not available; "
+            "run `uv run python manage.py makemigrations` after generation."
+        )
         return
 
     env = os.environ.copy()
@@ -133,7 +141,7 @@ def generate_initial_migrations():
     try:
         subprocess.run(
             [
-                "uv",
+                *uv_command,
                 "run",
                 "python",
                 "manage.py",
@@ -148,6 +156,100 @@ def generate_initial_migrations():
     finally:
         settings_module_path.unlink(missing_ok=True)
         Path(".post_gen_migrations.sqlite3").unlink(missing_ok=True)
+
+
+def valid_uv_command():
+    """Return a working uv command if uv is already available."""
+    uv_path = shutil.which("uv")
+    if uv_path is None:
+        return None
+
+    try:
+        completed = subprocess.run(
+            [uv_path, "--version"],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return None
+
+    version_parts = completed.stdout.strip().split()
+    if len(version_parts) < 2:
+        return None
+
+    installed_version = version_parts[1]
+    if installed_version != UV_VERSION:
+        return None
+
+    return [uv_path]
+
+
+def run_quiet(command):
+    """Run a command, surfacing output only to callers handling failures."""
+    return subprocess.run(
+        command,
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        universal_newlines=True,
+    )
+
+
+def install_uv(temp_dir):
+    """Install uv into a temporary virtual environment and return its path."""
+    venv_path = Path(temp_dir) / "uv-bootstrap"
+    subprocess.run([sys.executable, "-m", "venv", str(venv_path)], check=True)
+
+    bin_dir = "Scripts" if os.name == "nt" else "bin"
+    executable_suffix = ".exe" if os.name == "nt" else ""
+    python_path = venv_path / bin_dir / ("python" + executable_suffix)
+    uv_path = venv_path / bin_dir / ("uv" + executable_suffix)
+
+    run_quiet(
+        [str(python_path), "-m", "pip", "install", "--upgrade", "pip"],
+    )
+    run_quiet([str(python_path), "-m", "pip", "install", f"uv=={UV_VERSION}"])
+
+    return [str(uv_path)]
+
+
+def ensure_uv_command():
+    """Return a pinned uv command, installing it temporarily if needed."""
+    uv_command = valid_uv_command()
+    if uv_command is not None:
+        return uv_command, None
+
+    print(
+        f"uv {UV_VERSION} not found; "
+        "installing it temporarily for post-generation tasks..."
+    )
+    temp_dir = tempfile.TemporaryDirectory()
+    try:
+        return install_uv(temp_dir.name), temp_dir
+    except (OSError, subprocess.CalledProcessError):
+        temp_dir.cleanup()
+        raise
+
+
+def generate_uv_lock(uv_command):
+    """Generate uv.lock so Docker and hosted deployments work immediately."""
+    print("Generating uv.lock...")
+
+    try:
+        run_quiet([*uv_command, "lock"])
+    except (OSError, subprocess.CalledProcessError) as exc:
+        print("")
+        print("WARNING: Could not generate uv.lock automatically.")
+        print("Install uv and run `uv lock` before committing or deploying this project.")
+        if isinstance(exc, subprocess.CalledProcessError) and exc.output:
+            print("")
+            print(exc.output)
+        print(f"Original error: {exc}")
+        return
+
+    print("Generated uv.lock")
 
 
 def main():
@@ -191,7 +293,23 @@ def main():
         remove_ci_workflow()
         print("CI cleanup complete!")
 
-    generate_initial_migrations()
+    uv_command = None
+    uv_temp_dir = None
+    try:
+        uv_command, uv_temp_dir = ensure_uv_command()
+    except (OSError, subprocess.CalledProcessError) as exc:
+        print("")
+        print("WARNING: Could not prepare uv for post-generation tasks.")
+        print("Install uv and run `uv lock` before committing or deploying this project.")
+        print(f"Original error: {exc}")
+
+    try:
+        if uv_command is not None:
+            generate_uv_lock(uv_command)
+            generate_initial_migrations(uv_command)
+    finally:
+        if uv_temp_dir is not None:
+            uv_temp_dir.cleanup()
 
 
 if __name__ == "__main__":

@@ -133,6 +133,7 @@ def test_generate_default_structure(tmp_path: Path) -> None:
     # sanity: core entrypoints exist
     assert (project_dir / "manage.py").exists()
     assert (project_dir / "pyproject.toml").exists()
+    assert (project_dir / "uv.lock").exists()
     assert (project_dir / "DESIGN.md").exists()
     assert (project_dir / "frontend" / "templates").exists()
 
@@ -190,7 +191,7 @@ def test_generate_default_structure(tmp_path: Path) -> None:
     assert (project_dir / "apps" / "blog" / "migrations" / "0001_initial.py").exists()
 
     _assert_contains(project_dir / "deployment" / "entrypoint.sh", "wait_for_database")
-    _assert_contains(project_dir / "deployment" / "entrypoint.sh", "exec gunicorn")
+    _assert_contains(project_dir / "deployment" / "entrypoint.sh", "exec uv run --no-sync gunicorn")
     _assert_contains(project_dir / "deployment" / "Dockerfile.server", "chmod +x deployment/entrypoint.sh")
     _assert_contains(project_dir / "deployment" / "Dockerfile.server", '["sh", "deployment/entrypoint.sh", "-s"]')
     _assert_contains(

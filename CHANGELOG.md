@@ -66,7 +66,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - remove djstripe. only use strip for payments
 - Use psycopg-binary instead of psycopg2-binary
 - If use_stripe is no. then make sure to remove everything
-- Use uv instead of poetry for pakage management.
+- Use uv instead of poetry for package management.
   - No need for requirements.txt file
 
 ### Fixed
@@ -86,6 +86,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 - Cookiecutter auth templates now include dark-mode friendly contrast updates
 - Cookiecutter settings template and confirm-email warning banner now include dark-mode friendly contrast updates
 - Cookiecutter auth templates (`login`, `signup`, `password_reset`) now include dark-mode friendly text/input/border styling
+- Keep Docker and Render deployments on uv and generate `uv.lock` during post-generation
 
 ## [0.0.5] - 2025-10-23
 ### Added

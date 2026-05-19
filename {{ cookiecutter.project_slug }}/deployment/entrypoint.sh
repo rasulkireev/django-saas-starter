@@ -23,7 +23,7 @@ shift $((OPTIND - 1))
 
 wait_for_database() {
     echo "Waiting for database..."
-    python - <<'PY'
+    uv run --no-sync python - <<'PY'
 import os
 import sys
 import time
@@ -54,14 +54,14 @@ wait_for_database
 
 if [ "$server" = true ]; then
     echo "Starting {{ cookiecutter.project_name }} server..."
-    python manage.py collectstatic --noinput
-    python manage.py migrate --noinput
+    uv run --no-sync python manage.py collectstatic --noinput
+    uv run --no-sync python manage.py migrate --noinput
     {% if cookiecutter.use_mcp == 'y' -%}
-    exec gunicorn ${PROJECT_NAME}.asgi:application --bind 0.0.0.0:80 --workers 3 --worker-class uvicorn_worker.UvicornWorker
+    exec uv run --no-sync gunicorn ${PROJECT_NAME}.asgi:application --bind 0.0.0.0:80 --workers 3 --worker-class uvicorn_worker.UvicornWorker
     {% else -%}
-    exec gunicorn ${PROJECT_NAME}.wsgi:application --bind 0.0.0.0:80 --workers 3 --threads 2
+    exec uv run --no-sync gunicorn ${PROJECT_NAME}.wsgi:application --bind 0.0.0.0:80 --workers 3 --threads 2
     {% endif %}
 else
     echo "Starting {{ cookiecutter.project_name }} workers..."
-    exec python manage.py qcluster
+    exec uv run --no-sync python manage.py qcluster
 fi
